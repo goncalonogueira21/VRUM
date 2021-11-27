@@ -1,0 +1,14 @@
+bcrypt
+flask
+flask_login
+flask_migrate
+flask_wtf
+flask_sqlalchemy
+flask_pymongo
+flask_cors
+gunicorn
+psycopg2
+nltk
+Werkzeug
+pymongo
+PyJWT
