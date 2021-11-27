@@ -21,7 +21,7 @@ else:
 
 	Start Mongo
 	
-	export FLASK_APP=leonardo.py
+	export FLASK_APP=vrum.py
 	
 	flask run
 
