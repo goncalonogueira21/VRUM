@@ -75,9 +75,12 @@ computed: {
   methods: {
     validate() {
       if (this.$refs.loginForm.validate()) {
-        // submit form to server/API here...
+        //request to API server login
       }
-    },
+      if(this.$refs.registerForm.validate()){
+        //request to API server registar
+        }
+      },
     reset() {
       this.$refs.form.reset();
     },
