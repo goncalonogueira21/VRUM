@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
   export default {
 computed: {
     passwordMatch() {
@@ -78,7 +80,17 @@ computed: {
         //request to API server login
       }
       if(this.$refs.registerForm.validate()){
-        //request to API server registar
+         const payload = {
+            username: this.firstName,
+            email : this.email, 
+            password : this.password
+          }
+          axios.post("http://localhost:5000/users/register",payload)
+              .then((response) => {
+                console.log(response.data)
+              },(error)=> {
+                console.log(error);
+              });
         }
       },
     reset() {
