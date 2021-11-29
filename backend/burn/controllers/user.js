@@ -9,7 +9,7 @@ module.exports.listar = () => {
 
 module.exports.findByUserName = u => {
     return User
-        .findOne({usersname: u})
+        .findOne({username: u})
         .exec()
 }
 
