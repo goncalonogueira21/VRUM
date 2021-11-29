@@ -1,17 +1,6 @@
 <template>
-    <v-app-bar app color="#2A3F54" height="100" clipped-left>
-        <v-list
-            nav
-            dense
-            dark
-            color="#2A3F54"
-        >
-            <v-list-item two-line class="px-0">
-                <v-list-item-avatar min-width="55px" tile class="ava" @click="about = true">
-                    <img src= "../assets/VRUM_logo.png" > 
-                </v-list-item-avatar>
-            </v-list-item>
-        </v-list>
+    <v-app-bar app color="#7e380e" height="80" clipped-left>
+        
         <div class="spacer"></div>
        
         <!-- Menú do cabeçalho-->
@@ -35,7 +24,7 @@
             </template>
             <v-list>
                 <v-list-item link :to="link">
-                    <v-list-item-title>Página para mudar</v-list-item-title>
+                    <v-list-item-title>Editar Perfil</v-list-item-title>
                 </v-list-item>
                 <!-- Se se quiser fazer logout -->
                 <v-list-item @click="logout();" text>
