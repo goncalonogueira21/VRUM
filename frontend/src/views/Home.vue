@@ -1,6 +1,8 @@
 <template>
   <v-container>
-     <img src= "../assets/VRUM_logo.png" class="center" >
+    <v-card class="d-flex justify-center mb-6" flat>
+     <img src= "../assets/VRUM_logo.png"  >
+    </v-card>
      <v-card class="d-flex justify-center mb-6" flat >
       <v-btn to="/auth" color="#7e380e" class="white--text">
       Login/Signup
