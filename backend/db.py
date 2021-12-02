@@ -1,16 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-from flask_mysqldb import MySQL
+from flask import request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+import jwt
+import pymysql
 
-app = Flask(__name__)
 
-# Colocar uma secret key
-app.secret_key = 'colocar secret key'
+from functools import wraps
 
-# Info da DB
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'vrum'
+# configuration
+from backend.app import app
+from backend.venv import secrets
 
-# Initialize MySQL
-mysql = MySQL(app)
+conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(secrets.dbuser, secrets.dbpass, secrets.dbhost, secrets.dbname)
+
+app.config['SECRET_KEY'] = 'SECRET KEY'
+# database name
+app.config['SQLALCHEMY_DATABASE_URI'] = conn
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+# creates SQLALCHEMY object
+db = SQLAlchemy(app)
