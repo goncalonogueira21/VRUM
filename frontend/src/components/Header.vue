@@ -1,6 +1,19 @@
 <template>
     <v-app-bar app color="#7e380e" height="80" clipped-left>
         
+        <v-list
+            nav
+            dense
+            dark
+            color="#7e380e"
+        >
+        <v-list-item two-line class="px-0">
+            <v-list-item-content>
+                <v-list-item-title><h2>VRUM</h2></v-list-item-title>
+                <v-list-item-subtitle>Vehicle Rides UM</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
         <div class="spacer"></div>
        
         <!-- Menú do cabeçalho-->
@@ -23,7 +36,7 @@
                 </v-tooltip>
             </template>
             <v-list>
-                <v-list-item link :to="link">
+                <v-list-item :to="profile" link >
                     <v-list-item-title>Editar Perfil</v-list-item-title>
                 </v-list-item>
                 <!-- Se se quiser fazer logout -->
