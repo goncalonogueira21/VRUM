@@ -1,23 +1,23 @@
-CREATE DATABASE user_authentication;
+CREATE DATABASE vrum;
 
-USE user_authentication;
+USE vrum;
 
 /* Lógico_1: */
 
 CREATE TABLE Carro (
     ano int,
-    tipoFuel varchar,
-    cor varchar,
-    matricula varchar PRIMARY KEY,
-    modelo varchar,
+    tipoFuel varchar(255),
+    cor varchar(255),
+    matricula varchar(255) PRIMARY KEY,
+    modelo varchar(255),
     lugares int,
-    fk_Utilizador_username varchar
+    fk_Utilizador_username varchar(255)
 );
 
 CREATE TABLE Avaliacoes (
-    conteudo varchar,
+    conteudo varchar(255),
     dataAvaliacao datetime,
-    utilizador varchar,
+    utilizador varchar(255),
     fk_Viagem_idViagem int
 );
 
@@ -25,41 +25,41 @@ CREATE TABLE Viagem (
     dataInicio DateTime,
     kmsViagem float,
     custo float,
-    localInicio varchar,
+    localInicio varchar(255),
     bagagem boolean,
-    localDestino varchar,
+    localDestino varchar(255),
     lugaresDisp int,
-    regularidade varchar,
+    regularidade varchar(255),
     idViagem int PRIMARY KEY,
     custoMinimo float,
-    idCondutor varchar,
-    fk_Carro_matricula varchar
+    idCondutor varchar(255),
+    fk_Carro_matricula varchar(255)
 );
 
 CREATE TABLE Pedido (
     nrPessoas int,
-    localFinal varchar,
+    localFinal varchar(255),
     idPedido int PRIMARY KEY,
-    pickupLocal varchar,
+    pickupLocal varchar(255),
     aceite boolean,
-    fk_Utilizador_username varchar,
+    fk_Utilizador_username varchar(255),
     fk_Viagem_idViagem int
 );
 
 CREATE TABLE Utilizador (
     rating int,
-    email varchar,
+    email varchar(255),
     nrTelemovel int,
-    morada varchar,
-    username varchar PRIMARY KEY,
-    password varchar,
+    morada varchar(255),
+    username varchar(255) PRIMARY KEY,
+    password varchar(255),
     dataNascimento DateTime
 );
 
 CREATE TABLE usufrui (
-    fk_Utilizador_username varchar,
+    fk_Utilizador_username varchar(255),
     fk_Viagem_idViagem int,
-    custoPago varchar
+    custoPago varchar(255)
 );
 
 ALTER TABLE Carro ADD CONSTRAINT FK_Carro_2
