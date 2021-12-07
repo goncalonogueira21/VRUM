@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Search from "../views/Search.vue";
 import Auth from "../components/auth.vue";
 import Profile from "../views/Profile"
+import CriarViagem from "../views/CriarViagem"
 
 Vue.use(VueRouter);
 
@@ -28,6 +29,12 @@ const routes = [
     name: "Profile",
     component: Profile,
   },
+  {
+    path: "/criarviagem",
+    name: "CriarViagem",
+    component: CriarViagem,
+  },
+
 ];
 
 const router = new VueRouter({

@@ -77,7 +77,7 @@ import FormCriarViagem from "../components/FormCriarViagem.vue"
 import FormProcurarViagens from "../components/FormProcurarViagens.vue"
 
 export default {
-    name:"tabsWrpper",
+    name:"tabsWrapper",
     components:{
         FormCriarViagem, FormProcurarViagens
     },

@@ -17,9 +17,15 @@
           >
             <v-divider light></v-divider> 
 
-            <v-list-item link to="Link Secção">
+              <v-list-item link to="profile">
+                <v-list-item-title class="white--text">Perfil</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item link to="criarviagem">
                 <v-list-item-title class="white--text">Inserir viagem</v-list-item-title>
             </v-list-item>
+
+             
              <!-- List group se for uma secção da barra de navegação lateral que se divida em subsecções-->
             <v-list-group
               class="white--text"

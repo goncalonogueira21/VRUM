@@ -6,45 +6,29 @@
             dense
             dark
             color="#7e380e"
+            
         >
-        <v-list-item two-line class="px-0">
+        <v-list-item two-line class="px-4" >               
             <v-list-item-content>
                 <v-list-item-title><h2>VRUM</h2></v-list-item-title>
                 <v-list-item-subtitle>Vehicle Rides UM</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
+                  
         </v-list>
         <div class="spacer"></div>
-       
-        <!-- Menú do cabeçalho-->
-        <v-menu>
-            <template v-slot:activator="{ on: menu }">
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on: tooltip }">
-                        <v-btn
-                        fab
-                        v-on="{ ...tooltip, ...menu }"
-                        >
-                            <v-avatar>
-                                <v-img v-bind:src="foto"/>
-                            </v-avatar>
-                        </v-btn>
-                    </template>
-                    <span>
-                        
-                    </span>
-                </v-tooltip>
-            </template>
-            <v-list>
-                <v-list-item :to="profile" link >
-                    <v-list-item-title>Editar Perfil</v-list-item-title>
-                </v-list-item>
-                <!-- Se se quiser fazer logout -->
-                <v-list-item @click="logout();" text>
-                    <v-list-item-title>Logout</v-list-item-title>
-                </v-list-item>
-            </v-list>
-        </v-menu>
+               <v-btn
+                    class="ma-4"
+                    color="gray"
+                    dense
+                    dark
+                    elevation="10"
+                    to="/search"
+                >
+                    <v-icon dark>
+                    mdi-home-circle-outline
+                    </v-icon>
+                </v-btn>
         <v-list-item-group>
             <v-list-item disabled dark>
                 <v-list-item-content>

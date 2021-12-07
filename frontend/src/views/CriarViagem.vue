@@ -13,7 +13,7 @@
                   <v-tabs-items v-model="tab">
         
                     <v-tab-item eager>
-                      <FormProcurarViagens/>
+                      <FormCriarViagem/>
                    </v-tab-item>
 
                   
@@ -79,7 +79,7 @@
 import Header from "../components/Header.vue"
 import Footer from "../components/Footer.vue"
 import NavDraw from "../components/NavDraw.vue"
-import FormProcurarViagens from "../components/FormProcurarViagens.vue"
+import FormCriarViagem from "../components/FormCriarViagem.vue"
 
 
 export default {
@@ -88,14 +88,14 @@ export default {
         Header,
         Footer,
         NavDraw,
-        FormProcurarViagens
+        FormCriarViagem
     },
      data() {
     return{
       tab: null,
       openHelp: false,
       items: [
-        { tab: 'Procurar Viagem'}
+        { tab: 'Inserir Viagem'}
       ]}
    }
 }
