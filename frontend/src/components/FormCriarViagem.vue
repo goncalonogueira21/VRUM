@@ -84,7 +84,7 @@
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
                         :rules="rules.required"
-                        v-model="time"
+                        v-model="horaInicio"
                         label="Hora de Ínicio"
                         prepend-icon="mdi-clock-time-four-outline"
                         readonly
@@ -93,7 +93,7 @@
                       ></v-text-field>
                     </template>
                     <v-time-picker
-                      v-if="menu2"
+                      v-if="menuTime"
                       v-model="horaInicio"
                       full-width
                       @click:minute="$refs.menuTime.save(horaInicio)"
@@ -135,7 +135,7 @@ export default {
             regularidade:'',
             bagagem: false,
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-            horaInicio:''
+            horaInicio: null
         },
         rules: {
             required: [(v) => !!v || "Field is required"],
@@ -145,7 +145,8 @@ export default {
         },
         lugares:['1','2','3','4','5','6'],
         menu: false,
-        menu2: false
+        menu2: false,
+        menuTime: false
       }
     } ,
     methods:{
