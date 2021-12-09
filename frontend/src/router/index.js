@@ -5,6 +5,7 @@ import Search from "../views/Search.vue";
 import Auth from "../components/auth.vue";
 import Profile from "../views/Profile"
 import CriarViagem from "../views/CriarViagem"
+import Viagens from "../views/Viagens"
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,11 @@ const routes = [
     path: "/criarviagem",
     name: "CriarViagem",
     component: CriarViagem,
+  },
+  {
+    path: "/viagens",
+    name: "Viagens",
+    component: Viagens,
   },
 
 ];

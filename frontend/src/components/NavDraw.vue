@@ -21,8 +21,19 @@
                 <v-list-item-title class="white--text">Perfil</v-list-item-title>
             </v-list-item>
 
+
+            <v-list-item link to="search">
+                <v-list-item-title class="white--text">Procurar Viagem</v-list-item-title>
+            </v-list-item>
+
+
             <v-list-item link to="criarviagem">
-                <v-list-item-title class="white--text">Inserir viagem</v-list-item-title>
+                <v-list-item-title class="white--text">Inserir Viagem</v-list-item-title>
+            </v-list-item>
+
+
+            <v-list-item link to="viagens">
+                <v-list-item-title class="white--text">Viagens Disponíveis</v-list-item-title>
             </v-list-item>
 
              
@@ -73,6 +84,7 @@ export default {
     },
     methods:{
       logout: function(){
+        
         //função de logout
       },
       //função de fixação da barra de navegação lateral

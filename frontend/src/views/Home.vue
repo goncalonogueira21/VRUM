@@ -5,7 +5,7 @@
     </v-card>
      <v-card class="d-flex justify-center mb-6" flat >
       <v-btn to="/auth" color="#7e380e" class="white--text">
-      Login/Signup
+      Entrar
     </v-btn> 
      </v-card> 
     <Footer class="mt-5"></Footer>
