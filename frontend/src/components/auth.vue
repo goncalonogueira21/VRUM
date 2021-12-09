@@ -108,7 +108,6 @@ computed: {
         {name:"Register", icon:"mdi-account-outline"}
     ],
     valid: true,
-    
     firstName: "",
     lastName: "",
     email: "",
