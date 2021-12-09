@@ -6,6 +6,7 @@
       :items="viagens"
       :page="page"
       :pageCount="numberOfPages"
+      :hide-default-footer="true"
       :options.sync="options"
       sort-by="name"
     >
@@ -60,6 +61,14 @@ export default {
       viagens: [
           {
             user: 'User Teste',
+            origem: 'Gualtar',
+            destino: 'Azurem',
+            dataViagem: '12/01/2022',
+            horaInicial: '12:00',
+            disponiveis: 3,
+            bagagem: false
+          },{
+            user: 'User Teste2',
             origem: 'Gualtar',
             destino: 'Azurem',
             dataViagem: '12/01/2022',
