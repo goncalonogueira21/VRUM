@@ -16,7 +16,9 @@
                       <Perfil/>
                    </v-tab-item>
 
-                  
+                   <v-tab-item eager>
+                      <Carro/>
+                   </v-tab-item>
                   
 
                  </v-tabs-items>
@@ -35,12 +37,13 @@ import Footer from "../components/Footer.vue"
 import Header from "../components/Header.vue"
 import NavDraw from "../components/NavDraw.vue" 
 import Perfil from "../components/Perfil.vue"
+import Carro from "../components/Carro.vue"
 
 export default {
     name: "Profile",
 
      components: {
-      Footer,Header,NavDraw,Perfil
+      Footer,Header,NavDraw,Perfil, Carro
   },
   data() {
     return{
