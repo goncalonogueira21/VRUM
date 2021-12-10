@@ -1,21 +1,20 @@
-from functools import wraps
-
 import jwt
-from flask import jsonify, request
+import app
 
-from backend.app import app
-from backend.db import db
+from app import db
+from flask import request, jsonify, make_response
+from functools import wraps
 
 
 class Utilizador(db.Model):
     username = db.Column(db.Integer, primary_key=True)
     # name = db.Column(db.String(100))
-    email = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(80))
-    rating = db.Column(db.Integer)
-    nrTelemovel = db.Column(db.Integer)
-    dataNascimento = db.Column(db.Date)
-    morada = db.Column(db.String(100))
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
+    rating = db.Column(db.INT)
+    nrTelemovel = db.Column(db.INT)
+    dataNascimento = db.Column(db.DateTime)
+    morada = db.Column(db.String(255))
 
 
 # decorator for verifying the JWT

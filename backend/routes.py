@@ -1,12 +1,24 @@
-import uuid
-
+import app
+import db
 import jwt
+
+from user import token_required, Utilizador
 from flask import request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.sql import text
 from datetime import datetime, timedelta
 
-from backend.app import app
-from backend.user import token_required, Utilizador, db
+'''
+@app.route('/')
+def testdb():
+    try:
+        print(db.session.query(text('show tables')))#.from_statement(text('SELECT 1')).all()
+        return '<h1>It works.</h1>'
+    except Exception as e:
+        # see Terminal for description of the error
+        print("\nThe error:\n" + str(e) + "\n")
+        return '<h1>Something is broken.</h1>'
+'''
 
 
 @app.route('/user', methods=['GET'])
@@ -22,10 +34,10 @@ def get_all_users(current_user):
         # appending the user data json
         # to the response list
         output.append({
-            'username': Utilizador.username,
+            'username': user.username,
             # 'name': user.name,
-            'email': Utilizador.email,
-            'rating': Utilizador.rating
+            'email': user.email,
+            'rating': user.rating
         })
 
     return jsonify({'Utilizadores': output})
@@ -52,7 +64,7 @@ def login():
     if not user:
         # returns 401 if user does not exist
         return make_response(
-            'Could not verify',
+            'Nao foi possivel verificar',
             401,
             {'WWW-Authenticate': 'Basic realm ="User does not exist!"'}
         )
@@ -80,7 +92,7 @@ def registar():
     data = request.form
 
     # gets name, email and password
-    name, email = data.get('name'), data.get('email')
+    username, email = data.get('username'), data.get('email')
     password = data.get('password')
 
     # checking for existing user
@@ -90,7 +102,7 @@ def registar():
     if not user:
         # database ORM object
         user = Utilizador(
-            username=str(uuid.uuid4()),
+            username=username,
             # name=name,
             email=email,
             password=generate_password_hash(password)

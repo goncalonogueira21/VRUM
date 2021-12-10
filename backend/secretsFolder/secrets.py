@@ -1,4 +1,5 @@
-dbhost = ''
+dbhost = 'localhost'
 dbuser = 'root'
 dbpass = 'root'
 dbname = 'vrum'
+dbport = '3306'
