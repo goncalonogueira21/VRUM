@@ -13,7 +13,7 @@
                   <v-tabs-items v-model="tab">
         
                     <v-tab-item eager>
-                      <FormCriarViagem/>
+                      <FormCriarViagem ref="criarviagem"/>
                    </v-tab-item>
 
                   
@@ -97,6 +97,11 @@ export default {
       items: [
         { tab: 'Inserir Viagem'}
       ]}
+   },
+   methods:{
+     reset(){
+       this.$refs.criarviagem.reset()
+     }
    }
 }
 </script>

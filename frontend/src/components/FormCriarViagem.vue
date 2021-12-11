@@ -4,6 +4,7 @@
       <v-row>
           <v-col cols="11" md="5">
           <v-text-field v-model="formData.pontoPartida" 
+            id="autocomplete"
             :rules="[...rules.required,...rules.length30]" 
             :counter="30" label="Ponto de Partida"
             /> 
@@ -102,20 +103,30 @@
                 </v-col>
         </v-row>
         <v-row >
-           <v-col cols="11" md="4">
+           <v-col cols="11" md="5">
              <v-select height="44px" v-model="formData.lugaresDisponiveis" clear :rules="rules.required" :items="lugares" label="Lugares Disponíveis" dense/>
           </v-col>
 
-        <v-col cols="11" md="4">
+          <v-spacer/>
+        <v-col cols="11" md="5">
         <v-text-field v-model="formData.regularidade" 
             :rules="rules.length30" 
             :counter="30" label="Regularidade"
             /> 
         </v-col>
-        <v-col cols="12" md="4">
+        </v-row>
+        <v-row>
+          <v-col cols="11" md="5">
+          <v-text-field v-model="formData.custoMinimo"
+              label="Custo mínimo por pessoa"/>
+          </v-col>
+        <v-spacer/>
+        <v-col cols="11" md="5">
           <v-checkbox v-model="formData.bagagem"
               label="Bagagem"
               />
+        
+        
         </v-col>
         </v-row>
     </v-container>
@@ -135,7 +146,8 @@ export default {
             regularidade:'',
             bagagem: false,
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-            horaInicio: null
+            horaInicio: null,
+            custoMinimo:''
         },
         rules: {
             required: [(v) => !!v || "Field is required"],
@@ -149,6 +161,12 @@ export default {
         menuTime: false
       }
     } ,
+   /* mounted(){
+        new google.maps.places.Autocomplete(
+            document.getElementById("autocomplete")
+        )
+    },*/
+
     methods:{
          reset () {
             this.$refs.form.reset()

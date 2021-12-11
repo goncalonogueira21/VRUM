@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app color="#7e380e" height="80" clipped-left>
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon @click.stop="openNavDraw"></v-app-bar-nav-icon>
 
     <v-list nav dense dark color="#7e380e">
       <v-list-item two-line class="px-4">
@@ -40,6 +40,10 @@ export default {
     logout: function () {
       //Função de logout
     },
+    openNavDraw() {
+      this.drawer = !this.drawer
+      this.$emit('clicked',this.drawer)
+    }
   },
   watch: {
     group() {
