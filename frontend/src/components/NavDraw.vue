@@ -11,11 +11,27 @@
       class="navBar"
     >
       <v-list nav dense dark>
+        <v-list-item link to="homeLogado">
+          <v-list-item-icon>
+            <v-icon>mdi-home</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title class="white--text">Home</v-list-item-title>
+        </v-list-item>
+
         <v-list-item link to="profile">
           <v-list-item-icon>
-            <v-icon>mdi-account-circle</v-icon>
+            <v-icon>mdi-account</v-icon>
           </v-list-item-icon>
           <v-list-item-title class="white--text">Perfil</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item link to="viagens">
+          <v-list-item-icon>
+            <v-icon>mdi-car</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title class="white--text"
+            >Viagens Disponíveis</v-list-item-title
+          >
         </v-list-item>
 
         <v-list-item link to="search">
@@ -36,15 +52,6 @@
           >
         </v-list-item>
 
-        <v-list-item link to="viagens">
-          <v-list-item-icon>
-            <v-icon>mdi-car</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title class="white--text"
-            >Viagens Disponíveis</v-list-item-title
-          >
-        </v-list-item>
-
         <v-list-item link to="historico">
           <v-list-item-icon>
             <v-icon>mdi-history</v-icon>
@@ -62,6 +69,9 @@
         <!-- List group se for uma secção da barra de navegação lateral que se divida em subsecções-->
         <v-list-group class="white--text" :value="false" no-action>
           <template v-slot:activator>
+            <v-list-item-icon>
+            <v-icon>mdi-bell-ring</v-icon>
+          </v-list-item-icon>
             <v-list-item-title class="white--text"
               >Notificações</v-list-item-title
             >
