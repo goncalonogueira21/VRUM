@@ -1,10 +1,10 @@
 <template>
   <v-container class ="my-5">
       <Header @clicked = "onClickHeader"></Header>
-      <NavDraw ref="navdraw"></NavDraw>
+    <NavDraw ref="navdraw"></NavDraw>
       <v-layout justify-space-around row wrap >
              <v-flex xs10 sm10 md9 lg9>
-                <v-card class="mt-2" flat >
+                <v-card class="mt-2" flat  >
                   <v-tabs v-model="tab"  show-arrows color="#7e380e">
                     <v-tab v-for="item in items" :key="item.tab">
                      {{ item.tab }}
@@ -13,10 +13,12 @@
                   <v-tabs-items v-model="tab">
         
                     <v-tab-item eager>
-                      <TabelaViagens/>
+                      <Inbox/>
                    </v-tab-item>
 
-                   
+                   <v-tab-item eager>
+                     
+                   </v-tab-item>
                   
 
                  </v-tabs-items>
@@ -29,27 +31,24 @@
       <Footer></Footer>
   </v-container>
 </template>
-<script>
-import Header from "../components/Header.vue"
-import Footer from "../components/Footer.vue"
-import NavDraw from "../components/NavDraw.vue"
-import TabelaViagens from "../components/TabelaViagens.vue"
 
+<script>
+import Footer from "../components/Footer.vue"
+import Header from "../components/Header.vue"
+import NavDraw from "../components/NavDraw.vue" 
+import Inbox from "../components/Inbox.vue"
 
 export default {
-    name: "Viagens",
-    components: {
-        Header,
-        Footer,
-        NavDraw,
-        TabelaViagens
-    },
-     data() {
+    name: "Profile",
+
+     components: {
+      Footer,Header,NavDraw, Inbox
+  },
+  data() {
     return{
       tab: null,
-      openHelp: false,
       items: [
-        { tab: 'Viagens'}
+        { tab: 'Inbox'}
       ]}
    },
    methods:{
@@ -59,4 +58,3 @@ export default {
    }
 }
 </script>
-

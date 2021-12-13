@@ -1,7 +1,7 @@
 <template>
   <v-container class="my-5">
-    <Header></Header>
-    <NavDraw></NavDraw>
+    <Header @clicked = "onClickHeader"></Header>
+    <NavDraw ref="navdraw"></NavDraw>
     <v-layout justify-space-around row wrap >
              <v-flex xs10 sm10 md9 lg9>
                 <v-card class="mt-2" flat >
@@ -102,7 +102,11 @@ export default {
      reset(){
        this.$refs.criarviagem.reset()
      }
-   }
+   },
+     onClickHeader(){
+       this.$refs.navdraw.fixNav()
+     }
+   
 }
 </script>
 

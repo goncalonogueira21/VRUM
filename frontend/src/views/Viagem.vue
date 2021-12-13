@@ -1,7 +1,7 @@
 <template>
   <v-container class="my-5">
-    <Header></Header>
-    <NavDraw></NavDraw>
+    <Header @clicked = "onClickHeader"></Header>
+    <NavDraw ref="navdraw"></NavDraw>
     <Footer></Footer>
   </v-container>
 </template>
@@ -24,6 +24,11 @@ export default {
       tab: null,
       openHelp: false,
     }
+   },
+   methods:{
+     onClickHeader(){
+       this.$refs.navdraw.fixNav()
+     }
    }
 }
 </script>

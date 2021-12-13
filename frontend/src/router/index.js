@@ -6,6 +6,7 @@ import Auth from "../components/auth.vue";
 import Profile from "../views/Profile"
 import CriarViagem from "../views/CriarViagem"
 import Viagens from "../views/Viagens"
+import Mensagens from "../views/Mensagens"
 import Page404 from "../views/PageNotFound.vue"
 
 Vue.use(VueRouter);
@@ -40,6 +41,11 @@ const routes = [
     path: "/viagens",
     name: "Viagens",
     component: Viagens,
+  },
+  {
+    path: "/inbox",
+    name: "inbox",
+    component: Mensagens,
   },
 
 
