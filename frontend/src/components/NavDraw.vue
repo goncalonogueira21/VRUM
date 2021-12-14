@@ -76,7 +76,7 @@
               >Notificações</v-list-item-title
             >
           </template>
-          <v-list-item link to="Link Subsecção 1">
+          <v-list-item link to="pedidos">
             <v-list-item-title class="white--text">Viagens</v-list-item-title>
           </v-list-item>
           <v-list-item link to="inbox">

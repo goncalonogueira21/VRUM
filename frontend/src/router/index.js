@@ -7,6 +7,8 @@ import Profile from "../views/Profile"
 import CriarViagem from "../views/CriarViagem"
 import Viagens from "../views/Viagens"
 import Mensagens from "../views/Mensagens"
+import Pedidos from "../views/Pedidos"
+import Historico from "../views/HistoricoViagens"
 import Page404 from "../views/PageNotFound.vue"
 
 Vue.use(VueRouter);
@@ -47,7 +49,16 @@ const routes = [
     name: "inbox",
     component: Mensagens,
   },
-
+  {
+    path: "/pedidos",
+    name: "pedidos",
+    component: Pedidos,
+  },
+  {
+    path: "/historico",
+    name: "historico",
+    component: Historico,
+  },
 
   { path: "/*",
     name: "Page404",

@@ -115,6 +115,13 @@
                 </v-col>
                 <v-spacer></v-spacer>
            </v-row>
+           <v-row>
+               <v-col cols="11" md="5">
+                    <v-checkbox v-model="formData.bagagem"
+                    label="Bagagem"
+              />
+               </v-col>
+           </v-row>
         </v-container>
     </v-form>
 </template>

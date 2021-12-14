@@ -57,6 +57,10 @@ export default {
           text: "Bagagem",
           value: "bagagem",
         },
+        {
+          text: "Preço",
+          value:"preco"
+        }
       ],
       viagens: [
           {
@@ -66,7 +70,8 @@ export default {
             dataViagem: '12/01/2022',
             horaInicial: '12:00',
             disponiveis: 3,
-            bagagem: false
+            bagagem: false,
+            preco:'10'
           },{
             user: 'User Teste2',
             origem: 'Gualtar',
@@ -74,7 +79,8 @@ export default {
             dataViagem: '12/01/2022',
             horaInicial: '12:00',
             disponiveis: 3,
-            bagagem: false
+            bagagem: false,
+            preco:'5'
           },
       ],
     };
