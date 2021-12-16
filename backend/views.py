@@ -5,12 +5,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
 from datetime import datetime, timedelta
 
-
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
-
-from __init__ import db
+from __init__ import db, app
 from models import Utilizador
+
+
 @auth_blueprint.route('/')
 def testdb():
     try:
