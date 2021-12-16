@@ -1,32 +1,13 @@
-CREATE DATABASE user_authentication;
-
-USE user_authentication;
-
---CREATE TABLE users (
---    id INT NOT NULL AUTO_INCREMENT, 
---    email VARCHAR(255) NOT NULL, 
---    password_salt VARCHAR(255) NOT NULL, 
---    password_hash VARCHAR(255) NOT NULL, 
---    PRIMARY KEY (id), UNIQUE (email)
---);
-
--- MySQL Workbench Forward Engineering
-
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
-
-
 -- -----------------------------------------------------
 -- Schema VRUM
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `VRUM` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `VRUM` ;
+CREATE SCHEMA IF NOT EXISTS `vrum` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `vrum` ;
 
 -- -----------------------------------------------------
 -- Table `VRUM`.`utilizador`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `VRUM`.`utilizador` (
+CREATE TABLE IF NOT EXISTS `vrum`.`utilizador` (
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
   `firstName` VARCHAR(45) NOT NULL,
@@ -47,7 +28,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 -- Table `VRUM`.`carro`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `VRUM`.`carro` (
+CREATE TABLE IF NOT EXISTS `vrum`.`carro` (
   `matricula` VARCHAR(45) NOT NULL,
   `fk_Utilizador_username` VARCHAR(45) NOT NULL,
   `modelo` VARCHAR(45) NOT NULL,
@@ -60,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `VRUM`.`carro` (
   INDEX `FK_Carro_2` (`fk_Utilizador_username` ASC) VISIBLE,
   CONSTRAINT `FK_Carro_2`
     FOREIGN KEY (`fk_Utilizador_username`)
-    REFERENCES `VRUM`.`utilizador` (`username`)
+    REFERENCES `vrum`.`utilizador` (`username`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -70,7 +51,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 -- Table `VRUM`.`viagem`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `VRUM`.`viagem` (
+CREATE TABLE IF NOT EXISTS `vrum`.`viagem` (
   `idViagem` INT NOT NULL AUTO_INCREMENT,
   `fk_Carro_matricula` VARCHAR(45) NOT NULL,
   `dataInicio` DATETIME NOT NULL,
@@ -88,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `VRUM`.`viagem` (
   INDEX `FK_Viagem_2` (`fk_Carro_matricula` ASC) VISIBLE,
   CONSTRAINT `FK_Viagem_2`
     FOREIGN KEY (`fk_Carro_matricula`)
-    REFERENCES `VRUM`.`carro` (`matricula`)
+    REFERENCES `vrum`.`carro` (`matricula`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -98,7 +79,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 -- Table `VRUM`.`avaliacoes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `VRUM`.`avaliacoes` (
+CREATE TABLE IF NOT EXISTS `vrum`.`avaliacoes` (
   `idAvaliacao` INT NOT NULL AUTO_INCREMENT,
   `fk_Viagem_idViagem` INT NOT NULL,
   `conteudo` VARCHAR(45) NOT NULL,
@@ -108,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `VRUM`.`avaliacoes` (
   PRIMARY KEY (`idAvaliacao`),
   CONSTRAINT `FK_Avaliacoes_1`
     FOREIGN KEY (`fk_Viagem_idViagem`)
-    REFERENCES `VRUM`.`viagem` (`idViagem`)
+    REFERENCES `vrum`.`viagem` (`idViagem`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT)
 ENGINE = InnoDB
@@ -119,7 +100,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 -- Table `VRUM`.`pedido`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `VRUM`.`pedido` (
+CREATE TABLE IF NOT EXISTS `vrum`.`pedido` (
   `idPedido` INT NOT NULL AUTO_INCREMENT,
   `fk_Utilizador_username` VARCHAR(45) NOT NULL,
   `fk_Viagem_idViagem` INT NOT NULL,
@@ -132,11 +113,11 @@ CREATE TABLE IF NOT EXISTS `VRUM`.`pedido` (
   INDEX `FK_Pedido_3` (`fk_Viagem_idViagem` ASC) VISIBLE,
   CONSTRAINT `FK_Pedido_2`
     FOREIGN KEY (`fk_Utilizador_username`)
-    REFERENCES `VRUM`.`utilizador` (`username`)
+    REFERENCES `vrum`.`utilizador` (`username`)
     ON DELETE CASCADE,
   CONSTRAINT `FK_Pedido_3`
     FOREIGN KEY (`fk_Viagem_idViagem`)
-    REFERENCES `VRUM`.`viagem` (`idViagem`)
+    REFERENCES `vrum`.`viagem` (`idViagem`)
     )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -146,7 +127,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 -- Table `VRUM`.`usufrui`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `VRUM`.`usufrui` (
+CREATE TABLE IF NOT EXISTS `vrum`.`usufrui` (
   `fk_Utilizador_username` VARCHAR(45) NOT NULL,
   `fk_Viagem_idViagem` INT NOT NULL,
   `custoPago` FLOAT NOT NULL,
@@ -154,11 +135,11 @@ CREATE TABLE IF NOT EXISTS `VRUM`.`usufrui` (
   INDEX `FK_usufrui_2` (`fk_Viagem_idViagem` ASC) VISIBLE,
   CONSTRAINT `FK_usufrui_1`
     FOREIGN KEY (`fk_Utilizador_username`)
-    REFERENCES `VRUM`.`utilizador` (`username`)
+    REFERENCES `vrum`.`utilizador` (`username`)
     ON DELETE RESTRICT,
   CONSTRAINT `FK_usufrui_2`
     FOREIGN KEY (`fk_Viagem_idViagem`)
-    REFERENCES `VRUM`.`viagem` (`idViagem`)
+    REFERENCES `vrum`.`viagem` (`idViagem`)
     )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -168,7 +149,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 -- Table `VRUM`.`mensagens`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `VRUM`.`mensagens` (
+CREATE TABLE IF NOT EXISTS `vrum`.`mensagens` (
   `idMensagens` INT NOT NULL AUTO_INCREMENT,
   `conteudo` VARCHAR(250) NOT NULL,
   `userOrigem` VARCHAR(45) NOT NULL,
@@ -181,7 +162,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `VRUM`.`mailBox`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `VRUM`.`mailBox` (
+CREATE TABLE IF NOT EXISTS `vrum`.`mailBox` (
   `idMailBox` INT NOT NULL AUTO_INCREMENT,
   `fk_Utilizador_username` VARCHAR(45) NOT NULL,
   `fk_Mensagens_idMensagens` INT NOT NULL,
@@ -191,12 +172,12 @@ CREATE TABLE IF NOT EXISTS `VRUM`.`mailBox` (
   PRIMARY KEY (`idMailBox`),
   CONSTRAINT `fk_mailBox_Utilizador1`
     FOREIGN KEY (`fk_Utilizador_username`)
-    REFERENCES `VRUM`.`utilizador` (`username`)
+    REFERENCES `vrum`.`utilizador` (`username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_mailBox_Mensagens1`
     FOREIGN KEY (`fk_Mensagens_idMensagens`)
-    REFERENCES `VRUM`.`mensagens` (`idMensagens`)
+    REFERENCES `vrum`.`mensagens` (`idMensagens`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
