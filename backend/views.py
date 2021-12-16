@@ -1,27 +1,56 @@
-import app
-import db
 import jwt
-
-from user import token_required, Utilizador
-from flask import request, jsonify, make_response
+from functools import wraps
+from flask import request, jsonify, make_response, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
 from datetime import datetime, timedelta
 
-'''
-@app.route('/')
+
+auth_blueprint = Blueprint('auth_blueprint', __name__)
+
+
+from __init__ import db
+from models import Utilizador
+@auth_blueprint.route('/')
 def testdb():
     try:
-        print(db.session.query(text('show tables')))#.from_statement(text('SELECT 1')).all()
+        print(db.session.query(text('show tables')))  # .from_statement(text('SELECT 1')).all()
         return '<h1>It works.</h1>'
     except Exception as e:
         # see Terminal for description of the error
         print("\nThe error:\n" + str(e) + "\n")
         return '<h1>Something is broken.</h1>'
-'''
 
 
-@app.route('/user', methods=['GET'])
+# decorator for verifying the JWT
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        # jwt is passed in the request header
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+        # return 401 if token is not passed
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+
+        try:
+            # decoding the payload to fetch the stored details
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+            current_user = Utilizador.query \
+                .filter_by(username=data['username']) \
+                .first()
+        except:
+            return jsonify({
+                'message': 'Token is invalid!'
+            }), 401
+        # returns the current logged in users context to the routes
+        return f(current_user, *args, **kwargs)
+
+    return decorated
+
+
+@auth_blueprint.route('/user', methods=['GET'])
 @token_required
 def get_all_users(current_user):
     # querying the database
@@ -44,7 +73,7 @@ def get_all_users(current_user):
 
 
 # route for logging user in
-@app.route('/login', methods=['POST'])
+@auth_blueprint.route('/login', methods=['POST'])
 def login():
     # creates dictionary of form data
     auth = request.form
@@ -85,8 +114,7 @@ def login():
     )
 
 
-# signup route
-@app.route('/registo', methods=['POST'])
+@auth_blueprint.route('/registo', methods=['POST'])
 def registar():
     # creates a dictionary of the form data
     data = request.form
