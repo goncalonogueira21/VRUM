@@ -9,15 +9,15 @@ USE `vrum` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `vrum`.`utilizador` (
   `username` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  `firstName` VARCHAR(45) NOT NULL,
-  `lastName` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(105) NOT NULL,
+  `firstName` VARCHAR(45) NULL,
+  `lastName` VARCHAR(45) NULL,
   `email` VARCHAR(45) NOT NULL,
-  `nrTelemovel` VARCHAR(9) NOT NULL,
-  `rating` INT NOT NULL,
-  `morada` VARCHAR(45) NOT NULL,
-  `dataNascimento` DATE NOT NULL,
-  `avatar` VARBINARY(8000) NOT NULL,
+  `nrTelemovel` VARCHAR(9) NULL,
+  `rating` INT NULL,
+  `morada` VARCHAR(45) NULL,
+  `dataNascimento` DATE NULL,
+  `avatar` VARBINARY(8000) NULL,
   `aboutME` VARCHAR(200) NULL,
   PRIMARY KEY (`username`))
 ENGINE = InnoDB
