@@ -1,12 +1,17 @@
 from __init__ import db
 
+
 class Utilizador(db.Model):
     # __tablename__ = 'Utilizador'
-    username = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(45), primary_key=True)
     # name = db.Column(db.String(100))
-    email = db.Column(db.String(255), unique=True)
-    password = db.Column(db.String(255))
+    password = db.Column(db.String(45))
+    firstName = db.Column(db.String(45))
+    lastName = db.Column(db.String(45))
+    email = db.Column(db.String(45))
+    nrTelemovel = db.Column(db.String(9))
     rating = db.Column(db.INT)
-    nrTelemovel = db.Column(db.INT)
+    morada = db.Column(db.String(45))
     dataNascimento = db.Column(db.DateTime)
-    morada = db.Column(db.String(255))
+    avatar = db.Column(db.VARBINARY(8000))
+    aboutME = db.Column(db.String(200))
