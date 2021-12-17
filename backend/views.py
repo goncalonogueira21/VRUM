@@ -5,12 +5,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
 from datetime import datetime, timedelta
 
-
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
-
-from __init__ import db
+from __init__ import db, app
 from models import Utilizador
+
+
 @auth_blueprint.route('/')
 def testdb():
     try:
@@ -28,8 +28,8 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
         # jwt is passed in the request header
-        if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
+        if 'X-Aceess-Token' in request.headers:
+            token = request.headers['X-Aceess-Token']
         # return 401 if token is not passed
         if not token:
             return jsonify({'message': 'Token is missing!'}), 401

@@ -9,15 +9,15 @@ USE `vrum` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `vrum`.`utilizador` (
   `username` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  `firstName` VARCHAR(45) NOT NULL,
-  `lastName` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(105) NOT NULL,
+  `firstName` VARCHAR(45) NULL,
+  `lastName` VARCHAR(45) NULL,
   `email` VARCHAR(45) NOT NULL,
-  `nrTelemovel` VARCHAR(9) NOT NULL,
-  `rating` INT NOT NULL,
-  `morada` VARCHAR(45) NOT NULL,
-  `dataNascimento` DATE NOT NULL,
-  `avatar` VARBINARY(8000) NOT NULL,
+  `nrTelemovel` VARCHAR(9) NULL,
+  `rating` INT NULL,
+  `morada` VARCHAR(45) NULL,
+  `dataNascimento` DATE NULL,
+  `avatar` VARBINARY(8000) NULL,
   `aboutME` VARCHAR(200) NULL,
   PRIMARY KEY (`username`))
 ENGINE = InnoDB
@@ -77,9 +77,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `VRUM`.`avaliacoes`
+-- Table `VRUM`.`avaliacao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `vrum`.`avaliacoes` (
+CREATE TABLE IF NOT EXISTS `vrum`.`avaliacao` (
   `idAvaliacao` INT NOT NULL AUTO_INCREMENT,
   `fk_Viagem_idViagem` INT NOT NULL,
   `conteudo` VARCHAR(45) NOT NULL,
@@ -147,15 +147,15 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `VRUM`.`mensagens`
+-- Table `VRUM`.`mensagem`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `vrum`.`mensagens` (
-  `idMensagens` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `vrum`.`mensagem` (
+  `idMensagem` INT NOT NULL AUTO_INCREMENT,
   `conteudo` VARCHAR(250) NOT NULL,
   `userOrigem` VARCHAR(45) NOT NULL,
   `userDestino` VARCHAR(45) NOT NULL,
   `data` DATETIME NOT NULL,
-  PRIMARY KEY (`idMensagens`))
+  PRIMARY KEY (`idMensagem`))
 ENGINE = InnoDB;
 
 
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `vrum`.`mailBox` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_mailBox_Mensagens1`
     FOREIGN KEY (`fk_Mensagens_idMensagens`)
-    REFERENCES `vrum`.`mensagens` (`idMensagens`)
+    REFERENCES `vrum`.`mensagem` (`idMensagem`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
