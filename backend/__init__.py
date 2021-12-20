@@ -23,4 +23,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 from views import auth_blueprint
+from carros import carro_blueprint
+from pedidos import pedido_blueprint
+from viagens import viagem_blueprint
+from avaliacoes import avaliacao_blueprint
 app.register_blueprint(auth_blueprint)
+app.register_blueprint(carro_blueprint, url_prefix='/carro')
+app.register_blueprint(pedido_blueprint, url_prefix='/pedido')
+app.register_blueprint(viagem_blueprint, url_prefix='/viagem')
+app.register_blueprint(avaliacao_blueprint, url_prefix='/avaliacao')
