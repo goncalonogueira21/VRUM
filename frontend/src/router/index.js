@@ -3,6 +3,13 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Search from "../views/Search.vue";
 import Auth from "../components/auth.vue";
+import Profile from "../views/Profile"
+import CriarViagem from "../views/CriarViagem"
+import Viagens from "../views/Viagens"
+import Mensagens from "../views/Mensagens"
+import Pedidos from "../views/Pedidos"
+import Historico from "../views/HistoricoViagens"
+import Page404 from "../views/PageNotFound.vue"
 
 Vue.use(VueRouter);
 
@@ -22,6 +29,42 @@ const routes = [
     name: "auth",
     component: Auth,
   },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+  },
+  {
+    path: "/criarviagem",
+    name: "CriarViagem",
+    component: CriarViagem,
+  },
+  {
+    path: "/viagens",
+    name: "Viagens",
+    component: Viagens,
+  },
+  {
+    path: "/inbox",
+    name: "inbox",
+    component: Mensagens,
+  },
+  {
+    path: "/pedidos",
+    name: "pedidos",
+    component: Pedidos,
+  },
+  {
+    path: "/historico",
+    name: "historico",
+    component: Historico,
+  },
+
+  { path: "/*",
+    name: "Page404",
+    component: Page404 
+  }
+
 ];
 
 const router = new VueRouter({

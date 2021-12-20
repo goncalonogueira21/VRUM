@@ -77,17 +77,30 @@ computed: {
   methods: {
     validate() {
       if (this.$refs.loginForm.validate()) {
-        //request to API server login
-      }
-      if(this.$refs.registerForm.validate()){
-         const payload = {
-            username: this.firstName,
-            email : this.email, 
-            password : this.password
+        const payload = {
+            email : this.loginEmail, 
+            password : this.loginPassword
           }
-          axios.post("http://localhost:5000/users/register",payload)
+          axios.post("http://localhost:5000/login",payload)
               .then((response) => {
                 console.log(response.data)
+                this.$router.push({ name: 'Home' })
+              },(error)=> {
+                console.log(error);
+              });
+      }
+      if(this.$refs.registerForm.validate()){
+          var payload = new FormData();
+          payload.append('username',this.firstName);
+          payload.append('email',this.email);
+          payload.append('password',this.password);
+          payload.append('lastName',this.lastName);
+          payload.append('firstName',this.firstName);
+
+          axios.post("http://localhost:5000/registo",payload)
+              .then((response) => {
+                console.log(response.data)
+                this.$router.push({ name: 'login' })
               },(error)=> {
                 console.log(error);
               });
@@ -108,7 +121,6 @@ computed: {
         {name:"Register", icon:"mdi-account-outline"}
     ],
     valid: true,
-    
     firstName: "",
     lastName: "",
     email: "",

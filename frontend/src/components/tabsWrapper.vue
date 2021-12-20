@@ -1,23 +1,28 @@
 <template>
     <v-layout justify-space-around row wrap >
              <v-flex xs10 sm10 md9 lg9>
-                <v-card class="mt-2" elevation="10" >
-                  <v-tabs v-model="tab"  show-arrows>
+                <v-card class="mt-2" flat >
+                  <v-tabs v-model="tab"  show-arrows color="#7e380e">
                     <v-tab v-for="item in items" :key="item.tab">
                      {{ item.tab }}
                     </v-tab>
                   </v-tabs>
                   <v-tabs-items v-model="tab">
-                   <v-tab-item eager> 
-                      
+        
+                    <v-tab-item eager>
+                      <FormProcurarViagens/>
                    </v-tab-item>
+
+                  
                    <v-tab-item eager>
                       <FormCriarViagem/>
                    </v-tab-item>
+                  
+
                  </v-tabs-items>
               </v-card>
               
-              <v-card class="mx-auto" >
+              <v-card class="mx-auto" flat>
                 <v-row class="px-2 pb-2 ma-0 py-2" justify="space-between">
                     
                 <v-btn-toggle v-model="alignment"
@@ -69,11 +74,12 @@
 
 <script>
 import FormCriarViagem from "../components/FormCriarViagem.vue"
+import FormProcurarViagens from "../components/FormProcurarViagens.vue"
 
 export default {
-    name:"tabsWrpper",
+    name:"tabsWrapper",
     components:{
-        FormCriarViagem
+        FormCriarViagem, FormProcurarViagens
     },
    data() {
     return{

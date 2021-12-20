@@ -1,10 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from secretsFolder import secrets
+
+cors = CORS()
 
 app = Flask(__name__)
 app.debug = True
 
+cors.init_app(app)
 
 conn = "mysql+pymysql://{0}:{1}@{2}/{3}?charset=utf8mb4".format(secrets.dbuser, secrets.dbpass, secrets.dbhost,
                                                 secrets.dbname)
