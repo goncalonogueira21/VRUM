@@ -5,6 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
 from datetime import datetime, timedelta
 
+import json
+
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
 from __init__ import db, app
@@ -76,9 +78,10 @@ def get_all_users(current_user):
 @auth_blueprint.route('/login', methods=['POST'])
 def login():
     # creates dictionary of form data
-    auth = request.form
-
-    if not auth or not auth.get('email') or not auth.get('password'):
+    #auth = request.form
+    auth = json.loads(request.data)
+    print(auth['email'])
+    if not auth or not auth['email'] or not auth['password']:
         # returns 401 if any email or / and password is missing
         return make_response(
             'Não foi possível verificar o login',
@@ -87,7 +90,7 @@ def login():
         )
 
     user = Utilizador.query \
-        .filter_by(email=auth.get('email')) \
+        .filter_by(email=auth['email']) \
         .first()
 
     if not user:
@@ -122,7 +125,8 @@ def registar():
     # gets name, email and password
     username, email = data.get('username'), data.get('email')
     password = data.get('password')
-
+    print('\n\n\n\n\n\n\n')
+    print(data)
     # checking for existing user
     user = Utilizador.query \
         .filter_by(email=email) \
