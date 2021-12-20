@@ -4,6 +4,7 @@ from flask import request, jsonify, make_response, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
 from datetime import datetime, timedelta
+from flask_cors import cross_origin
 
 import json
 
@@ -71,11 +72,14 @@ def get_all_users(current_user):
             'rating': user.rating
         })
 
-    return jsonify({'Utilizadores': output})
+    response = jsonify({'Utilizadores': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 # route for logging user in
 @auth_blueprint.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     # creates dictionary of form data
     #auth = request.form
@@ -108,7 +112,7 @@ def login():
             'exp': datetime.utcnow() + timedelta(minutes=30)
         }, app.config['SECRET_KEY'])
 
-        return make_response(jsonify({'token': token.decode('UTF-8')}), 201)
+        return make_response(jsonify({'token': token}), 201)
     # returns 403 if password is wrong
     return make_response(
         'Could not verify',
@@ -118,6 +122,7 @@ def login():
 
 
 @auth_blueprint.route('/registo', methods=['POST'])
+@cross_origin()
 def registar():
     # creates a dictionary of the form data
     data = request.form

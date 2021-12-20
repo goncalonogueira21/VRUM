@@ -9,6 +9,7 @@ import Viagens from "../views/Viagens"
 import Mensagens from "../views/Mensagens"
 import Pedidos from "../views/Pedidos"
 import Historico from "../views/HistoricoViagens"
+import HomeLogado from "../views/HomeLogado"
 import Page404 from "../views/PageNotFound.vue"
 
 Vue.use(VueRouter);
@@ -58,6 +59,11 @@ const routes = [
     path: "/historico",
     name: "historico",
     component: Historico,
+  },
+  {
+    path: "/homeLogado",
+    name: "homeLogado",
+    component: HomeLogado,
   },
 
   { path: "/*",

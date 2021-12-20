@@ -3,9 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from secretsFolder import secrets
 
-cors = CORS()
+#cors = CORS()
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
 app.debug = True
 
 cors.init_app(app)

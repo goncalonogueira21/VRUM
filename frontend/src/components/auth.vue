@@ -24,7 +24,7 @@
                                         </v-col>
                                         <v-spacer></v-spacer>
                                         <v-col class="d-flex" cols="12" sm="3" xsm="12" align-end>
-                                            <v-btn x-large block :disabled="!valid" color="success" @click="validate"> Login </v-btn>
+                                            <v-btn x-large block :disabled="!valid" color="success" @click="validateLogin"> Login </v-btn>
                                         </v-col>
                                     </v-row>
                                 </v-form>
@@ -53,7 +53,7 @@
                                         </v-col>
                                         <v-spacer></v-spacer>
                                         <v-col class="d-flex ml-auto" cols="12" sm="3" xsm="12">
-                                            <v-btn x-large block :disabled="!valid" color="success" @click="validate">Register</v-btn>
+                                            <v-btn x-large block :disabled="!valid" color="success" @click="validateRegister">Register</v-btn>
                                         </v-col>
                                     </v-row>
                                 </v-form>
@@ -67,29 +67,36 @@
 
 <script>
 import axios from 'axios'
+import {mapActions} from "vuex"
+
 
   export default {
 computed: {
     passwordMatch() {
       return () => this.password === this.verify || "Password must match";
-    }
+    },
+    
   },
   methods: {
-    validate() {
-      if (this.$refs.loginForm.validate()) {
+    ...mapActions({
+      signIn: 'auth/signIn'
+    }),
+    validateLogin() {
         const payload = {
             email : this.loginEmail, 
             password : this.loginPassword
           }
-          axios.post("http://localhost:5000/login",payload)
-              .then((response) => {
-                console.log(response.data)
-                this.$router.push({ name: 'Home' })
+         this.signIn(payload)
+            .then((response) => {
+                if(response.status==201){
+                  this.$router.push({ name: 'homeLogado' })
+                } else console.log(response)
               },(error)=> {
                 console.log(error);
               });
-      }
-      if(this.$refs.registerForm.validate()){
+         
+      },
+      validateRegister(){
           var payload = new FormData();
           payload.append('username',this.firstName);
           payload.append('email',this.email);
@@ -100,11 +107,10 @@ computed: {
           axios.post("http://localhost:5000/registo",payload)
               .then((response) => {
                 console.log(response.data)
-                this.$router.push({ name: 'login' })
+                this.$router.push({ name: 'auth' })
               },(error)=> {
                 console.log(error);
               });
-        }
       },
     reset() {
       this.$refs.form.reset();
