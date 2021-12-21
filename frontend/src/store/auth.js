@@ -28,5 +28,8 @@ export default {
 
 
         }
+    },
+    getters: {
+        isAuthenticated: state => !!state.token,  
     }
 }
