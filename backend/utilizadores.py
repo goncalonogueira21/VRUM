@@ -14,6 +14,8 @@ from __init__ import db, app
 from models import Utilizador
 
 
+# TODO: Delete and Update
+
 @auth_blueprint.route('/')
 def testdb():
     try:
@@ -53,7 +55,7 @@ def token_required(f):
     return decorated
 
 
-@auth_blueprint.route('/user', methods=['GET'])
+@auth_blueprint.route('/todos', methods=['GET'])
 @token_required
 def get_all_users(current_user):
     # querying the database
@@ -82,7 +84,7 @@ def get_all_users(current_user):
 @cross_origin()
 def login():
     # creates dictionary of form data
-    #auth = request.form
+    # auth = request.form
     auth = json.loads(request.data)
     if not auth or not auth['email'] or not auth['password']:
         # returns 401 if any email or / and password is missing
@@ -149,3 +151,5 @@ def registar():
     else:
         # returns 202 if user already exists
         return make_response('User already exists. Please Log in.', 202)
+
+# @auth_blueprint.route('/apagar_conta', methods=['DELETE'])
