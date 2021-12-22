@@ -48,7 +48,7 @@
                   v-model="this.formData.username"
                   :readonly="readonly"
                   color="#7e380e"
-                  label="formDataname"
+                  label="Username"
                 />
               </v-col>
 
