@@ -17,7 +17,7 @@ export default {
     actions:{
         async signIn({ commit }, credentials) {
             try{
-            let response = await axios.post("http://localhost:5000/login",credentials)
+            let response = await axios.post("http://localhost:5000/utilizador/login",credentials)
             commit('SET_TOKEN', response.data.token)
             commit('SET_USER',credentials.email)
             return response;
