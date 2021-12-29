@@ -71,7 +71,7 @@ def get_all_users(current_user):
             'username': user.username,
             # 'name': user.name,
             'email': user.email,
-            'rating': user.rating
+            'password': user.password
         })
 
     response = jsonify({'Utilizadores': output})
@@ -131,6 +131,14 @@ def registar():
     # gets name, email and password
     username, email = data.get('username'), data.get('email')
     password = data.get('password')
+    firstname=data.get('firstName')
+    lastname=data.get('lastName')
+    telemovel=data.get('nrTelemovel')
+    rat=data.get('rating')
+    morad=data.get('morada')
+    nascimento=data.get('dataNascimento')
+    #avatar
+    about=data.get('aboutME')
     # checking for existing user
     user = Utilizador.query \
         .filter_by(email=email) \
@@ -141,7 +149,14 @@ def registar():
             username=username,
             # name=name,
             email=email,
-            password=generate_password_hash(password)
+            password=generate_password_hash(password),
+            firstName=firstname,
+            lastName=lastname,
+            nrTelemovel=telemovel,
+            rating=rat,
+            morada=morad,
+            dataNascimento=nascimento,
+            aboutME=about
         )
         # insert user
         db.session.add(user)
