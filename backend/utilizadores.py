@@ -167,4 +167,45 @@ def registar():
         # returns 202 if user already exists
         return make_response('User already exists. Please Log in.', 202)
 
-# @auth_blueprint.route('/apagar_conta', methods=['DELETE'])
+
+
+
+@auth_blueprint.route('/<int:id>/delete', methods=['GET','POST'])
+def delete(id):
+    user = Utilizador.query.filter_by(username=id).first()
+    if request.method == 'POST':
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return make_response('Utilizador removido com sucesso.', 200)
+ 
+    return make_response('Utilizador não existe', 204)
+
+
+
+#Editar utilizador
+@auth_blueprint.route('/<int:id>/update', methods=['GET','POST'])
+def updateUser():
+    user = Utilizador.query.filter_by(username=id).first()
+    data = request.form
+    if request.method == 'POST':
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            password = data.get('password')
+            firsName = data.get('firstName')
+            lastName = data.get('lastName')
+            email = data.get('email')
+            nrTelemovel = data.get('nrTelemovel')
+            #rating
+            morada = data.get('morada')
+            dataNascimento = data.get('dataNascimento')
+            #avatar
+            about = data.get('aboutMe')
+
+            user = Utilizador(username=id, password=password, firsName=firsName, lastName=lastName, email=email, nrTelemovel=nrTelemovel, morada=morada,dataNascimento=dataNascimento, aboutMe=about, rating=0)
+            db.session.add(user)
+            db.session.commit()
+        return make_response('Utilizador nao existe', 404)
+ 
+    return make_response('Utilizador atualizado com sucesso', 200)
