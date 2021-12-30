@@ -171,7 +171,7 @@ export default {
       this.readonly = !this.readonly;
     },  
     save() {
-      const payload = this.formData;
+      const payload = JSON.stringify(this.formData);
       this.readonly = !this.readonly;
       axios
         .put("http://localhost:5000/users/" + this.formData.username, payload,{
