@@ -14,6 +14,8 @@ from __init__ import db, app
 from models import Utilizador
 
 
+# TODO: Delete and Update
+
 @auth_blueprint.route('/')
 def testdb():
     try:
@@ -53,7 +55,7 @@ def token_required(f):
     return decorated
 
 
-@auth_blueprint.route('/user', methods=['GET'])
+@auth_blueprint.route('/todos', methods=['GET'])
 @token_required
 def get_all_users(current_user):
     # querying the database
@@ -69,7 +71,7 @@ def get_all_users(current_user):
             'username': user.username,
             # 'name': user.name,
             'email': user.email,
-            'rating': user.rating
+            'password': user.password
         })
 
     response = jsonify({'Utilizadores': output})
@@ -82,9 +84,8 @@ def get_all_users(current_user):
 @cross_origin()
 def login():
     # creates dictionary of form data
-    #auth = request.form
+    # auth = request.form
     auth = json.loads(request.data)
-    print(auth['email'])
     if not auth or not auth['email'] or not auth['password']:
         # returns 401 if any email or / and password is missing
         return make_response(
@@ -100,7 +101,7 @@ def login():
     if not user:
         # returns 401 if user does not exist
         return make_response(
-            'Nao foi possivel verificar',
+            'Utilizador não existe',
             401,
             {'WWW-Authenticate': 'Basic realm ="User does not exist!"'}
         )
@@ -130,8 +131,14 @@ def registar():
     # gets name, email and password
     username, email = data.get('username'), data.get('email')
     password = data.get('password')
-    print('\n\n\n\n\n\n\n')
-    print(data)
+    firstname=data.get('firstName')
+    lastname=data.get('lastName')
+    telemovel=data.get('nrTelemovel')
+    rat=data.get('rating')
+    morad=data.get('morada')
+    nascimento=data.get('dataNascimento')
+    #avatar
+    about=data.get('aboutME')
     # checking for existing user
     user = Utilizador.query \
         .filter_by(email=email) \
@@ -142,7 +149,14 @@ def registar():
             username=username,
             # name=name,
             email=email,
-            password=generate_password_hash(password)
+            password=generate_password_hash(password),
+            firstName=firstname,
+            lastName=lastname,
+            nrTelemovel=telemovel,
+            rating=rat,
+            morada=morad,
+            dataNascimento=nascimento,
+            aboutME=about
         )
         # insert user
         db.session.add(user)
@@ -152,3 +166,46 @@ def registar():
     else:
         # returns 202 if user already exists
         return make_response('User already exists. Please Log in.', 202)
+
+
+
+
+@auth_blueprint.route('/<int:id>/delete', methods=['GET','POST'])
+def delete(id):
+    user = Utilizador.query.filter_by(username=id).first()
+    if request.method == 'POST':
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return make_response('Utilizador removido com sucesso.', 200)
+ 
+    return make_response('Utilizador não existe', 204)
+
+
+
+#Editar utilizador
+@auth_blueprint.route('/<int:id>/update', methods=['GET','POST'])
+def updateUser():
+    user = Utilizador.query.filter_by(username=id).first()
+    data = request.form
+    if request.method == 'POST':
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            password = data.get('password')
+            firsName = data.get('firstName')
+            lastName = data.get('lastName')
+            email = data.get('email')
+            nrTelemovel = data.get('nrTelemovel')
+            #rating
+            morada = data.get('morada')
+            dataNascimento = data.get('dataNascimento')
+            #avatar
+            about = data.get('aboutMe')
+
+            user = Utilizador(username=id, password=password, firsName=firsName, lastName=lastName, email=email, nrTelemovel=nrTelemovel, morada=morada,dataNascimento=dataNascimento, aboutMe=about, rating=0)
+            db.session.add(user)
+            db.session.commit()
+        return make_response('Utilizador nao existe', 404)
+ 
+    return make_response('Utilizador atualizado com sucesso', 200)

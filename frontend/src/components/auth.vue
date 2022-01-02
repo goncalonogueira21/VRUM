@@ -104,7 +104,7 @@ computed: {
           payload.append('lastName',this.lastName);
           payload.append('firstName',this.firstName);
 
-          axios.post("http://localhost:5000/registo",payload)
+          axios.post("http://localhost:5000/utilizador/registo",payload)
               .then((response) => {
                 console.log(response.data)
                 this.$router.push({ name: 'auth' })
