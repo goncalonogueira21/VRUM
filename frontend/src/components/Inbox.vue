@@ -8,7 +8,7 @@
               class="flex-grow-1 flex-shrink-0"
               style="border-right: 1px solid #0000001f;"
             >
-              <v-responsive
+              <v-responsive v-if="activeChat==0"
                 class="overflow-y-auto fill-height"
                 height="500"
               >
@@ -61,6 +61,7 @@
                   class="d-flex flex-column fill-height"
                 >
                   <v-card-title>
+                    <v-icon class="mr-4" color="#7e380e" @click="activeChat=0"> mdi-arrow-left </v-icon>
                     {{(parents[activeChat-1]).title}}
                   </v-card-title>
                   <v-card-text class="flex-grow-1 overflow-y-auto">
@@ -113,8 +114,8 @@
                       no-details
                       outlined
                       append-outer-icon="mdi-send"
-                      @keyup.enter="messages.push(messageForm)"
-                      @click:append-outer="messages.push(messageForm)"
+                      @keyup.enter="sendMessage(messageForm)"
+                      @click:append-outer="sendMessage(messageForm)"
                       hide-details
                     />
                   </v-card-text>
@@ -208,6 +209,10 @@
     methods:{
       openMessageDialog(userDestino){
           console.log(userDestino)
+      },
+      sendMessage(msg){
+        this.messages.push(msg)
+        this.messageForm.content=''
       }
     } 
 }

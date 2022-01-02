@@ -2,19 +2,14 @@
   <v-data-table
     :headers="headers"
     :items="carros"
-    sort-by="calories"
+    :search="search"
+    sort-by="matricula"
     class="elevation-1"
   >
     <template v-slot:top>
       <v-toolbar
         flat
       >
-        <v-toolbar-title>Gestao de Carros</v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        ></v-divider>
         <v-spacer></v-spacer>
         <v-dialog
           v-model="dialog"
@@ -45,6 +40,7 @@
                     md="4"
                   >
                     <v-text-field
+                      color="#7e380e"
                       v-model="editedItem.matricula"
                       label="Matrícula"
                     ></v-text-field>
@@ -55,6 +51,7 @@
                     md="4"
                   >
                     <v-text-field
+                      color="#7e380e"
                       v-model="editedItem.marca"
                       label="Marca"
                     ></v-text-field>
@@ -65,6 +62,7 @@
                     md="4"
                   >
                     <v-text-field
+                      color="#7e380e"
                       v-model="editedItem.modelo"
                       label="Modelo"
                     ></v-text-field>
@@ -75,6 +73,7 @@
                     md="4"
                   >
                     <v-text-field
+                      color="#7e380e"
                       v-model="editedItem.ano"
                       label="Ano"
                     ></v-text-field>
@@ -85,10 +84,44 @@
                     md="4"
                   >
                     <v-text-field
+                      color="#7e380e"
                       v-model="editedItem.cor"
                       label="Cor"
                     ></v-text-field>
                   </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      color="#7e380e"
+                      v-model="editedItem.lugares"
+                      label="Lugares disponíveis"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      color="#7e380e"
+                      v-model="editedItem.combustivel"
+                      label="Tipo de combustível"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    
+                  >
+                    <label class="text-h6 mb-2 text--secondary">
+                        Inserir fotografia do carro  
+                        </label>
+                    <input class="text-h7 mb-2 text--secondary"  type="file" accept="image/*" @change="handleFileUpload( $event )"/>
+                    
+                </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -96,14 +129,14 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                color="blue darken-1"
+                color="#7e380e"
                 text
                 @click="close"
               >
                 Cancel
               </v-btn>
               <v-btn
-                color="blue darken-1"
+                color="#7e380e"
                 text
                 @click="save"
               >
@@ -114,26 +147,31 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+            <v-card-title color="#7e380e" class="text-h5">Are you sure you want to delete this item?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="#7e380e" text @click="closeDelete">Cancel</v-btn>
+              <v-btn color="#7e380e" text @click="deleteItemConfirm">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-toolbar>
     </template>
+    <template v-slot:item.foto="{ item }">
+          <img :src="item.foto" style="width: 50px; height: 50px" />
+    </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
+        color="#7e380e"
         small
         class="mr-2"
         @click="editItem(item)"
       >
         mdi-pencil
-      </v-icon>
+      </v-icon> 
       <v-icon
+        color="#7e380e"
         small
         @click="deleteItem(item)"
       >
@@ -148,6 +186,7 @@
     data: () => ({
       dialog: false,
       dialogDelete: false,
+      search:"",
       headers: [
         {
           text: 'Matrícula',
@@ -161,6 +200,7 @@
         { text: 'Cor', value: 'cor' },
         { text: 'Lugares', value: 'lugares' },
         { text: 'Combustivel', value: 'combustivel'},
+        { text: 'Foto', value: 'foto'},
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       carros: [],
@@ -172,7 +212,8 @@
         ano: '',
         cor: '',
         lugares: '',
-        combustivel: ''
+        combustivel: '',
+        foto:''
       },
       defaultItem: {
         matricula: '',
@@ -181,7 +222,8 @@
         ano: '',
         cor: '',
         lugares: '',
-        combustivel: ''
+        combustivel: '',
+        foto:''
       },
     }),
 
@@ -207,7 +249,14 @@
     methods: {
       initialize () {
         this.carros = [
-         
+          { matricula: '63-FC-51',
+        marca: 'Citroen',
+        modelo: 'C2',
+        ano: '2008',
+        cor: 'Preto',
+        lugares: '3',
+        combustivel: 'Diesel',
+        foto:'https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg'}
         ]
 
       },
@@ -253,6 +302,10 @@
         }
         this.close()
       },
-    },
+      handleFileUpload( event ){
+        const file = event.target.files[0];
+        this.editedItem.foto=URL.createObjectURL(file)
+    }
+    }
   }
 </script>

@@ -3,7 +3,13 @@ import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
 import store from "./store"
+import axios from "axios"
 import titleMixin from './mixins/titleMixin'
+
+const token = localStorage.getItem('user-token')
+if (token) {
+  axios.defaults.headers.common['Authorization'] = token
+}
 
 Vue.config.productionTip = false;
 
