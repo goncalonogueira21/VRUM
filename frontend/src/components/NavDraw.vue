@@ -86,7 +86,7 @@
       </v-list>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block>
+          <v-btn block @click="logout">
             <v-list-item-icon>
               <v-icon>mdi-exit-to-app</v-icon>
             </v-list-item-icon>
@@ -100,6 +100,7 @@
 
 <script>
 //import axios from 'axios'
+import {mapActions} from "vuex"
 export default {
   data() {
     return {
@@ -110,8 +111,12 @@ export default {
     };
   },
   methods: {
-    logout: function () {
-      //função de logout
+   ...mapActions({
+      logOut: 'auth/logOut'
+    }),
+    logout(){
+      this.logOut()
+      this.$router.push('/')
     },
     //função de fixação da barra de navegação lateral
     fixNav: function () {
@@ -120,8 +125,8 @@ export default {
       this.drawerOn = false;
       this.$nextTick(() => (this.drawerOn = true));
     },
-  },
-};
+  }
+}
 </script>
 
 <style scoped>

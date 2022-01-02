@@ -1,24 +1,26 @@
 <template>
-  <v-container id="user-profile-view" fluid tag="section">
+  <v-container id="formData-profile-view" fluid tag="section">
     <v-row justify="center">
       <v-col cols="12" md="4">
         <app-card class="mt-4 ml-16 text-center">
           <v-img
             class="rounded-circle elevation-8 mt-4 ml-4 d-inline-block"
-            src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
+            :src="this.formData.ava"
             width="128"
           />
-
+          
+          <input class="text-h7 mb-2 text--secondary" v-if="!readonly" type="file" accept="image/*" @change="handleFileUpload( $event )"/>
+         
           <v-card-text class="text-center">
             <h6 class="text-h6 mb-2 text--secondary">Rating</h6>
-
+ 
             <v-rating
               background-color="brown lighten-3"
               color="#7e380e"
-              :readonly="readonly"
+              readonly
               length="5"
               size="24"
-              v-model="this.user.rating"
+              v-model="this.formData.rating"
             />
 
             <h6 class="text-h6 mb-1 mt-4 text--secondary">About me</h6>
@@ -28,7 +30,7 @@
               solo
               class="ma-0 pa-0"
               hide-details
-              v-model="this.user.about"
+              v-model="this.formData.about"
               :readonly="readonly"
               row-height="10"
               auto-grow
@@ -43,7 +45,7 @@
             <v-row>
               <v-col cols="12" md="4">
                 <v-text-field
-                  v-model="this.user.username"
+                  v-model="this.formData.username"
                   :readonly="readonly"
                   color="#7e380e"
                   label="Username"
@@ -53,7 +55,7 @@
               <v-col cols="12" md="8">
                 <v-text-field
                   :readonly="readonly"
-                  v-model="this.user.email"
+                  v-model="this.formData.email"
                   color="#7e380e"
                   label="Email"
                 />
@@ -62,7 +64,7 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   :readonly="readonly"
-                  v-model="this.user.nomeProprio"
+                  v-model="this.formData.nomeProprio"
                   color="#7e380e"
                   label="Nome Próprio"
                 />
@@ -71,7 +73,7 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   :readonly="readonly"
-                  v-model="this.user.apelido"
+                  v-model="this.formData.apelido"
                   color="#7e380e"
                   label="Apelido"
                 />
@@ -80,7 +82,7 @@
               <v-col cols="12">
                 <v-text-field
                   :readonly="readonly"
-                  v-model="this.user.morada"
+                  v-model="this.formData.morada"
                   color="#7e380e"
                   label="Morada"
                 />
@@ -89,7 +91,7 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   :readonly="readonly"
-                  v-model="this.user.telemovel"
+                  v-model="this.formData.telemovel"
                   color="#7e380e"
                   label="Telemóvel"
                 />
@@ -98,7 +100,7 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   :readonly="readonly"
-                  v-model="this.user.dataNascimento"
+                  v-model="this.formData.dataNascimento"
                   color="#7e380e"
                   label="Data de Nascimento"
                 />
@@ -137,10 +139,10 @@
 import axios from "axios";
 
 export default {
-  name: "UserProfileView",
+  name: "formDataProfileView",
   data() {
     return {
-      user: {
+      formData: {
         username: "Gonçalo",
         email: "mail@mail.com",
         nomeProprio: "Antonio",
@@ -155,19 +157,26 @@ export default {
         rating: "3",
         about:
           "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione dolorem deserunt veniam tempora magnam quisquam quam error iusto cupiditate ducimus, et eligendi saepe voluptatibus assumenda similique temporibus placeat animi dicta?",
+        ava:'https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg'
       },
       readonly: true,
+      url:''
     };
+  },
+  mounted(){
+    
   },
   methods: {
     edit() {
       this.readonly = !this.readonly;
-    },
+    },  
     save() {
-      const payload = this.user;
+      const payload = JSON.stringify(this.formData);
       this.readonly = !this.readonly;
       axios
-        .put("http://localhost:5000/users/" + this.user.username, payload)
+        .put("http://localhost:5000/users/" + this.formData.username, payload,{
+           headers: {'Content-Type': 'multipart/form-data' }
+          })
         .then(
           (response) => {
             console.log(response.data);
@@ -176,7 +185,11 @@ export default {
             console.log(error);
           }
         );
-    },
+      },
+      handleFileUpload( event ){
+        const file = event.target.files[0];
+        this.formData.ava=URL.createObjectURL(file)
+    }
   },
 };
 </script>
