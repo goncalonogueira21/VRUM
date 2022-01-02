@@ -43,6 +43,9 @@
                                             <v-text-field v-model="lastName" :rules="[rules.required]" label="Last Name" maxlength="20" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
+                                            <v-text-field v-model="username" :rules="[rules.required]" label="Username" required></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
                                             <v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
@@ -98,7 +101,7 @@ computed: {
       },
       validateRegister(){
           var payload = new FormData();
-          payload.append('username',this.firstName);
+          payload.append('username',this.username);
           payload.append('email',this.email);
           payload.append('password',this.password);
           payload.append('lastName',this.lastName);
@@ -130,6 +133,7 @@ computed: {
     firstName: "",
     lastName: "",
     email: "",
+    username:"",
     password: "",
     verify: "",
     loginPassword: "",

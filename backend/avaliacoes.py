@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, make_response, request
-from sqlalchemy.sql import text, Date
+from sqlalchemy import text, Date
 
 
 avaliacao_blueprint = Blueprint('avaliacao_blueprint', __name__)

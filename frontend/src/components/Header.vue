@@ -37,9 +37,7 @@ export default {
     };
   },
   methods: {
-    logout: function () {
-      //Função de logout
-    },
+   
     openNavDraw() {
       this.drawer = !this.drawer
       this.$emit('clicked',this.drawer)
