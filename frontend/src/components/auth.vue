@@ -110,7 +110,7 @@ computed: {
           axios.post("http://localhost:5000/utilizador/registo",payload)
               .then((response) => {
                 console.log(response.data)
-                this.$router.push({ name: 'auth' })
+                this.$router.go()
               },(error)=> {
                 console.log(error);
               });
