@@ -4,18 +4,18 @@ export default {
     namespaced: true,
     state:{
         token: localStorage.getItem('user-token') || '',
-        user:   localStorage.getItem('user-email') || '',
+        username:   localStorage.getItem('username') || '',
     },
     mutations:{
         SET_TOKEN (state,token){
             state.token=token
         },
-        SET_USER(state,mail){
-            state.user=mail
+        SET_USER(state,username){
+            state.username=username
         },
         USER_LOGOUT(state){
             state.token=''
-            state.user=''
+            state.username=''
         }
     },
     actions:{
@@ -25,9 +25,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' } 
                 })
             commit('SET_TOKEN', response.data.token)
-            commit('SET_USER',credentials.email)
+            commit('SET_USER',credentials.username)
             localStorage.setItem('user-token', response.data.token)
-            localStorage.setItem('user-email', credentials.email)
+            localStorage.setItem('username', credentials.username)
             return response;
             } catch(error) {
                 localStorage.removeItem('user-token')
@@ -37,7 +37,7 @@ export default {
         logOut({commit}){
             commit('USER_LOGOUT')
             localStorage.removeItem('user-token')
-            localStorage.removeItem('user-email')
+            localStorage.removeItem('username')
         }
     },
     getters: {

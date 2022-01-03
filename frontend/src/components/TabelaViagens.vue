@@ -17,6 +17,8 @@
 </template>
 
 <script>
+//import axios from 'axios'
+
 export default {
   name: "Home",
   data: () => {
@@ -85,5 +87,19 @@ export default {
       ],
     };
   },
+  /*created(){
+    this.initialize()
+  },
+  methods: {
+    initialize(){
+      axios.get('http://localhost:5000/viagem/todas')
+        .then((response)=>{
+
+        })
+        .catch((error)=> {
+          console.log(error)
+        })
+    }
+  }*/
 };
 </script>

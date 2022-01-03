@@ -8,6 +8,8 @@ from flask_cors import cross_origin
 
 import json
 
+from werkzeug.wrappers import response
+
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
 from __init__ import db, app
@@ -33,8 +35,9 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
         # jwt is passed in the request header
-        if 'X-Aceess-Token' in request.headers:
-            token = request.headers['X-Aceess-Token']
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization']
+            
         # return 401 if token is not passed
         if not token:
             return jsonify({'message': 'Token is missing!'}), 401
@@ -86,16 +89,16 @@ def login():
     # creates dictionary of form data
     # auth = request.form
     auth = json.loads(request.data)
-    if not auth or not auth['email'] or not auth['password']:
-        # returns 401 if any email or / and password is missing
+    if not auth or not auth['username'] or not auth['password']:
+        # returns 401 if any username or / and password is missing
         return make_response(
-            'Não foi possível verificar o login',
+            'Não foi possível verificar o username',
             401,
             {'WWW-Authenticate': 'Basic realm ="Login required!"'}
         )
 
     user = Utilizador.query \
-        .filter_by(email=auth['email']) \
+        .filter_by(username=auth['username']) \
         .first()
 
     if not user:
@@ -167,6 +170,29 @@ def registar():
         # returns 202 if user already exists
         return make_response('User already exists. Please Log in.', 202)
 
+#get user info by username
+@auth_blueprint.route('/<string:id>', methods=['GET'])
+@cross_origin()
+def get(id):
+    user = Utilizador.query.filter_by(username=id).first()
+    output = []
+    if request.method == 'GET':
+        if user:
+            output.append({
+                'username': user.username,
+                'firstName': user.firstName,
+                'lastName': user.lastName,
+                'email': user.email,
+                'nrTelemovel': user.nrTelemovel,
+                'rating': user.rating,
+                'morada': user.morada,
+                'dataNascimento': user.dataNascimento,
+                'aboutME': user.aboutME
+            })
+            return make_response(jsonify(output), 200)
+    return make_response('Utilizador não existe', 204)
+
+
 
 
 
@@ -184,28 +210,27 @@ def delete(id):
 
 
 #Editar utilizador
-@auth_blueprint.route('/<int:id>/update', methods=['GET','POST'])
-def updateUser():
-    user = Utilizador.query.filter_by(username=id).first()
-    data = request.form
-    if request.method == 'POST':
-        if user:
-            db.session.delete(user)
-            db.session.commit()
-            password = data.get('password')
-            firsName = data.get('firstName')
-            lastName = data.get('lastName')
-            email = data.get('email')
-            nrTelemovel = data.get('nrTelemovel')
-            #rating
-            morada = data.get('morada')
-            dataNascimento = data.get('dataNascimento')
-            #avatar
-            about = data.get('aboutMe')
+@auth_blueprint.route('/<string:id>/update', methods=['Put'])
 
-            user = Utilizador(username=id, password=password, firsName=firsName, lastName=lastName, email=email, nrTelemovel=nrTelemovel, morada=morada,dataNascimento=dataNascimento, aboutMe=about, rating=0)
-            db.session.add(user)
-            db.session.commit()
-        return make_response('Utilizador nao existe', 404)
- 
-    return make_response('Utilizador atualizado com sucesso', 200)
+def updateUser(id):
+    
+    user = Utilizador.query.get(id)
+    
+    if user is not None:
+        data=request.form
+
+    
+
+        for d in data:
+            #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
+            setattr(user,d,data.get(d))
+            
+        
+        db.session.commit()
+        
+
+        
+
+        return make_response('User atualizado com sucesso', 200)
+    else:
+        return make_response('User nao existe', 404)

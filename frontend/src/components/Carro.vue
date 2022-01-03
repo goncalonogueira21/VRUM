@@ -182,6 +182,9 @@
 </template>
 
 <script>
+import axios from "axios"
+import {mapState} from "vuex"
+
   export default {
     data: () => ({
       dialog: false,
@@ -227,11 +230,14 @@
       },
     }),
 
-    computed: {
+    computed: 
+      mapState({
+        username: state => state.auth.username
+        }),
+        
       formTitle () {
         return this.editedIndex === -1 ? 'Novo Carro' : 'Editar Carro'
       },
-    },
 
     watch: {
       dialog (val) {
@@ -248,17 +254,12 @@
 
     methods: {
       initialize () {
-        this.carros = [
-          { matricula: '63-FC-51',
-        marca: 'Citroen',
-        modelo: 'C2',
-        ano: '2008',
-        cor: 'Preto',
-        lugares: '3',
-        combustivel: 'Diesel',
-        foto:'https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg'}
-        ]
-
+          axios.get("http://localhost:5000/carro/" + this.username)
+              .then((response)=>{
+                this.carros=response.data.Carros
+              }).catch((error)=>{
+                console.log(error)
+              })
       },
 
       editItem (item) {
@@ -295,6 +296,23 @@
       },
 
       save () {
+        var payload = new FormData();
+        payload.append('matricula', this.editedItem.matricula);
+        payload.append('fk_Utilizador_username', this.username );
+        payload.append('modelo',this.editedItem.modelo );
+        payload.append('tipoFuel', this.editedItem.combustivel);
+        payload.append('cor',this.editedItem.cor );
+        payload.append('lugares',this.editedItem.lugares );
+        payload.append('ano', this.editedItem.ano);
+
+        axios.post("http://localhost:5000/carro/registo", payload)
+          .then((response)=>{
+              console.log(response)
+          })
+          .catch((error)=>{
+            console.log(error)
+          })
+
         if (this.editedIndex > -1) {
           Object.assign(this.carros[this.editedIndex], this.editedItem)
         } else {

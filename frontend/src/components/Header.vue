@@ -14,7 +14,7 @@
     <v-list-item-group>
       <v-list-item disabled dark>
         <v-list-item-content>
-          <v-list-item-title>Nome do utilizador</v-list-item-title>
+          <v-list-item-title> {{username}} </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list-item-group>
@@ -22,13 +22,12 @@
 </template>
 
 <script>
-//import axios from 'axios'
-//import NavDraw from "../NavDraw.vue"
+import {mapState} from "vuex"
 
 export default {
-  components: {
-    //'navDraw':NavDraw
-  },
+  computed: mapState({
+      username: state => state.auth.username
+    }),
   data() {
     return {
       parametro: "",

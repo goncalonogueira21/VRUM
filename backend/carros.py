@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, make_response, request
+from flask_cors.decorator import cross_origin
 from sqlalchemy.sql import text
 
 
@@ -21,8 +22,8 @@ def testdb():
 
 
 #Obter carros de um utilizador
-@carro_blueprint.route('/<int:id>', methods=['GET'])
-def get_all_carros():
+@carro_blueprint.route('/<string:id>', methods=['GET'])
+def get_all_carros(id):
     # querying the database
     # for all the entries in it
     carros=Carro.query.filter(Carro.fk_Utilizador_username==id)
@@ -37,7 +38,7 @@ def get_all_carros():
             'matricula': carro.matricula,
             'condutor': carro.fk_Utilizador_username,
             'modelo': carro.modelo,
-            'tipoFuel': carro.tipoFuel,
+            'combustivel': carro.tipoFuel,
             'cor': carro.cor,
             'lugares': carro.lugares,
             'foto': carro.foto
@@ -62,6 +63,7 @@ def registar():
     tipoFuel = data.get('tipoFuel')
     cor = data.get('cor')
     lugares = data.get('lugares')
+    ano= data.get('ano')
     #foto = data.get('foto')
     
     # checking for existing carro
@@ -72,11 +74,12 @@ def registar():
         # database ORM object
         carro = Carro(
             matricula = matricula,
-            condutor = condutor,
+            fk_Utilizador_username = condutor,
             modelo = modelo,
             tipoFuel = tipoFuel,
             cor = cor,
-            lugares = lugares
+            lugares = lugares,
+            ano=ano
         )
         # insert carro
         db.session.add(carro)
