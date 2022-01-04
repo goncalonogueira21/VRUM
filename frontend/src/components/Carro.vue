@@ -22,13 +22,14 @@
               class="mb-2"
               v-bind="attrs"
               v-on="on"
+              @click="formTitle()"
             >
               ADICIONAR CARRO
             </v-btn>
           </template>
           <v-card>
             <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
+              <span class="text-h5">{{ formTitle1 }}</span>
             </v-card-title>
 
             <v-card-text>
@@ -40,6 +41,8 @@
                     md="4"
                   >
                     <v-text-field
+                      :rules="[rules.required]"
+                      required
                       color="#7e380e"
                       v-model="editedItem.matricula"
                       label="Matrícula"
@@ -51,6 +54,8 @@
                     md="4"
                   >
                     <v-text-field
+                      :rules="[rules.required]"
+                      required
                       color="#7e380e"
                       v-model="editedItem.marca"
                       label="Marca"
@@ -62,6 +67,8 @@
                     md="4"
                   >
                     <v-text-field
+                      :rules="[rules.required]"
+                      required
                       color="#7e380e"
                       v-model="editedItem.modelo"
                       label="Modelo"
@@ -73,6 +80,8 @@
                     md="4"
                   >
                     <v-text-field
+                      :rules="[rules.required]"
+                      required
                       color="#7e380e"
                       v-model="editedItem.ano"
                       label="Ano"
@@ -84,6 +93,8 @@
                     md="4"
                   >
                     <v-text-field
+                      :rules="[rules.required]"
+                      required
                       color="#7e380e"
                       v-model="editedItem.cor"
                       label="Cor"
@@ -95,6 +106,8 @@
                     md="4"
                   >
                     <v-text-field
+                      :rules="[rules.required]"
+                      required
                       color="#7e380e"
                       v-model="editedItem.lugares"
                       label="Lugares disponíveis"
@@ -106,6 +119,8 @@
                     md="4"
                   >
                     <v-text-field
+                      :rules="[rules.required]"
+                      required
                       color="#7e380e"
                       v-model="editedItem.combustivel"
                       label="Tipo de combustível"
@@ -166,7 +181,7 @@
         color="#7e380e"
         small
         class="mr-2"
-        @click="editItem(item)"
+        @click="editItem(item), formTitle()"
       >
         mdi-pencil
       </v-icon> 
@@ -182,7 +197,6 @@
 </template>
 
 <script>
-import axios from "axios"
 import {mapState} from "vuex"
 
   export default {
@@ -216,7 +230,7 @@ import {mapState} from "vuex"
         cor: '',
         lugares: '',
         combustivel: '',
-        foto:''
+        foto:'',
       },
       defaultItem: {
         matricula: '',
@@ -226,8 +240,13 @@ import {mapState} from "vuex"
         cor: '',
         lugares: '',
         combustivel: '',
-        foto:''
+        foto:'',
       },
+      formTitle1:'',
+      rules: {
+      required: value => !!value || "Required.",
+      },
+      file:''
     }),
 
     computed: 
@@ -235,10 +254,7 @@ import {mapState} from "vuex"
         username: state => state.auth.username
         }),
         
-      formTitle () {
-        return this.editedIndex === -1 ? 'Novo Carro' : 'Editar Carro'
-      },
-
+      
     watch: {
       dialog (val) {
         val || this.close()
@@ -253,8 +269,12 @@ import {mapState} from "vuex"
     },
 
     methods: {
+      formTitle () {
+        return this.editedIndex === -1 ? this.formTitle1='Novo Carro' : this.formTitle1='Editar Carro'
+      },
+
       initialize () {
-          axios.get("http://localhost:5000/carro/" + this.username)
+          this.$request("get","carro/" + this.username)
               .then((response)=>{
                 this.carros=response.data.Carros
               }).catch((error)=>{
@@ -263,6 +283,7 @@ import {mapState} from "vuex"
       },
 
       editItem (item) {
+
         this.editedIndex = this.carros.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
@@ -275,6 +296,13 @@ import {mapState} from "vuex"
       },
 
       deleteItemConfirm () {
+        this.$request("delete","carro/" + this.editedItem.matricula + "/remove")
+          .then((response)=>{
+            console.log(response)
+          }).catch((error)=>{
+            console.log(error)
+          })
+
         this.carros.splice(this.editedIndex, 1)
         this.closeDelete()
       },
@@ -304,14 +332,28 @@ import {mapState} from "vuex"
         payload.append('cor',this.editedItem.cor );
         payload.append('lugares',this.editedItem.lugares );
         payload.append('ano', this.editedItem.ano);
+        payload.append('foto', this.file)
+        
 
-        axios.post("http://localhost:5000/carro/registo", payload)
+        if (this.editedIndex > -1) {
+          this.$request("put", "carro/" + this.editedItem.matricula + "/update", payload)
           .then((response)=>{
+            console.log(response)
+          }).catch((error)=>{
+            console.log(error)
+          })
+          
+        } else {
+          this.$request("post","carro/registo", payload, {'Content-Type': ' multipart/form-data'} )
+          .then((response)=>{
+            console.log(payload.foto)
               console.log(response)
           })
           .catch((error)=>{
             console.log(error)
           })
+          
+        }
 
         if (this.editedIndex > -1) {
           Object.assign(this.carros[this.editedIndex], this.editedItem)
@@ -319,10 +361,11 @@ import {mapState} from "vuex"
           this.carros.push(this.editedItem)
         }
         this.close()
+        
       },
       handleFileUpload( event ){
-        const file = event.target.files[0];
-        this.editedItem.foto=URL.createObjectURL(file)
+        this.file = event.target.files[0];
+        this.editedItem.foto=URL.createObjectURL(this.file)
     }
     }
   }

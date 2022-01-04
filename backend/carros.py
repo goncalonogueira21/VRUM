@@ -41,7 +41,8 @@ def get_all_carros(id):
             'combustivel': carro.tipoFuel,
             'cor': carro.cor,
             'lugares': carro.lugares,
-            'foto': carro.foto
+            'foto': carro.foto,
+            'ano' : carro.ano
             
         })
 
@@ -64,7 +65,7 @@ def registar():
     cor = data.get('cor')
     lugares = data.get('lugares')
     ano= data.get('ano')
-    #foto = data.get('foto')
+    foto = data.get('foto')
     
     # checking for existing carro
     carro = Carro.query \
@@ -79,7 +80,8 @@ def registar():
             tipoFuel = tipoFuel,
             cor = cor,
             lugares = lugares,
-            ano=ano
+            ano= ano,
+            foto=foto
         )
         # insert carro
         db.session.add(carro)
@@ -88,12 +90,12 @@ def registar():
         return make_response('Successfully registered.', 201)
     else:
         # returns 202 if user already exists
-        return make_response('Esta viagem ja existe.', 202)
+        return make_response('Este carro ja existe.', 202)
 
 
 
 #Eliminar Carro
-@carro_blueprint.route('/<matricula>/remove', methods=['Delete'])
+@carro_blueprint.route('/<string:matricula>/remove', methods=['Delete'])
 def eliminarCarro(matricula):
     print ('its working--Delete group')
     if Carro.query.filter_by(matricula=matricula).first() is not None:
@@ -107,25 +109,26 @@ def eliminarCarro(matricula):
 
 #Editar carro
 #/update?matricula=matr
-@carro_blueprint.route('/update', methods=['GET','POST'])
-def updateCarro():
-    matr = request.args.get('matricula')
-    carro = Carro.query.filter_by(matricula=matr).first()
+@carro_blueprint.route('/<string:matricula>/update', methods=['Put'])
+def updateCarro(matricula):
+    
+    carro = Carro.query.get(matricula)
+    
+    if carro is not None:
+        data=request.form
 
-    if request.method == 'POST':
-        if carro:
-            db.session.delete(carro)
-            db.session.commit()
-            modelo = request.form['modelo']
-            ano = request.form['ano']
-            tipoFuel = request.form['tipoFuel']
-            cor = request.form['cor']
-            lugares = request.form['lugares']
-            #foto
-            carro = Carro(matricula=matr, modelo=modelo, ano=ano, tipoFuel=tipoFuel, cor=cor,lugares=lugares)
-            db.session.add(carro)
-            db.session.commit()
+    
+
+        for d in data:
+            #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
+            setattr(carro,d,data.get(d))
+            
+        
+        db.session.commit()
+        
+
+        
+
+        return make_response('Carro atualizado com sucesso', 200)
+    else:
         return make_response('Carro nao existe', 404)
- 
-    return make_response('Carro atualizado com sucesso', 200)
-
