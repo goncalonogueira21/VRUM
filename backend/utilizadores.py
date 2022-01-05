@@ -1,10 +1,16 @@
+import sys
+from typing import ByteString
 import jwt
 from functools import wraps
 from flask import request, jsonify, make_response, Blueprint
+from sqlalchemy.dialects.mysql import base
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
 from datetime import datetime, timedelta
 from flask_cors import cross_origin
+import base64
+from PIL import Image
+import io
 
 import json
 
@@ -57,10 +63,10 @@ def token_required(f):
 
     return decorated
 
-
+#obter todos os utilizadores
 @auth_blueprint.route('/todos', methods=['GET'])
-@token_required
-def get_all_users(current_user):
+#@token_required
+def get_all_users():
     # querying the database
     # for all the entries in it
     users = Utilizador.query.all()
@@ -125,9 +131,27 @@ def login():
     )
 
 
+#para testar as imagens
+@auth_blueprint.route('/testeImagem', methods=['POST'])
+@cross_origin()
+def registar2():
+    # creates a dictionary of the form data
+        data=request.form
+        texto=data.get('avatar')
+        avatar=base64.b64decode(texto)
+        #foto = "".join(["{:08b}".format(x) for x in foto1])
+        avatarencoded=base64.b64encode(avatar)
+        #PARA TIRAR O B E AS PELICAS
+        final = str(avatarencoded, 'UTF-8')
+        print(final)
+        #fotoencoded=base64.b64encode(ByteString)
+        
+        return make_response('E TASS', 201)
+    
 @auth_blueprint.route('/registo', methods=['POST'])
 @cross_origin()
 def registar():
+    db.session.rollback()
     # creates a dictionary of the form data
     data = request.form
 
@@ -140,11 +164,11 @@ def registar():
     rat=data.get('rating')
     morad=data.get('morada')
     nascimento=data.get('dataNascimento')
-    #avatar
+    avatardecoded=base64.b64decode(data.get('avatar'))
     about=data.get('aboutME')
     # checking for existing user
     user = Utilizador.query \
-        .filter_by(email=email) \
+        .filter_by(username=username) \
         .first()
     if not user:
         # database ORM object
@@ -159,6 +183,7 @@ def registar():
             rating=rat,
             morada=morad,
             dataNascimento=nascimento,
+            avatar=avatardecoded,
             aboutME=about
         )
         # insert user
@@ -187,7 +212,9 @@ def get(id):
                 'rating': user.rating,
                 'morada': user.morada,
                 'dataNascimento': user.dataNascimento,
-                'aboutME': user.aboutME
+                'aboutME': user.aboutME,
+                'avatar': str(base64.b64encode(user.avatar),'UTF-8')
+        
             })
             return make_response(jsonify(output), 200)
     return make_response('Utilizador não existe', 204)
@@ -223,7 +250,10 @@ def updateUser(id):
 
         for d in data:
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
-            setattr(user,d,data.get(d))
+            if(d=='avatar'):
+                setattr(user,d,base64.b64decode(data.get(d)))
+            else:
+                setattr(user,d,data.get(d))
             
         
         db.session.commit()
