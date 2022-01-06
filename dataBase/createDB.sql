@@ -31,6 +31,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `vrum`.`carro` (
   `matricula` VARCHAR(45) NOT NULL,
   `fk_Utilizador_username` VARCHAR(45) NOT NULL,
+  `marca` VARCHAR(45) NOT NULL,
   `modelo` VARCHAR(45) NOT NULL,
   `ano` INT NOT NULL,
   `tipoFuel` VARCHAR(45) NOT NULL,

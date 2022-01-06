@@ -4,17 +4,16 @@ import jwt
 from functools import wraps
 from flask import request, jsonify, make_response, Blueprint
 from sqlalchemy.dialects.mysql import base
+from sqlalchemy.sql.expression import null
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
 from datetime import datetime, timedelta
 from flask_cors import cross_origin
 import base64
-from PIL import Image
 import io
 
 import json
 
-from werkzeug.wrappers import response
 
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
@@ -160,12 +159,11 @@ def registar():
     password = data.get('password')
     firstname=data.get('firstName')
     lastname=data.get('lastName')
-    telemovel=data.get('nrTelemovel')
-    rat=data.get('rating')
-    morad=data.get('morada')
-    nascimento=data.get('dataNascimento')
-    avatardecoded=base64.b64decode(data.get('avatar'))
-    about=data.get('aboutME')
+    #telemovel=data.get('nrTelemovel')
+    #rat=data.get('rating')
+    #morad=data.get('morada')
+    #nascimento=data.get('dataNascimento')
+    #about=data.get('aboutME')
     # checking for existing user
     user = Utilizador.query \
         .filter_by(username=username) \
@@ -178,13 +176,7 @@ def registar():
             email=email,
             password=generate_password_hash(password),
             firstName=firstname,
-            lastName=lastname,
-            nrTelemovel=telemovel,
-            rating=rat,
-            morada=morad,
-            dataNascimento=nascimento,
-            avatar=avatardecoded,
-            aboutME=about
+            lastName=lastname
         )
         # insert user
         db.session.add(user)
@@ -203,6 +195,10 @@ def get(id):
     output = []
     if request.method == 'GET':
         if user:
+            if (user.avatar) : 
+                ava = str(base64.b64encode(user.avatar),'UTF-8')
+            else : 
+               ava = ''
             output.append({
                 'username': user.username,
                 'firstName': user.firstName,
@@ -211,9 +207,9 @@ def get(id):
                 'nrTelemovel': user.nrTelemovel,
                 'rating': user.rating,
                 'morada': user.morada,
-                'dataNascimento': user.dataNascimento,
+                'dataNascimento': str(user.dataNascimento),
                 'aboutME': user.aboutME,
-                'avatar': str(base64.b64encode(user.avatar),'UTF-8')
+                'avatar':  ava
         
             })
             return make_response(jsonify(output), 200)
@@ -251,7 +247,7 @@ def updateUser(id):
         for d in data:
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
             if(d=='avatar'):
-                setattr(user,d,base64.b64decode(data.get(d)))
+                setattr(user,d,base64.b64decode(data.get(d)))   
             else:
                 setattr(user,d,data.get(d))
             

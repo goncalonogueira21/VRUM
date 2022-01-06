@@ -3,6 +3,8 @@ from flask_cors.decorator import cross_origin
 from sqlalchemy.sql import text
 import base64
 
+from sqlalchemy.sql.elements import Null
+
 carro_blueprint = Blueprint('carro_blueprint', __name__)
 
 from __init__ import db, app
@@ -32,17 +34,23 @@ def get_all_carros(id):
     # to list of jsons
     output = []
     for carro in carros:
+        if (carro.foto) : 
+            foto = str(base64.b64encode(carro.foto),'UTF-8')
+        else : 
+            foto = ''
         # appending the user data json
         # to the response list
         output.append({
             'matricula': carro.matricula,
             'condutor': carro.fk_Utilizador_username,
+            'marca' : carro.marca,
             'modelo': carro.modelo,
             'combustivel': carro.tipoFuel,
             'cor': carro.cor,
             'lugares': carro.lugares,
             'foto': carro.foto,
-            'ano' : carro.ano
+            'ano' : carro.ano,
+            'foto': foto
             
         })
 
@@ -60,14 +68,17 @@ def registar():
     # gets all attributes
     matricula = data.get('matricula')
     condutor = data.get('fk_Utilizador_username')
+    marca = data.get('marca')
     modelo = data.get('modelo')
     tipoFuel = data.get('tipoFuel')
     cor = data.get('cor')
     lugares = data.get('lugares')
     ano= data.get('ano')
+    if data.get('foto'):
+        foto= base64.b64decode(data.get('foto'))
+    else:
+        foto = Null
     
-    #foto1= base64.b64decode(data.get('foto'))
-    #foto = "".join(["{:08b}".format(x) for x in foto1])
     # checking for existing carro
     carro = Carro.query \
         .filter_by(matricula=matricula) \
@@ -77,12 +88,13 @@ def registar():
         carro = Carro(
             matricula = matricula,
             fk_Utilizador_username = condutor,
+            marca=marca,
             modelo = modelo,
             tipoFuel = tipoFuel,
             cor = cor,
             lugares = lugares,
             ano= ano,
-            #foto=foto
+            foto=foto
         )
         # insert carro
         db.session.add(carro)
@@ -121,7 +133,10 @@ def updateCarro(matricula):
 
         for d in data:
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
-            setattr(carro,d,data.get(d))
+            if(d=='foto'):
+                setattr(carro,d,base64.b64decode(data.get(d)))   
+            else:
+                setattr(carro,d,data.get(d))
             
         
         db.session.commit()

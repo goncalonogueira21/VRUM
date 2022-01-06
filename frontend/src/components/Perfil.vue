@@ -5,7 +5,7 @@
         <app-card class="mt-4 ml-16 text-center">
           <v-img
             class="rounded-circle elevation-8 mt-4 ml-4 d-inline-block"
-            :src="formData.ava"
+            :src="`data:image/png;base64,${formData.ava}`"
             width="128"
           />
           
@@ -154,12 +154,12 @@ export default {
         morada: "",
         dataNascimento:"",
         rating:0 ,
-        about:
-          "",
-        ava:'https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg'
+        about:"",
+        ava:''
       },
       readonly: true,
       url:'',
+      base64:''
     };
   },
   created(){
@@ -181,6 +181,8 @@ export default {
             this.formData.dataNascimento = resp.dataNascimento
             this.formData.rating = resp.rating
             this.formData.about = resp.aboutME
+            this.formData.ava = resp.avatar
+
         })
         .catch((error)=>{
           console.log(error)
@@ -197,9 +199,11 @@ export default {
       payload.append( 'lastName', this.formData.apelido);
       payload.append('nrTelemovel', this.formData.telemovel); 
       payload.append( 'morada', this.formData.morada); 
-      //payload.append( 'dataNascimento', this.formData.dataNascimento); 
-      payload.append( 'aboutMe', this.formData.about);
-      console.log(payload)
+      payload.append( 'dataNascimento', this.formData.dataNascimento); 
+      payload.append( 'aboutME', this.formData.about);
+      payload.append( 'avatar', this.formData.ava);
+      
+      
 
       this.readonly = !this.readonly;
       axios
@@ -217,7 +221,15 @@ export default {
       },
       handleFileUpload( event ){
         const file = event.target.files[0];
-        this.formData.ava=URL.createObjectURL(file)
+         const reader = new FileReader()
+
+          reader.onloadend = () => {
+             this.formData.ava= reader.result.split(',')[1]
+
+          }
+          reader.readAsDataURL(file);
+
+
     },
   },
 };
