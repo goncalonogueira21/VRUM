@@ -246,7 +246,7 @@ import {mapState} from "vuex"
       rules: {
       required: value => !!value || "Required.",
       },
-      file:''
+      base64:''
     }),
 
     computed: 
@@ -333,6 +333,7 @@ import {mapState} from "vuex"
         payload.append('lugares',this.editedItem.lugares );
         payload.append('ano', this.editedItem.ano);
         payload.append('foto', this.file)
+
         
 
         if (this.editedIndex > -1) {
@@ -346,7 +347,6 @@ import {mapState} from "vuex"
         } else {
           this.$request("post","carro/registo", payload, {'Content-Type': ' multipart/form-data'} )
           .then((response)=>{
-            console.log(payload.foto)
               console.log(response)
           })
           .catch((error)=>{
@@ -365,8 +365,19 @@ import {mapState} from "vuex"
       },
       handleFileUpload( event ){
         this.file = event.target.files[0];
+        const reader = new FileReader()
+
+          reader.onloadend = () => {
+            this.base64 = (reader.result).split(",")[1];
+
+            console.log(this.base64);
+          }
+          reader.readAsDataURL(this.file);
+
+
         this.editedItem.foto=URL.createObjectURL(this.file)
-    }
+    },
+    
     }
   }
 </script>

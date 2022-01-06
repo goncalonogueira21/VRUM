@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, make_response, request
 from flask_cors.decorator import cross_origin
 from sqlalchemy.sql import text
-
+import base64
 
 carro_blueprint = Blueprint('carro_blueprint', __name__)
 
@@ -65,8 +65,9 @@ def registar():
     cor = data.get('cor')
     lugares = data.get('lugares')
     ano= data.get('ano')
-    foto = data.get('foto')
     
+    #foto1= base64.b64decode(data.get('foto'))
+    #foto = "".join(["{:08b}".format(x) for x in foto1])
     # checking for existing carro
     carro = Carro.query \
         .filter_by(matricula=matricula) \
@@ -81,7 +82,7 @@ def registar():
             cor = cor,
             lugares = lugares,
             ano= ano,
-            foto=foto
+            #foto=foto
         )
         # insert carro
         db.session.add(carro)
@@ -97,7 +98,6 @@ def registar():
 #Eliminar Carro
 @carro_blueprint.route('/<string:matricula>/remove', methods=['Delete'])
 def eliminarCarro(matricula):
-    print ('its working--Delete group')
     if Carro.query.filter_by(matricula=matricula).first() is not None:
         Carro.query.filter_by(matricula=matricula).delete()
         db.session.commit()
