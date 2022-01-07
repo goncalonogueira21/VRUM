@@ -10,19 +10,6 @@ carro_blueprint = Blueprint('carro_blueprint', __name__)
 from __init__ import db, app
 from models import Carro
 
-#TODO
-
-@carro_blueprint.route('/')
-def testdb():
-    try:
-        print(db.session.query(text('show tables')))  # .from_statement(text('SELECT 1')).all()
-        return '<h1>It works.</h1>'
-    except Exception as e:
-        # see Terminal for description of the error
-        print("\nThe error:\n" + str(e) + "\n")
-        return '<h1>Something is broken.</h1>'
-
-
 #Obter carros de um utilizador
 @carro_blueprint.route('/<string:id>', methods=['GET'])
 def get_all_carros(id):
@@ -34,9 +21,9 @@ def get_all_carros(id):
     # to list of jsons
     output = []
     for carro in carros:
-        if (carro.foto) : 
+        if (carro.foto) :
             foto = str(base64.b64encode(carro.foto),'UTF-8')
-        else : 
+        else :
             foto = ''
         # appending the user data json
         # to the response list
@@ -51,7 +38,7 @@ def get_all_carros(id):
             'foto': carro.foto,
             'ano' : carro.ano,
             'foto': foto
-            
+
         })
 
     response = jsonify({'Carros': output})

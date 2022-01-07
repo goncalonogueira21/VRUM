@@ -7,20 +7,6 @@ avaliacao_blueprint = Blueprint('avaliacao_blueprint', __name__)
 from __init__ import db, app
 from models import Avaliacao, Utilizador, Viagem
 
-#TODO
-
-@avaliacao_blueprint.route('/')
-def testdb():
-    try:
-        print(db.session.query(text('show tables')))  # .from_statement(text('SELECT 1')).all()
-        return '<h1>It works.</h1>'
-    except Exception as e:
-        # see Terminal for description of the error
-        print("\nThe error:\n" + str(e) + "\n")
-        return '<h1>Something is broken.</h1>'		
-
-
-
 #Regista a avaliação do condutor de uma determinada viagem
 @avaliacao_blueprint.route('/<int:id>', methods=['POST'])
 def rate_user():

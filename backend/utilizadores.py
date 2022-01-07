@@ -159,11 +159,15 @@ def registar():
     password = data.get('password')
     firstname=data.get('firstName')
     lastname=data.get('lastName')
-    #telemovel=data.get('nrTelemovel')
-    #rat=data.get('rating')
-    #morad=data.get('morada')
-    #nascimento=data.get('dataNascimento')
-    #about=data.get('aboutME')
+    telemovel=data.get('nrTelemovel')
+    rat=data.get('rating')
+    morad=data.get('morada')
+    nascimento=data.get('dataNascimento')
+    about=data.get('aboutME')
+    if data.get('avatar'):
+        avatar= base64.b64decode(data.get('avatar'))
+    else:
+        avatar = base64.b64decode('')
     # checking for existing user
     user = Utilizador.query \
         .filter_by(username=username) \
@@ -172,11 +176,16 @@ def registar():
         # database ORM object
         user = Utilizador(
             username=username,
-            # name=name,
             email=email,
             password=generate_password_hash(password),
             firstName=firstname,
-            lastName=lastname
+            lastName=lastname,
+            nrTelemovel=telemovel,
+            rating=rat,
+            morada=morad,
+            dataNascimento=nascimento,
+            aboutME=about,
+            avatar=avatar
         )
         # insert user
         db.session.add(user)
