@@ -332,7 +332,8 @@ import {mapState} from "vuex"
         payload.append('cor',this.editedItem.cor );
         payload.append('lugares',this.editedItem.lugares );
         payload.append('ano', this.editedItem.ano);
-        payload.append('foto', this.file)
+        payload.append('foto', this.file);
+        payload.append('marca', this.editedItem.marca);
         
 
         if (this.editedIndex > -1) {

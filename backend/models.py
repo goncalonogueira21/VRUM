@@ -31,12 +31,14 @@ class Viagem(db.Model):
     regularidade = db.Column(db.String(45))
     idCondutor = db.Column(db.String(45))
     descricao = db.Column(db.String(200))
+    estado = db.Column(db.String(45))
 
 
 class Carro(db.Model):
     matricula = db.Column(db.String(45), primary_key=True)
     fk_Utilizador_username = db.Column(db.String(45), db.ForeignKey('utilizador.username'), nullable=False)
     modelo = db.Column(db.String(45))
+    marca = db.Column(db.String(45))
     ano = db.Column(db.Integer)
     tipoFuel = db.Column(db.String(45))
     cor = db.Column(db.String(45))

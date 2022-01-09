@@ -10,6 +10,10 @@
       :options.sync="options"
       sort-by="name"
     >
+
+    <template v-slot:item.id="{ item }">
+          <div style="cursor: pointer" @click.stop="pushOtherPage">{{ item.id }}</div>
+      </template>
       
     </v-data-table>
 
@@ -31,21 +35,31 @@ export default {
       options: {},
       headers: [
         {
-          text: "Utilizador",
-          value: "user",
+          text: "ID Viagem",
+          value: "id",
+          sortable: false,
+        },
+        {
+          text: "Condutor",
+          value: "idCondutor",
+          sortable: false,
+        },
+        {
+          text: "Carro",
+          value: "username",
           sortable: false,
         },
         {
           text: "Origem",
-          value: "origem",
+          value: "localInicio",
         },
         {
           text: "Destino",
-          value: "destino",
+          value: "localDestino",
         },
         {
           text: "Data",
-          value: "dataViagem",
+          value: "dataInicio",
         },
         {
           text: "Hora",
@@ -53,53 +67,54 @@ export default {
         },
         {
           text: "Lugares Disponivel",
-          value: "disponiveis",
+          value: "lugaresDisp",
         },
         {
           text: "Bagagem",
           value: "bagagem",
         },
         {
-          text: "Preço",
-          value:"preco"
+          text: "Custo por Pessoa",
+          value:"custoPessoa"
         }
       ],
-      viagens: [
-          {
-            user: 'User Teste',
-            origem: 'Gualtar',
-            destino: 'Azurem',
-            dataViagem: '12/01/2022',
-            horaInicial: '12:00',
-            disponiveis: 3,
-            bagagem: false,
-            preco:'10'
-          },{
-            user: 'User Teste2',
-            origem: 'Gualtar',
-            destino: 'Azurem',
-            dataViagem: '12/01/2022',
-            horaInicial: '12:00',
-            disponiveis: 3,
-            bagagem: false,
-            preco:'5'
-          },
-      ],
+      viagens: [],
+      // viagem: [
+      //   {
+      //     'id': viagem.idViagem,
+      //     'username': viagem.fk_Carro_matricula,
+      //     'dataInicio': viagem.dataInicio,
+      //     'kmsViagem': viagem.kmsViagem,
+      //     'custoPessoa': viagem.custoPessoa,
+      //     'localInicio':viagem.localInicio,
+      //     'bagagem':viagem.bagagem,
+      //     'localDestino': viagem.localDestino,
+      //     'nrLugares': viagem.nrLugares,
+      //     'lugaresDisp': viagem.lugaresDisp,
+      //     'regularidade': viagem.regularidade,
+      //     'idCondutor': viagem.idCondutor,
+      //     'descricao': viagem.descricao,
+      //     'estado': viagem.estado,
+      //   },
+      // ],
     };
   },
-  /*created(){
-    this.initialize()
-  },
+  created () {
+      this.initialize()
+    },
   methods: {
-    initialize(){
-      axios.get('http://localhost:5000/viagem/todas')
-        .then((response)=>{
+    initialize () {
+        this.$request("get","viagem/todos")
+            .then((response)=>{
+              this.viagens=response.data.Viagens
+            }).catch((error)=>{
+              console.log(error)
+            })
+    },
+    pushOtherPage() {
+      this.$router.push({ name: 'Viagem' });
+    },
 
-        })
-        .catch((error)=> {
-          console.log(error)
-        })
-    }
-  }*/
+  }
 };
 </script>

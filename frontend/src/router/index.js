@@ -6,6 +6,7 @@ import Auth from "../components/auth.vue";
 import Profile from "../views/Profile"
 import CriarViagem from "../views/CriarViagem"
 import Viagens from "../views/Viagens"
+import Viagem from "../views/Viagem"
 import Mensagens from "../views/Mensagens"
 import Pedidos from "../views/Pedidos"
 import Historico from "../views/HistoricoViagens"
@@ -44,6 +45,11 @@ const routes = [
     path: "/viagens",
     name: "Viagens",
     component: Viagens,
+  },
+  {
+    path: "/viagem",
+    name: "Viagem",
+    component: Viagem,
   },
   {
     path: "/inbox",

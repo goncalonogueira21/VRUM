@@ -42,7 +42,8 @@ def get_all_carros(id):
             'cor': carro.cor,
             'lugares': carro.lugares,
             'foto': carro.foto,
-            'ano' : carro.ano
+            'ano' : carro.ano,
+            'marca' : carro.marca,
             
         })
 
@@ -57,25 +58,31 @@ def registar():
     # creates a dictionary of the form data
     data = request.form
 
+    print('data: ', data.get('marca'))
     # gets all attributes
     matricula = data.get('matricula')
     condutor = data.get('fk_Utilizador_username')
     modelo = data.get('modelo')
+    marca = data.get('marca')
     tipoFuel = data.get('tipoFuel')
     cor = data.get('cor')
     lugares = data.get('lugares')
     ano= data.get('ano')
     foto = data.get('foto')
     
+    
     # checking for existing carro
     carro = Carro.query \
         .filter_by(matricula=matricula) \
         .first()
+
+    print('carro: ', carro)
     if not carro:
         # database ORM object
         carro = Carro(
             matricula = matricula,
             fk_Utilizador_username = condutor,
+            marca = marca,
             modelo = modelo,
             tipoFuel = tipoFuel,
             cor = cor,

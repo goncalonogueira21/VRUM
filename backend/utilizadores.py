@@ -84,11 +84,11 @@ def get_all_users(current_user):
 
 # route for logging user in
 @auth_blueprint.route('/login', methods=['POST'])
-@cross_origin()
 def login():
     # creates dictionary of form data
-    # auth = request.form
+    #auth = request.form
     auth = json.loads(request.data)
+
     if not auth or not auth['username'] or not auth['password']:
         # returns 401 if any username or / and password is missing
         return make_response(
@@ -100,6 +100,7 @@ def login():
     user = Utilizador.query \
         .filter_by(username=auth['username']) \
         .first()
+
 
     if not user:
         # returns 401 if user does not exist
@@ -116,7 +117,9 @@ def login():
             'exp': datetime.utcnow() + timedelta(minutes=30)
         }, app.config['SECRET_KEY'])
 
-        return make_response(jsonify({'token': token}), 201)
+        # return make_response({'token': token}, 201)
+        return make_response({'token': token.decode('UTF-8')}, 201)
+
     # returns 403 if password is wrong
     return make_response(
         'Could not verify',
@@ -195,7 +198,7 @@ def get(id):
 
 
 
-
+# Eliminar um utilizador
 @auth_blueprint.route('/<int:id>/delete', methods=['GET','POST'])
 def delete(id):
     user = Utilizador.query.filter_by(username=id).first()

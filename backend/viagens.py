@@ -40,14 +40,50 @@ def get_all_viagens():
             'kmsViagem': viagem.kmsViagem,
             'custoPessoa': viagem.custoPessoa,
             'localInicio':viagem.localInicio,
-            'bagaem':viagem.bagagem,
+            'bagagem':viagem.bagagem,
             'localDestino': viagem.localDestino,
             'nrLugares': viagem.nrLugares,
             'lugaresDisp': viagem.lugaresDisp,
             'regularidade': viagem.regularidade,
             'idCondutor': viagem.idCondutor,
-            'descricao': viagem.descricao
+            'descricao': viagem.descricao,
+            'estado': viagem.estado,
         })
+
+    response = jsonify({'Viagens': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+#Obter as Viagens todas de um utilizador condutor
+@viagem_blueprint.route('/todos/:id', methods=['GET'])
+def get_all_viagens_condutor(id):
+    # querying the database
+    # for all the entries in it
+    viagens=Viagem.query.all()
+    # converting the query objects
+    # to list of jsons
+    output = []
+    for viagem in viagens:
+        # appending the user data json
+        # to the response list
+        if (viagem.idCondutor == id):
+            output.append({
+                'id': viagem.idViagem,
+                'username': viagem.fk_Carro_matricula,
+                # 'name': user.name,
+                'dataInicio': viagem.dataInicio,
+                'kmsViagem': viagem.kmsViagem,
+                'custoPessoa': viagem.custoPessoa,
+                'localInicio':viagem.localInicio,
+                'bagagem':viagem.bagagem,
+                'localDestino': viagem.localDestino,
+                'nrLugares': viagem.nrLugares,
+                'lugaresDisp': viagem.lugaresDisp,
+                'regularidade': viagem.regularidade,
+                'idCondutor': viagem.idCondutor,
+                'descricao': viagem.descricao,
+                'estado': viagem.estado,
+            })
 
     response = jsonify({'Viagens': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -63,20 +99,21 @@ def getViagem(id):
          output=[]
         
          output.append({
-           'id': viagem.idViagem,
+            'id': viagem.idViagem,
             'username': viagem.fk_Carro_matricula,
             # 'name': user.name,
             'dataInicio': viagem.dataInicio,
             'kmsViagem': viagem.kmsViagem,
             'custoPessoa': viagem.custoPessoa,
             'localInicio':viagem.localInicio,
-            'bagaem':viagem.bagagem,
+            'bagagem':viagem.bagagem,
             'localDestino': viagem.localDestino,
             'nrLugares': viagem.nrLugares,
             'lugaresDisp': viagem.lugaresDisp,
             'regularidade': viagem.regularidade,
             'idCondutor': viagem.idCondutor,
-            'descricao': viagem.descricao
+            'descricao': viagem.descricao,
+            'estado': viagem.estado,
         })
          response= jsonify({'Viagem': output})
          response.headers.add("Access-Control-Allow-Origin", "*")
@@ -113,7 +150,8 @@ def registar():
             nrLugares=lugarDisp,
             regularidade=reg,
             idCondutor=idCond,
-            descricao=desc
+            descricao=desc,
+            estado='Agendada'
         )
         # insert user
         db.session.add(viagem)
