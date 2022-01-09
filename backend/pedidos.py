@@ -10,18 +10,6 @@ pedido_blueprint = Blueprint('pedido_blueprint', __name__)
 from __init__ import db, app
 from models import Pedido
 
-#TODO
-
-@pedido_blueprint.route('/')
-def testdb():
-    try:
-        print(db.session.query(text('show tables')))  # .from_statement(text('SELECT 1')).all()
-        return '<h1>It works.</h1>'
-    except Exception as e:
-        # see Terminal for description of the error
-        print("\nThe error:\n" + str(e) + "\n")
-        return '<h1>Something is broken.</h1>'
-
 #Obter os pedidos todos
 @pedido_blueprint.route('/todos', methods=['GET'])
 def get_all_pedidos():

@@ -174,7 +174,7 @@
       </v-toolbar>
     </template>
     <template v-slot:item.foto="{ item }">
-          <img :src="item.foto" style="width: 50px; height: 50px" />
+          <img :src="`data:image/png;base64,${item.foto}`" style="width: 50px; height: 50px" />
     </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
@@ -246,6 +246,7 @@ import {mapState} from "vuex"
       rules: {
       required: value => !!value || "Required.",
       },
+      base64:'',
       file:''
     }),
 
@@ -276,7 +277,7 @@ import {mapState} from "vuex"
       initialize () {
           this.$request("get","carro/" + this.username)
               .then((response)=>{
-                this.carros=response.data.Carros
+                this.carros=response.data.Carros   
               }).catch((error)=>{
                 console.log(error)
               })
@@ -347,7 +348,6 @@ import {mapState} from "vuex"
         } else {
           this.$request("post","carro/registo", payload, {'Content-Type': ' multipart/form-data'} )
           .then((response)=>{
-            console.log(payload.foto)
               console.log(response)
           })
           .catch((error)=>{
@@ -366,8 +366,15 @@ import {mapState} from "vuex"
       },
       handleFileUpload( event ){
         this.file = event.target.files[0];
-        this.editedItem.foto=URL.createObjectURL(this.file)
-    }
+        const reader = new FileReader()
+
+          reader.onloadend = () => {
+            this.editedItem.foto = reader.result.split(',')[1];
+
+          }
+          reader.readAsDataURL(this.file);
+    },
+    
     }
   }
 </script>

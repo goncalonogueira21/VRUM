@@ -1,25 +1,14 @@
 from flask import Blueprint, jsonify, make_response, request
 from flask_cors.decorator import cross_origin
 from sqlalchemy.sql import text
+import base64
 
+from sqlalchemy.sql.elements import Null
 
 carro_blueprint = Blueprint('carro_blueprint', __name__)
 
 from __init__ import db, app
 from models import Carro
-
-#TODO
-
-@carro_blueprint.route('/')
-def testdb():
-    try:
-        print(db.session.query(text('show tables')))  # .from_statement(text('SELECT 1')).all()
-        return '<h1>It works.</h1>'
-    except Exception as e:
-        # see Terminal for description of the error
-        print("\nThe error:\n" + str(e) + "\n")
-        return '<h1>Something is broken.</h1>'
-
 
 #Obter carros de um utilizador
 @carro_blueprint.route('/<string:id>', methods=['GET'])
@@ -32,19 +21,24 @@ def get_all_carros(id):
     # to list of jsons
     output = []
     for carro in carros:
+        if (carro.foto) :
+            foto = str(base64.b64encode(carro.foto),'UTF-8')
+        else :
+            foto = ''
         # appending the user data json
         # to the response list
         output.append({
             'matricula': carro.matricula,
             'condutor': carro.fk_Utilizador_username,
+            'marca' : carro.marca,
             'modelo': carro.modelo,
             'combustivel': carro.tipoFuel,
             'cor': carro.cor,
             'lugares': carro.lugares,
             'foto': carro.foto,
             'ano' : carro.ano,
-            'marca' : carro.marca,
-            
+            'foto': foto
+
         })
 
     response = jsonify({'Carros': output})
@@ -62,13 +56,17 @@ def registar():
     # gets all attributes
     matricula = data.get('matricula')
     condutor = data.get('fk_Utilizador_username')
+    marca = data.get('marca')
     modelo = data.get('modelo')
     marca = data.get('marca')
     tipoFuel = data.get('tipoFuel')
     cor = data.get('cor')
     lugares = data.get('lugares')
     ano= data.get('ano')
-    foto = data.get('foto')
+    if data.get('foto'):
+        foto= base64.b64decode(data.get('foto'))
+    else:
+        foto = Null
     
     
     # checking for existing carro
@@ -104,7 +102,6 @@ def registar():
 #Eliminar Carro
 @carro_blueprint.route('/<string:matricula>/remove', methods=['Delete'])
 def eliminarCarro(matricula):
-    print ('its working--Delete group')
     if Carro.query.filter_by(matricula=matricula).first() is not None:
         Carro.query.filter_by(matricula=matricula).delete()
         db.session.commit()
@@ -128,7 +125,10 @@ def updateCarro(matricula):
 
         for d in data:
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
-            setattr(carro,d,data.get(d))
+            if(d=='foto'):
+                setattr(carro,d,base64.b64decode(data.get(d)))   
+            else:
+                setattr(carro,d,data.get(d))
             
         
         db.session.commit()

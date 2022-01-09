@@ -37,6 +37,7 @@ class Viagem(db.Model):
 class Carro(db.Model):
     matricula = db.Column(db.String(45), primary_key=True)
     fk_Utilizador_username = db.Column(db.String(45), db.ForeignKey('utilizador.username'), nullable=False)
+    marca = db.Column(db.String(45))
     modelo = db.Column(db.String(45))
     marca = db.Column(db.String(45))
     ano = db.Column(db.Integer)

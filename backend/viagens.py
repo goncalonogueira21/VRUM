@@ -1,24 +1,12 @@
+from sqlalchemy.sql.sqltypes import DateTime
 from flask import Blueprint, jsonify, make_response, request
-from sqlalchemy.sql import text
+from sqlalchemy.sql import text, and_
+from datetime import datetime
 
 viagem_blueprint = Blueprint('viagem_blueprint', __name__)
 
 from __init__ import db, app
 from models import Viagem
-
-#TODO
-
-@viagem_blueprint.route('/')
-def testdb():
-    try:
-        
-        print(db.session.query(text('show tables')))  # .from_statement(text('SELECT 1')).all()
-        return '<h1>It works.</h1>'
-    except Exception as e:
-        # see Terminal for description of the error
-        print("\nThe error:\n" + str(e) + "\n")
-        return '<h1>Something is broken.</h1>'
-
 
 #Obter as Viagens todas
 @viagem_blueprint.route('/todos', methods=['GET'])
@@ -54,6 +42,71 @@ def get_all_viagens():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+
+
+
+#ViagemComFiltros
+#é preciso passar o intervalo de tempo pela querystring e os outros atributos pelo body
+@viagem_blueprint.route('/filtros', methods=['GET'])
+def get_viagens_filtros():
+    # querying the database
+    # for all the entries in it
+
+    
+    #form
+    data = request.form
+    #queryString
+    arg = request.args
+    #if data.get('desde') or ('ate'):
+    #    print("o zataoooo")
+    
+    if (arg):
+        if (arg.get('dataInicio') and arg.get('dataFim')):
+            
+            inicio=arg.get('dataInicio')
+            fim = arg.get('dataFim')
+            viagens=Viagem.query.filter(and_(Viagem.dataInicio >= inicio , Viagem.dataInicio <= fim)).filter_by(**data)
+                   
+        elif (arg.get('dataFim')):
+            fim=arg.get('dataFim')
+            viagens=Viagem.query.filter(Viagem.dataInicio <= fim).filter_by(**data)
+        else:
+            inicio = arg.get('dataInicio')
+            viagens=Viagem.query.filter(Viagem.dataInicio >= inicio ).filter_by(**data)
+            
+    
+    else: 
+        ##se nao tiver comparacoes gt ou assim
+        viagens=Viagem.query.filter_by(**data)
+
+        # converting the query objects
+        # to list of jsons
+    output = []
+    for viagem in viagens:
+        # appending the user data json
+        # to the response list
+        output.append({
+            'id': viagem.idViagem,
+            'username': viagem.fk_Carro_matricula,
+            # 'name': user.name,
+            'dataInicio': viagem.dataInicio,
+            'kmsViagem': viagem.kmsViagem,
+            'custoPessoa': viagem.custoPessoa,
+            'localInicio':viagem.localInicio,
+            'bagaem':viagem.bagagem,
+            'localDestino': viagem.localDestino,
+            'nrLugares': viagem.nrLugares,
+            'lugaresDisp': viagem.lugaresDisp,
+            'regularidade': viagem.regularidade,
+            'idCondutor': viagem.idCondutor,
+            'descricao': viagem.descricao
+        })
+
+    response = jsonify({'Viagens': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 #Obter as Viagens todas de um utilizador condutor
 @viagem_blueprint.route('/todos/:id', methods=['GET'])
 def get_all_viagens_condutor(id):
@@ -62,30 +115,31 @@ def get_all_viagens_condutor(id):
     viagens=Viagem.query.all()
     # converting the query objects
     # to list of jsons
+
     output = []
     for viagem in viagens:
         # appending the user data json
         # to the response list
+
         if (viagem.idCondutor == id):
             output.append({
-                'id': viagem.idViagem,
-                'username': viagem.fk_Carro_matricula,
-                # 'name': user.name,
-                'dataInicio': viagem.dataInicio,
-                'kmsViagem': viagem.kmsViagem,
-                'custoPessoa': viagem.custoPessoa,
-                'localInicio':viagem.localInicio,
-                'bagagem':viagem.bagagem,
-                'localDestino': viagem.localDestino,
-                'nrLugares': viagem.nrLugares,
-                'lugaresDisp': viagem.lugaresDisp,
-                'regularidade': viagem.regularidade,
-                'idCondutor': viagem.idCondutor,
-                'descricao': viagem.descricao,
-                'estado': viagem.estado,
-            })
-
-    response = jsonify({'Viagens': output})
+            'id': viagem.idViagem,
+            'username': viagem.fk_Carro_matricula,
+            # 'name': user.name,
+            'dataInicio': viagem.dataInicio,
+            'kmsViagem': viagem.kmsViagem,
+            'custoPessoa': viagem.custoPessoa,
+            'localInicio':viagem.localInicio,
+            'bagagem':viagem.bagagem,
+            'localDestino': viagem.localDestino,
+            'nrLugares': viagem.nrLugares,
+            'lugaresDisp': viagem.lugaresDisp,
+            'regularidade': viagem.regularidade,
+            'idCondutor': viagem.idCondutor,
+            'descricao': viagem.descricao,
+            'estado': viagem.estado,
+        })      
+    response = jsonify({'Viagem': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
@@ -118,6 +172,9 @@ def getViagem(id):
          response= jsonify({'Viagem': output})
          response.headers.add("Access-Control-Allow-Origin", "*")
          return response
+
+
+
 
 
 #Registar uma viagem

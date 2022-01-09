@@ -1,14 +1,19 @@
+import sys
+from typing import ByteString
 import jwt
 from functools import wraps
 from flask import request, jsonify, make_response, Blueprint
+from sqlalchemy.dialects.mysql import base
+from sqlalchemy.sql.expression import null
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
 from datetime import datetime, timedelta
 from flask_cors import cross_origin
+import base64
+import io
 
 import json
 
-from werkzeug.wrappers import response
 
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
@@ -57,10 +62,10 @@ def token_required(f):
 
     return decorated
 
-
+#obter todos os utilizadores
 @auth_blueprint.route('/todos', methods=['GET'])
-@token_required
-def get_all_users(current_user):
+#@token_required
+def get_all_users():
     # querying the database
     # for all the entries in it
     users = Utilizador.query.all()
@@ -128,9 +133,27 @@ def login():
     )
 
 
+#para testar as imagens
+@auth_blueprint.route('/testeImagem', methods=['POST'])
+@cross_origin()
+def registar2():
+    # creates a dictionary of the form data
+        data=request.form
+        texto=data.get('avatar')
+        avatar=base64.b64decode(texto)
+        #foto = "".join(["{:08b}".format(x) for x in foto1])
+        avatarencoded=base64.b64encode(avatar)
+        #PARA TIRAR O B E AS PELICAS
+        final = str(avatarencoded, 'UTF-8')
+        print(final)
+        #fotoencoded=base64.b64encode(ByteString)
+        
+        return make_response('E TASS', 201)
+    
 @auth_blueprint.route('/registo', methods=['POST'])
 @cross_origin()
 def registar():
+    db.session.rollback()
     # creates a dictionary of the form data
     data = request.form
 
@@ -143,17 +166,19 @@ def registar():
     rat=data.get('rating')
     morad=data.get('morada')
     nascimento=data.get('dataNascimento')
-    #avatar
     about=data.get('aboutME')
+    if data.get('avatar'):
+        avatar= base64.b64decode(data.get('avatar'))
+    else:
+        avatar = base64.b64decode('')
     # checking for existing user
     user = Utilizador.query \
-        .filter_by(email=email) \
+        .filter_by(username=username) \
         .first()
     if not user:
         # database ORM object
         user = Utilizador(
             username=username,
-            # name=name,
             email=email,
             password=generate_password_hash(password),
             firstName=firstname,
@@ -162,7 +187,8 @@ def registar():
             rating=rat,
             morada=morad,
             dataNascimento=nascimento,
-            aboutME=about
+            aboutME=about,
+            avatar=avatar
         )
         # insert user
         db.session.add(user)
@@ -181,6 +207,10 @@ def get(id):
     output = []
     if request.method == 'GET':
         if user:
+            if (user.avatar) : 
+                ava = str(base64.b64encode(user.avatar),'UTF-8')
+            else : 
+               ava = ''
             output.append({
                 'username': user.username,
                 'firstName': user.firstName,
@@ -189,8 +219,10 @@ def get(id):
                 'nrTelemovel': user.nrTelemovel,
                 'rating': user.rating,
                 'morada': user.morada,
-                'dataNascimento': user.dataNascimento,
-                'aboutME': user.aboutME
+                'dataNascimento': str(user.dataNascimento),
+                'aboutME': user.aboutME,
+                'avatar':  ava
+        
             })
             return make_response(jsonify(output), 200)
     return make_response('Utilizador não existe', 204)
@@ -226,7 +258,10 @@ def updateUser(id):
 
         for d in data:
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
-            setattr(user,d,data.get(d))
+            if(d=='avatar'):
+                setattr(user,d,base64.b64decode(data.get(d)))   
+            else:
+                setattr(user,d,data.get(d))
             
         
         db.session.commit()
