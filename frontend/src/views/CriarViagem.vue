@@ -22,51 +22,7 @@
                  </v-tabs-items>
               </v-card>
               
-              <v-card class="mx-auto" flat>
-                <v-row class="px-2 pb-2 ma-0 py-2" justify="space-between">
-                    
-                <v-btn-toggle v-model="alignment"
-                    dense class="ml-5 mr-5 mb-3"  >
-                    <v-btn color="#2A3F54" class="ml-2" elevation="5" @click="help">
-                      <v-icon color="white">mdi-help</v-icon>
-                    </v-btn>
-
-                    <v-dialog v-model="openHelp" max-width="500px">
-                      <v-card color="white">
-                        <v-card-title >
-                          <p>
-                            Ajuda
-                          </p>
-                        </v-card-title>
-                        <v-card-text>
-                          asdasdas
-                        </v-card-text>
-                        <v-card-actions>
-                          <v-btn @click="closeHelp" color="#2A3F54">
-                            <v-icon color="white">mdi-close</v-icon>
-                          </v-btn>  
-                        </v-card-actions>
-
-                      </v-card>
-                        
-                    </v-dialog>
-                </v-btn-toggle>
-
-                <v-btn-toggle v-model="formatting" multiple dense class="ml-4 mb-3"  >
-                    <v-btn @click="submit" color="#F0B62B" elevation="5" class="ml-2 mr-2">
-                      <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-                      
-                    </v-btn>
-
-                   
-
-                    <v-btn color="#29E898" elevation="5" @click="reset">
-                      <v-icon color="white">mdi-broom</v-icon>
-                    </v-btn>
-                  </v-btn-toggle>
-                </v-row>
-
-              </v-card>
+              
 
         </v-flex>
     </v-layout> 
@@ -101,11 +57,12 @@ export default {
    methods:{
      reset(){
        this.$refs.criarviagem.reset()
-     }
-   },
+     },
      onClickHeader(){
        this.$refs.navdraw.fixNav()
      }
+   },
+
    
 }
 </script>

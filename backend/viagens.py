@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, make_response, request
 from sqlalchemy.sql import text, and_
 from datetime import datetime
 
+
 viagem_blueprint = Blueprint('viagem_blueprint', __name__)
 
 from __init__ import db, app
@@ -190,34 +191,38 @@ def registar():
     bagag, localDest= data.get('bagagem'), data.get('localDestino')
     lugarDisp, reg = data.get('lugaresDisp'), data.get('regularidade')
     idCond , desc = data.get('idCondutor'), data.get('descricao')
-    # checking for existing viagem (ver qual a restricao)
-    viagem = Viagem.query \
-        .filter_by(idCondutor=idCond) \
-        .first()
-    if not viagem:
-        # database ORM object
-        viagem = Viagem(
-            fk_Carro_matricula=matricula,
-            dataInicio=inicio,
-            kmsViagem=kms,
-            custoPessoa=custoP,
-            localInicio=localIni,
-            bagagem=bagag,
-            localDestino=localDest,
-            nrLugares=lugarDisp,
-            regularidade=reg,
-            idCondutor=idCond,
-            descricao=desc,
-            estado='Agendada'
-        )
-        # insert user
-        db.session.add(viagem)
-        db.session.commit()
 
-        return make_response('Successfully registered.', 201)
-    else:
-        # returns 202 if user already exists
-        return make_response('Esta viagem ja existe.', 202)
+    # checking for existing viagem (ver qual a restricao)
+    # viagem = Viagem.query \
+    #     .filter_by(idCondutor=idCond) \
+    #     .first()
+    
+    # if not viagem:
+        # database ORM object
+    viagem = Viagem(
+        fk_Carro_matricula=matricula,
+        dataInicio=inicio,
+        kmsViagem=kms,
+        custoPessoa=custoP,
+        localInicio=localIni,
+        bagagem=bagag,
+        localDestino=localDest,
+        lugaresDisp=lugarDisp,
+        regularidade=reg,
+        idCondutor=idCond,
+        descricao=desc,
+        estado='Agendada',
+        nrLugares=0 # TODO: Ir buscar nr de lugares do carro
+    )
+    # insert user
+    print("Viagem ", viagem)
+    db.session.add(viagem)
+    db.session.commit()
+
+    return make_response('Successfully registered.', 201)
+    # else:
+    #     # returns 202 if user already exists
+    #     return make_response('Esta viagem ja existe.', 202)
 
 #Eliminar Viagem
 @viagem_blueprint.route('/<int:idviagem>/remove', methods=['Delete'])

@@ -12,7 +12,7 @@
     >
 
     <template v-slot:item.id="{ item }">
-          <div style="cursor: pointer" @click.stop="pushOtherPage">{{ item.id }}</div>
+          <a :href="`/viagem/${item.id}`"> {{ item.id }} </a>
       </template>
       
     </v-data-table>

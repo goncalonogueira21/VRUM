@@ -11,21 +11,21 @@
       class="navBar"
     >
       <v-list nav dense dark>
-        <v-list-item link to="homeLogado">
+        <v-list-item link to="/homeLogado">
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
           </v-list-item-icon>
           <v-list-item-title class="white--text">Home</v-list-item-title>
         </v-list-item>
 
-        <v-list-item link to="profile">
+        <v-list-item link to="/profile">
           <v-list-item-icon>
             <v-icon>mdi-account</v-icon>
           </v-list-item-icon>
           <v-list-item-title class="white--text">Perfil</v-list-item-title>
         </v-list-item>
 
-        <v-list-item link to="viagens">
+        <v-list-item link to="/viagens">
           <v-list-item-icon>
             <v-icon>mdi-car</v-icon>
           </v-list-item-icon>
@@ -34,7 +34,7 @@
           >
         </v-list-item>
 
-        <v-list-item link to="search">
+        <v-list-item link to="/search">
           <v-list-item-icon>
             <v-icon>mdi-magnify</v-icon>
           </v-list-item-icon>
@@ -43,7 +43,7 @@
           >
         </v-list-item>
 
-        <v-list-item link to="criarviagem">
+        <v-list-item link to="/criarviagem">
           <v-list-item-icon>
             <v-icon>mdi-steering</v-icon>
           </v-list-item-icon>
@@ -52,14 +52,14 @@
           >
         </v-list-item>
 
-        <v-list-item link to="historico">
+        <v-list-item link to="/historico">
           <v-list-item-icon>
             <v-icon>mdi-history</v-icon>
           </v-list-item-icon>
           <v-list-item-title class="white--text">Histórico</v-list-item-title>
         </v-list-item>
 
-        <v-list-item link to="settings">
+        <v-list-item link to="/settings">
           <v-list-item-icon>
             <v-icon>mdi-cog</v-icon>
           </v-list-item-icon>
@@ -76,10 +76,10 @@
               >Notificações</v-list-item-title
             >
           </template>
-          <v-list-item link to="pedidos">
+          <v-list-item link to="/pedidos">
             <v-list-item-title class="white--text">Viagens</v-list-item-title>
           </v-list-item>
-          <v-list-item link to="inbox">
+          <v-list-item link to="/inbox">
             <v-list-item-title class="white--text">Mensagens</v-list-item-title>
           </v-list-item>
         </v-list-group>
