@@ -2,18 +2,9 @@
   <v-data-table
     :headers="headers"
     :items="viagens"
-    multiple-expand
-    :expanded.sync="expanded"
-    item-key="name"
-    show-expand
+    item-key="Data"
     class="elevation-1"
   >
-    
-    <template v-slot:expanded-item="{ headers, item }">
-      <td :colspan="headers.length">
-        More info about {{ item.name }}
-      </td>
-    </template>
   </v-data-table>
 </template>
 
@@ -26,37 +17,26 @@ import {mapState} from "vuex"
     }),
     data () {
       return {
-        expanded: [],
-        singleExpand: true,
         headers: [
           {
             text: 'Data',
             align: 'start',
             sortable: false,
-            value: 'data',
+            value: 'dataInicio',
           },
-          { text: 'Condutor', value: 'condutor' },
-          { text: 'Carro', value: 'carro' },
-          { text: 'Origem', value: 'origem' },
-          { text: 'Destino', value: 'destino' },
-          { text: 'Ganho', value: 'ganho' },
-          { text: '', value: 'data-table-expand' }
+          { text: 'Condutor', value: 'idCondutor' },
+          { text: 'Carro', value: 'matricula' },
+          { text: 'Origem', value: 'localInicio' },
+          { text: 'Destino', value: 'localDestino' },
+          { text: 'Ganho', value: 'custoGanho' }
         ],
-        viagemDefault:{
-            condutor:'',
-            carro: '',
-            origem:'',
-            destino:'',
-            data:'',
-            ganho:''
-        },
         viagens: []
       }
     },
     created(){
-      this.$request('get','viagem/passageiro/' + this.username)
+      this.$request('get','viagem/todos/passageiro/' + this.username)
         .then((response)=>{
-          this.viagens=response.data.Viagens
+          this.viagens=response.data.Viagem
         }).catch((error)=>{
           console.log(error.response)
         })

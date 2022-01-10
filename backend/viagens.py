@@ -1,13 +1,13 @@
 from sqlalchemy.sql.sqltypes import DateTime
 from flask import Blueprint, jsonify, make_response, request
-from sqlalchemy.sql import text, and_
+from sqlalchemy.sql import text, and_ , func
 from datetime import datetime
 
 
 viagem_blueprint = Blueprint('viagem_blueprint', __name__)
 
 from __init__ import db, app
-from models import Viagem
+from models import Viagem, Usufrui
 
 #Obter as Viagens todas
 @viagem_blueprint.route('/todos', methods=['GET'])
@@ -191,12 +191,16 @@ def registar():
     bagag, localDest= data.get('bagagem'), data.get('localDestino')
     lugaresDisp, reg = data.get('lugaresDisp'), data.get('regularidade')
     idCond , desc = data.get('idCondutor'), data.get('descricao')
-    nrLugares=(data.get('nrLugares'))
+    #nrLugares=(data.get('nrLugares'))
     # checking for existing viagem (ver qual a restricao)
     viagem = Viagem.query \
         .filter_by(idCondutor=idCond) \
+        .filter_by(dataInicio=inicio) \
         .first()
     if not viagem:
+        # database ORM object
+        
+    # if not viagem:
         # database ORM object
         viagem = Viagem(
             fk_Carro_matricula=matricula,
@@ -206,48 +210,23 @@ def registar():
             localInicio=localIni,
             bagagem=bagag,
             localDestino=localDest,
-            nrLugares=nrLugares,
             lugaresDisp=lugaresDisp,
             regularidade=reg,
             idCondutor=idCond,
             descricao=desc,
-            estado='Agendada'
+            estado='Agendada',
+            nrLugares=0 # TODO: Ir buscar nr de lugares do carro
         )
         # insert user
+        print("Viagem ", viagem)
         db.session.add(viagem)
         db.session.commit()
 
-    # checking for existing viagem (ver qual a restricao)
-    # viagem = Viagem.query \
-    #     .filter_by(idCondutor=idCond) \
-    #     .first()
+        return make_response('Successfully registered.', 201)
     
-    # if not viagem:
-        # database ORM object
-    viagem = Viagem(
-        fk_Carro_matricula=matricula,
-        dataInicio=inicio,
-        kmsViagem=kms,
-        custoPessoa=custoP,
-        localInicio=localIni,
-        bagagem=bagag,
-        localDestino=localDest,
-        lugaresDisp=lugaresDisp,
-        regularidade=reg,
-        idCondutor=idCond,
-        descricao=desc,
-        estado='Agendada',
-        nrLugares=0 # TODO: Ir buscar nr de lugares do carro
-    )
-    # insert user
-    print("Viagem ", viagem)
-    db.session.add(viagem)
-    db.session.commit()
-
-    return make_response('Successfully registered.', 201)
-    # else:
-    #     # returns 202 if user already exists
-    #     return make_response('Esta viagem ja existe.', 202)
+    else:
+        
+        return make_response('Esta viagem ja existe.', 202)
 
 #Eliminar Viagem
 @viagem_blueprint.route('/<int:idviagem>/remove', methods=['Delete'])
@@ -289,5 +268,58 @@ def updateViagem(idviagem):
         return make_response('Pedido nao existe', 404)
         
     
+@viagem_blueprint.route('/todos/passageiro/<string:idPassageiro>', methods=['GET'])
+def get_all_viagens_passageirocustos(idPassageiro):
+    # querying the database
+    # for all the entries in it
+    output = []
 
-    
+    result = db.session.query(Usufrui, Viagem).filter(and_(Usufrui.fk_Utilizador_username == idPassageiro, Usufrui.fk_Viagem_idViagem==Viagem.idViagem)).all()
+    for r,s in result:
+        print ("VALOR E : ", r.fk_Viagem_idViagem,s.localInicio )
+        output.append({
+            'idViagem': r.fk_Viagem_idViagem,
+            'matricula': s.fk_Carro_matricula,
+            'condutor': s.idCondutor,
+            'dataInicio': s.dataInicio,
+            'localInicio':s.localInicio,
+            'localDestino': s.localDestino,
+            'custo' : r.custoPago 
+        })
+
+
+    response = jsonify({'Viagem': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@viagem_blueprint.route('/todos/condutor/<string:idDriver>', methods=['GET'])
+def get_all_viagens_condutor_custos(idDriver):
+    # querying the database
+    # for all the entries in it
+    viagens=Viagem.query.filter_by(idCondutor=idDriver)
+
+    output = []
+    for viagem in viagens:
+        # appending the user data json
+        # to the response list
+
+        custos=db.session.query(func.sum(Usufrui.custoPago).label("custoPago")).filter_by(fk_Viagem_idViagem=viagem.idViagem).first()
+
+
+        #print("Valor ganho: " ,custos.custoPago)
+
+
+        output.append({
+            'id': viagem.idViagem,
+            'matricula': viagem.fk_Carro_matricula,
+            # 'name': user.name,
+            'dataInicio': viagem.dataInicio,
+            'localInicio':viagem.localInicio,
+            'localDestino': viagem.localDestino,
+            'idCondutor': viagem.idCondutor,
+            'custoGanho' : custos.custoPago 
+        })
+    response = jsonify({'Viagem': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response

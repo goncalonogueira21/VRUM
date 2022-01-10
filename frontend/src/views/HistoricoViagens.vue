@@ -50,8 +50,8 @@ export default {
     return{
       tab: null,
       items: [
-        { tab: 'Viagens como condutor'},
-        { tab: 'Viagens como passageiro'}
+        { tab: 'Condutor'},
+        { tab: 'Passageiro'}
       ]}
    },
    methods:{
