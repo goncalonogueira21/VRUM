@@ -8,7 +8,7 @@ from werkzeug.wrappers import response
 pedido_blueprint = Blueprint('pedido_blueprint', __name__)
 
 from __init__ import db, app
-from models import Pedido
+from models import Pedido, Viagem, Usufrui
 
 #Obter os pedidos todos
 @pedido_blueprint.route('/todos', methods=['GET'])
@@ -137,4 +137,25 @@ def updatePedido(idpedido):
         
     
 
-    
+@pedido_blueprint.route('/<int:idpedido>/aceitar', methods=['Put'])
+def aceitaPedido(idpedido):
+
+
+    pedido = Pedido.query.get(idpedido)
+    print("IDentificador do pedido" , pedido.idPedido)
+    #mudar na tabela pedidos,
+    setattr(pedido,"aceite",1)
+    custo = Viagem.query.get(pedido.fk_Viagem_idViagem).custoPessoa
+    #inserir entrada na tabela "usufrui"
+    usufrui = Usufrui(
+        fk_Utilizador_username= pedido.fk_Utilizador_username,
+        fk_Viagem_idViagem=pedido.fk_Viagem_idViagem,
+        custoPago= custo
+    )
+    db.session.add(usufrui)
+    db.session.commit()
+
+
+
+
+    return make_response('Alteracao bem sucedida', 200)

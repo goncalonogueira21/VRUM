@@ -28,7 +28,7 @@ import {mapState} from "vuex"
           { text: 'Carro', value: 'matricula' },
           { text: 'Origem', value: 'localInicio' },
           { text: 'Destino', value: 'localDestino' },
-          { text: 'Ganho', value: 'custoGanho' }
+          { text: 'Custo', value: 'custoGanho' }
         ],
         viagens: []
       }

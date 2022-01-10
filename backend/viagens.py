@@ -308,8 +308,7 @@ def get_all_viagens_condutor_custos(idDriver):
 
 
         #print("Valor ganho: " ,custos.custoPago)
-
-
+        print(custos)
         output.append({
             'id': viagem.idViagem,
             'matricula': viagem.fk_Carro_matricula,
