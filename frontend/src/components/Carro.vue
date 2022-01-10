@@ -333,7 +333,7 @@ import {mapState} from "vuex"
         payload.append('cor',this.editedItem.cor );
         payload.append('lugares',this.editedItem.lugares );
         payload.append('ano', this.editedItem.ano);
-        payload.append('foto', this.file);
+        payload.append('foto', this.editedItem.foto);
         payload.append('marca', this.editedItem.marca);
         
 
@@ -365,14 +365,14 @@ import {mapState} from "vuex"
         
       },
       handleFileUpload( event ){
-        this.file = event.target.files[0];
+        const file = event.target.files[0];
         const reader = new FileReader()
 
           reader.onloadend = () => {
-            this.editedItem.foto = reader.result.split(',')[1];
+            this.editedItem.foto = reader.result.split(',')[1]
 
           }
-          reader.readAsDataURL(this.file);
+          reader.readAsDataURL(file);
     },
     
     }

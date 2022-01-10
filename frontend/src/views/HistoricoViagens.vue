@@ -13,11 +13,11 @@
                   <v-tabs-items v-model="tab">
         
                     <v-tab-item eager>
-                      
+                      <ViagensCondutor/>
                    </v-tab-item>
 
                    <v-tab-item eager>
-                      
+                      <ViagensPassageiro/>
                    </v-tab-item>
                   
 
@@ -36,20 +36,22 @@
 import Footer from "../components/Footer.vue"
 import Header from "../components/Header.vue"
 import NavDraw from "../components/NavDraw.vue" 
+import ViagensCondutor from "../components/ViagensCondutor.vue"
+import ViagensPassageiro from "../components/ViagensPassageiro.vue"
 
 
 export default {
     name: "HistoricoViagens",
 
      components: {
-      Footer,Header,NavDraw
+      Footer,Header,NavDraw, ViagensCondutor, ViagensPassageiro
   },
   data() {
     return{
       tab: null,
-      openHelp: false,
       items: [
-        { tab: 'Histórico de Viagens'}
+        { tab: 'Viagens como condutor'},
+        { tab: 'Viagens como passageiro'}
       ]}
    },
    methods:{

@@ -123,7 +123,7 @@ def login():
         }, app.config['SECRET_KEY'])
 
         # return make_response({'token': token}, 201)
-        return make_response({'token': token.decode('UTF-8')}, 201)
+        return make_response({'token': token}, 201)
 
     # returns 403 if password is wrong
     return make_response(

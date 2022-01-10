@@ -126,7 +126,8 @@ def updateCarro(matricula):
         for d in data:
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
             if(d=='foto'):
-                setattr(carro,d,base64.b64decode(data.get(d)))   
+                setattr(carro,d,base64.b64decode(data.get(d)))
+                
             else:
                 setattr(carro,d,data.get(d))
             

@@ -21,10 +21,10 @@
 </template>
 
 <script>
-//import axios from 'axios'
 
 export default {
-  name: "TabelaViagens",
+  name: "ViagensPorFiltro",
+  props:['viagens'],
   data: () => {
     return {
       itemid: 0,
@@ -41,7 +41,7 @@ export default {
         },
         {
           text: "Condutor",
-          value: "idCondutor",
+          value: "condutor",
           sortable: false,
         },
         {
@@ -78,43 +78,14 @@ export default {
           value:"custoPessoa"
         }
       ],
-      viagens: [],
-      // viagem: [
-      //   {
-      //     'id': viagem.idViagem,
-      //     'username': viagem.fk_Carro_matricula,
-      //     'dataInicio': viagem.dataInicio,
-      //     'kmsViagem': viagem.kmsViagem,
-      //     'custoPessoa': viagem.custoPessoa,
-      //     'localInicio':viagem.localInicio,
-      //     'bagagem':viagem.bagagem,
-      //     'localDestino': viagem.localDestino,
-      //     'nrLugares': viagem.nrLugares,
-      //     'lugaresDisp': viagem.lugaresDisp,
-      //     'regularidade': viagem.regularidade,
-      //     'idCondutor': viagem.idCondutor,
-      //     'descricao': viagem.descricao,
-      //     'estado': viagem.estado,
-      //   },
-      // ],
+     
     };
   },
-  created () {
-      this.initialize()
-    },
   methods: {
-    initialize () {
-        this.$request("get","viagem/todos")
-            .then((response)=>{
-              this.viagens=response.data.Viagens
-            }).catch((error)=>{
-              console.log(error)
-            })
-    },
+    
     pushOtherPage() {
       this.$router.push({ name: 'Viagem' });
     },
-
   }
-};
+  }
 </script>

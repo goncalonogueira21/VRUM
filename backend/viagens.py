@@ -188,8 +188,9 @@ def registar():
     inicio, kms = data.get('dataInicio'), data.get('kmsViagem')
     custoP, localIni = data.get('custoPessoa'), data.get('localInicio')
     bagag, localDest= data.get('bagagem'), data.get('localDestino')
-    lugarDisp, reg = data.get('lugaresDisp'), data.get('regularidade')
+    lugaresDisp, reg = data.get('lugaresDisp'), data.get('regularidade')
     idCond , desc = data.get('idCondutor'), data.get('descricao')
+    nrLugares=(data.get('nrLugares'))
     # checking for existing viagem (ver qual a restricao)
     viagem = Viagem.query \
         .filter_by(idCondutor=idCond) \
@@ -204,7 +205,8 @@ def registar():
             localInicio=localIni,
             bagagem=bagag,
             localDestino=localDest,
-            nrLugares=lugarDisp,
+            nrLugares=nrLugares,
+            lugaresDisp=lugaresDisp,
             regularidade=reg,
             idCondutor=idCond,
             descricao=desc,
