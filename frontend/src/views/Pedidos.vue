@@ -13,11 +13,11 @@
                   <v-tabs-items v-model="tab">
         
                     <v-tab-item eager>
-                      
+                      <Recebidos/>
                    </v-tab-item>
 
                    <v-tab-item eager>
-                      
+                      <Enviados/>
                    </v-tab-item>
                   
 
@@ -36,20 +36,23 @@
 import Footer from "../components/Footer.vue"
 import Header from "../components/Header.vue"
 import NavDraw from "../components/NavDraw.vue" 
+import Recebidos from "../components/Recebidos.vue"
+import Enviados from '../components/Enviados.vue'
 
 
 export default {
     name: "Pedidos",
 
      components: {
-      Footer,Header,NavDraw
+      Footer,Header,NavDraw, Recebidos, Enviados
   },
   data() {
     return{
       tab: null,
       openHelp: false,
       items: [
-        { tab: 'Pedidos'}
+        { tab: 'Recebidos'},
+        { tab: 'Enviados'}
       ]}
    },
    methods:{

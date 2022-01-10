@@ -133,6 +133,14 @@
           <v-checkbox v-model="formData.bagagem" label="Bagagem" />
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="12">
+             <v-text-field
+            v-model="formData.descricao"
+            label="Descrição"
+          />
+        </v-col>
+      </v-row>
     </v-container>
     <v-card  flat>
       <v-row class="px-2 pb-2 ma-0 py-2" justify="center">
@@ -175,6 +183,7 @@ export default {
         horaInicio: null,
         custoPessoa: 0,
         kmsViagem: 0,
+        descricao:''
       },
       rules: {
         required: [(v) => !!v || "Field is required"],
@@ -198,8 +207,7 @@ export default {
       menu: false,
       menu2: false,
       menuTime: false,
-      carros: [],
-      openHelp: false,
+      carros: []
     };
   },
   computed: mapState({
@@ -239,8 +247,9 @@ export default {
       payload.append('custoPessoa', this.formData.custoPessoa);
       payload.append('kmsViagem', this.formData.kmsViagem);
       payload.append('idCondutor', this.username);
+      payload.append('descricao', this.formData.descricao)
 
-      this.$request("post", "viagem/registo", payload, {'Content-Type': ' multipart/form-data'})
+      this.$request("post", "viagem/registo", payload, {'Content-Type': ' application/form-data'})
         .then((response) => {
           console.log(response);
         })

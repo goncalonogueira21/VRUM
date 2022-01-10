@@ -77,7 +77,7 @@
             >
           </template>
           <v-list-item link to="/pedidos">
-            <v-list-item-title class="white--text">Viagens</v-list-item-title>
+            <v-list-item-title class="white--text">Pedidos</v-list-item-title>
           </v-list-item>
           <v-list-item link to="/inbox">
             <v-list-item-title class="white--text">Mensagens</v-list-item-title>

@@ -297,7 +297,7 @@ def get_all_viagens_passageirocustos(idPassageiro):
 def get_all_viagens_condutor_custos(idDriver):
     # querying the database
     # for all the entries in it
-    viagens=Viagem.query.filter_by(idCondutor=idDriver)
+    viagens=Viagem.query.filter_by(idCondutor=idDriver, estado='Finalizada')
 
     output = []
     for viagem in viagens:
@@ -308,7 +308,7 @@ def get_all_viagens_condutor_custos(idDriver):
 
 
         #print("Valor ganho: " ,custos.custoPago)
-        print(custos)
+        
         output.append({
             'id': viagem.idViagem,
             'matricula': viagem.fk_Carro_matricula,
@@ -317,8 +317,8 @@ def get_all_viagens_condutor_custos(idDriver):
             'localInicio':viagem.localInicio,
             'localDestino': viagem.localDestino,
             'idCondutor': viagem.idCondutor,
-            'custoGanho' : custos.custoPago 
-        })
+            'custoGanho' : "{:.2f}".format(custos.custoPago) 
+        })  
     response = jsonify({'Viagem': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
