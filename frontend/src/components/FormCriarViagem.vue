@@ -40,7 +40,7 @@
             ref="menu"
             v-model="menu"
             :close-on-content-click="false"
-            :return-value.sync="date"
+            :return-value.sync="formData.dataInicio"
             transition="scale-transition"
             offset-y
             min-width="auto"
@@ -48,7 +48,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 :rules="rules.required"
-                v-model="date"
+                v-model="formData.dataInicio"
                 label="Data da viagem"
                 prepend-icon="mdi-calendar"
                 readonly
@@ -56,10 +56,10 @@
                 v-on="on"
               ></v-text-field>
             </template>
-            <v-date-picker v-model="date" no-title scrollable>
+            <v-date-picker v-model="formData.dataInicio" no-title scrollable>
               <v-spacer></v-spacer>
               <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-              <v-btn text color="primary" @click="$refs.menu.save(date)">
+              <v-btn text color="primary" @click="$refs.menu.save(formData.dataInicio)">
                 OK
               </v-btn>
             </v-date-picker>
@@ -72,7 +72,7 @@
             v-model="menuTime"
             :close-on-content-click="false"
             :nudge-right="40"
-            :return-value.sync="horaInicio"
+            :return-value.sync="formData.horaInicio"
             transition="scale-transition"
             offset-y
             max-width="290px"
@@ -81,7 +81,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 :rules="rules.required"
-                v-model="horaInicio"
+                v-model="formData.horaInicio"
                 label="Hora de Ínicio"
                 prepend-icon="mdi-clock-time-four-outline"
                 readonly
@@ -91,9 +91,9 @@
             </template>
             <v-time-picker
               v-if="menuTime"
-              v-model="horaInicio"
+              v-model="formData.horaInicio"
               full-width
-              @click:minute="$refs.menuTime.save(horaInicio)"
+              @click:minute="$refs.menuTime.save(formData.horaInicio)"
             ></v-time-picker>
           </v-menu>
         </v-col>
@@ -134,42 +134,24 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-card class="mx-auto" flat>
-      <v-row class="px-2 pb-2 ma-0 py-2" justify="space-between">
-        <v-btn-toggle v-model="alignment" dense class="ml-5 mr-5 mb-3">
-          <v-btn color="#2A3F54" class="ml-2" elevation="5" @click="help">
-            <v-icon color="white">mdi-help</v-icon>
-          </v-btn>
-
-          <v-dialog v-model="openHelp" max-width="500px">
-            <v-card color="white">
-              <v-card-title>
-                <p>Ajuda</p>
-              </v-card-title>
-              <v-card-text> asdasdas </v-card-text>
-              <v-card-actions>
-                <v-btn @click="closeHelp" color="#2A3F54">
-                  <v-icon color="white">mdi-close</v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-btn-toggle>
-
-        <v-btn-toggle v-model="formatting" multiple dense class="ml-4 mb-3">
-          <v-btn
-            @click="registaViagem"
-            color="#F0B62B"
-            elevation="5"
-            class="ml-2 mr-2"
-          >
-            <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-          </v-btn>
-
-          <v-btn color="#29E898" elevation="5" @click="reset">
+    <v-card  flat>
+      <v-row class="px-2 pb-2 ma-0 py-2" justify="center">
+      
+          <v-btn  class="ml-2 mr-2 mb-2" color="#7e380e" elevation="5" @click="reset">
+            Clean
             <v-icon color="white">mdi-broom</v-icon>
           </v-btn>
-        </v-btn-toggle>
+          
+          <v-btn
+            @click="registaViagem"
+            color="#7e380e"
+            elevation="5"
+            class="ml-2 mr-2 mb-2"
+          >
+          Submit
+            <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+          </v-btn>
+        
       </v-row>
     </v-card>
   </v-form>
@@ -189,11 +171,7 @@ export default {
         localDestino: "",
         regularidade: "",
         bagagem: false,
-        dataInicio: new Date(
-          Date.now() - new Date().getTimezoneOffset() * 60000
-        )
-          .toISOString()
-          .substr(0, 10),
+        dataInicio: '',
         horaInicio: null,
         custoPessoa: 0,
         kmsViagem: 0,
