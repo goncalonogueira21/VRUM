@@ -68,9 +68,8 @@ def registar():
     # creates a dictionary of the form data
     db.session.rollback()
     data = request.form
-
     # gets all attributes
-    fk_Utilizador_username, fk_Viagem_idViagem = data.get('fk_Utilizador_username'), data.get('fk_Viagem_idViagem')
+    fk_Utilizador_username, fk_Viagem_idViagem = data.get('username'), data.get('idViagem')
     nrPessoas, pickupLocal = data.get('nrPessoas'), data.get('pickupLocal')
     localDestino = data.get('localDestino')
     # checking for existing pedido

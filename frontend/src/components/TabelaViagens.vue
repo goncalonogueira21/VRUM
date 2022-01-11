@@ -63,7 +63,7 @@ export default {
         },
         {
           text: "Hora",
-          value: "horaInicial",
+          value: "horaInicio",
         },
         {
           text: "Lugares Disponivel",

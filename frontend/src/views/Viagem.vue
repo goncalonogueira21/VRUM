@@ -40,7 +40,7 @@
           </div>
 
           <v-list-item-subtitle 
-            >Data e Hora: {{ viagem.dataInicio }}
+            >Data e Hora: {{ viagem.dataInicio }} {{viagem.horaInicio}}
           </v-list-item-subtitle>
         </v-list-item-content>
 
@@ -80,6 +80,7 @@
 import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import NavDraw from "../components/NavDraw.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "Viagem",
@@ -92,10 +93,12 @@ export default {
   data() {
     return {
       tab: null,
-      openHelp: false,
       viagem: {},
     };
   },
+   computed: mapState({
+    username: (state) => state.auth.username,
+  }),
   created() {
     this.initialize();
   },
@@ -113,7 +116,19 @@ export default {
         });
     },
     registarPassageiro(){
-      //TODO
+      var payload = new FormData();
+      payload.append('username', this.username );
+      payload.append('idViagem', this.$route.params.id );
+      payload.append('nrPessoas', 1);
+      payload.append('pickupLocal', this.viagem.localInicio);
+      payload.append('localDestino', this.viagem.localDestino);
+
+      this.$request("post", "pedido/registo",payload)
+        .then((response)=>{
+          console.log(response.data)
+        }).catch((error)=>{
+          console.log(error)
+        })
     },
     editarViagem(){
       //TODO

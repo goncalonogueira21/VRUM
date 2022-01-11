@@ -24,11 +24,11 @@ import {mapState} from "vuex"
             sortable: false,
             value: 'dataInicio',
           },
-          { text: 'Condutor', value: 'idCondutor' },
+          { text: 'Condutor', value: 'condutor' },
           { text: 'Carro', value: 'matricula' },
           { text: 'Origem', value: 'localInicio' },
           { text: 'Destino', value: 'localDestino' },
-          { text: 'Custo', value: 'custoGanho' }
+          { text: 'Custo', value: 'custo' }
         ],
         viagens: []
       }

@@ -1,7 +1,7 @@
 from sqlalchemy.sql.sqltypes import DateTime
 from flask import Blueprint, jsonify, make_response, request
 from sqlalchemy.sql import text, and_ , func
-from datetime import datetime
+from datetime import datetime as dt
 
 
 viagem_blueprint = Blueprint('viagem_blueprint', __name__)
@@ -19,25 +19,27 @@ def get_all_viagens():
     # to list of jsons
     output = []
     for viagem in viagens:
+        if (viagem.estado != 'Finalizada'):
         # appending the user data json
         # to the response list
-        output.append({
-            'id': viagem.idViagem,
-            'username': viagem.fk_Carro_matricula,
-            # 'name': user.name,
-            'dataInicio': viagem.dataInicio,
-            'kmsViagem': viagem.kmsViagem,
-            'custoPessoa': viagem.custoPessoa,
-            'localInicio':viagem.localInicio,
-            'bagagem':viagem.bagagem,
-            'localDestino': viagem.localDestino,
-            'nrLugares': viagem.nrLugares,
-            'lugaresDisp': viagem.lugaresDisp,
-            'regularidade': viagem.regularidade,
-            'idCondutor': viagem.idCondutor,
-            'descricao': viagem.descricao,
-            'estado': viagem.estado,
-        })
+            output.append({
+                'id': viagem.idViagem,
+                'username': viagem.fk_Carro_matricula,
+                # 'name': user.name,
+                'dataInicio': dt.strftime(viagem.dataInicio, '%Y-%m-%d'),
+                'horaInicio': dt.strftime(viagem.dataInicio, '%H:%M'),
+                'kmsViagem': viagem.kmsViagem,
+                'custoPessoa': viagem.custoPessoa,
+                'localInicio':viagem.localInicio,
+                'bagagem':viagem.bagagem,
+                'localDestino': viagem.localDestino,
+                'nrLugares': viagem.nrLugares,
+                'lugaresDisp': viagem.lugaresDisp,
+                'regularidade': viagem.regularidade,
+                'idCondutor': viagem.idCondutor,
+                'descricao': viagem.descricao,
+                'estado': viagem.estado,
+            })
 
     response = jsonify({'Viagens': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -90,7 +92,8 @@ def get_viagens_filtros():
             'id': viagem.idViagem,
             'username': viagem.fk_Carro_matricula,
             # 'name': user.name,
-            'dataInicio': viagem.dataInicio,
+            'dataInicio': dt.strftime(viagem.dataInicio, '%Y-%m-%d'),
+            'horaInicio': dt.strftime(viagem.dataInicio, '%H:%M'),
             'kmsViagem': viagem.kmsViagem,
             'custoPessoa': viagem.custoPessoa,
             'localInicio':viagem.localInicio,
@@ -102,6 +105,7 @@ def get_viagens_filtros():
             'idCondutor': viagem.idCondutor,
             'descricao': viagem.descricao
         })
+        
 
     response = jsonify({'Viagens': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -127,7 +131,8 @@ def get_all_viagens_condutor(id):
             'id': viagem.idViagem,
             'username': viagem.fk_Carro_matricula,
             # 'name': user.name,
-            'dataInicio': viagem.dataInicio,
+            'dataInicio': dt.strftime(viagem.dataInicio, '%Y-%m-%d'),
+            'horaInicio': dt.strftime(viagem.dataInicio, '%H:%M'),
             'kmsViagem': viagem.kmsViagem,
             'custoPessoa': viagem.custoPessoa,
             'localInicio':viagem.localInicio,
@@ -157,7 +162,8 @@ def getViagem(id):
             'id': viagem.idViagem,
             'username': viagem.fk_Carro_matricula,
             # 'name': user.name,
-            'dataInicio': viagem.dataInicio,
+            'dataInicio': dt.strftime(viagem.dataInicio, '%Y-%m-%d'),
+            'horaInicio': dt.strftime(viagem.dataInicio, '%H:%M'),
             'kmsViagem': viagem.kmsViagem,
             'custoPessoa': viagem.custoPessoa,
             'localInicio':viagem.localInicio,
@@ -191,11 +197,13 @@ def registar():
     bagag, localDest= data.get('bagagem'), data.get('localDestino')
     lugaresDisp, reg = data.get('lugaresDisp'), data.get('regularidade')
     idCond , desc = data.get('idCondutor'), data.get('descricao')
+    horaInicio = data.get('horaInicio')
+    horaCombinada =dt.strptime( inicio + " " + horaInicio, '%Y-%m-%d %H:%M')
     #nrLugares=(data.get('nrLugares'))
     # checking for existing viagem (ver qual a restricao)
     viagem = Viagem.query \
         .filter_by(idCondutor=idCond) \
-        .filter_by(dataInicio=inicio) \
+        .filter_by(dataInicio=horaCombinada) \
         .first()
     if not viagem:
         # database ORM object
@@ -204,7 +212,7 @@ def registar():
         # database ORM object
         viagem = Viagem(
             fk_Carro_matricula=matricula,
-            dataInicio=inicio,
+            dataInicio=horaCombinada,
             kmsViagem=kms,
             custoPessoa=custoP,
             localInicio=localIni,
@@ -281,12 +289,13 @@ def get_all_viagens_passageirocustos(idPassageiro):
             'idViagem': r.fk_Viagem_idViagem,
             'matricula': s.fk_Carro_matricula,
             'condutor': s.idCondutor,
-            'dataInicio': s.dataInicio,
+            'dataInicio': dt.strftime(s.dataInicio, '%Y-%m-%d'),
             'localInicio':s.localInicio,
             'localDestino': s.localDestino,
             'custo' : r.custoPago 
         })
-
+    print(s.idCondutor)
+    print(r.custoPago)
 
     response = jsonify({'Viagem': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -313,10 +322,9 @@ def get_all_viagens_condutor_custos(idDriver):
             'id': viagem.idViagem,
             'matricula': viagem.fk_Carro_matricula,
             # 'name': user.name,
-            'dataInicio': viagem.dataInicio,
+            'dataInicio': dt.strftime(viagem.dataInicio, '%Y-%m-%d'),
             'localInicio':viagem.localInicio,
             'localDestino': viagem.localDestino,
-            'idCondutor': viagem.idCondutor,
             'custoGanho' : "{:.2f}".format(custos.custoPago) 
         })  
     response = jsonify({'Viagem': output})
