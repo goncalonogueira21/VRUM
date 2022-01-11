@@ -1,6 +1,6 @@
 import re
 from flask import Blueprint, jsonify, request, make_response
-from sqlalchemy import text
+from sqlalchemy import text,and_
 from sqlalchemy.orm import session
 from werkzeug.wrappers import response
 
@@ -135,6 +135,67 @@ def updatePedido(idpedido):
         return make_response('Pedido nao existe', 404)
         
     
+
+@pedido_blueprint.route('todos/recebido/<string:idCondutor>', methods=['GET'])
+def getAllpedidosRecebidos(idCondutor):
+
+    output = []
+
+    result = db.session.query(Viagem, Pedido).filter(and_(Viagem.idCondutor == idCondutor, Viagem.idViagem==Pedido.fk_Viagem_idViagem)).all()
+
+    for r,s in result:
+
+         output.append({
+             'username': s.fk_Utilizador_username,
+             'viagem': s. fk_Viagem_idViagem,
+             'pickupLocal': s.pickupLocal,
+             'localDestino' :s.localDestino,
+             'nrPessoas': s.nrPessoas,
+             'aceite': s.aceite
+         })
+
+    
+    response = jsonify({'Recebido': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@pedido_blueprint.route('todos/enviado/<string:idPassageiro>', methods=['GET'])
+def getAllPedidosEnviados(idPassageiro):
+
+    output = []
+
+    pedido=Pedido.query.filter_by(fk_Utilizador_username=idPassageiro).first()
+
+    if not pedido:
+        return make_response('Pedido nao existe', 404)
+    else:
+        output=[]
+        
+        output.append({
+            'id': pedido.idPedido,
+            'viagem': pedido.fk_Viagem_idViagem,
+            'nrPessoas': pedido.nrPessoas,
+            'pickupLocal': pedido.pickupLocal,
+            'localDestino':pedido.localDestino,
+            'aceite':pedido.aceite,
+        })
+
+        response= jsonify({'Enviado': output})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+
+
+
+
+
+
+
+
+  
+
+
+
 
 @pedido_blueprint.route('/<int:idpedido>/aceitar', methods=['Put'])
 def aceitaPedido(idpedido):

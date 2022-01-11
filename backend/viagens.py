@@ -294,8 +294,6 @@ def get_all_viagens_passageirocustos(idPassageiro):
             'localDestino': s.localDestino,
             'custo' : r.custoPago 
         })
-    print(s.idCondutor)
-    print(r.custoPago)
 
     response = jsonify({'Viagem': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
