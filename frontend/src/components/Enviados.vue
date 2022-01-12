@@ -30,7 +30,7 @@ import {mapState} from "vuex"
           { text: 'Origem', value: 'pickupLocal' },
           { text: 'Destino', value: 'localDestino' },
           { text: 'Nrº Pessoas', value:'nrPessoas'},
-          { text: 'Estado', value : 'aceite'}
+          { text: 'Estado', value : 'estado'}
         ],
         enviados: []
       }
