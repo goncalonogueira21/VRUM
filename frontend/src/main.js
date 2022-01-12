@@ -16,6 +16,7 @@ Vue.config.productionTip = false;
 Vue.use(request)
 Vue.mixin(titleMixin)
 
+
 new Vue({
   router,
   vuetify,

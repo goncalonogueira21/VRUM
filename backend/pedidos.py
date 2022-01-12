@@ -10,7 +10,7 @@ pedido_blueprint = Blueprint('pedido_blueprint', __name__)
 from __init__ import db, app
 from models import Pedido, Viagem, Usufrui
 
-#Obter os pedidos todos
+# GET Obter os pedidos todos
 @pedido_blueprint.route('/todos', methods=['GET'])
 def get_all_pedidos():
     # querying the database
@@ -37,7 +37,7 @@ def get_all_pedidos():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-#Obter um pedido em especifico
+# GET Obter um pedido em especifico
 @pedido_blueprint.route('/<int:id>', methods=['GET'])
 def getPedido(id):
      pedido=Pedido.query.get(id)
@@ -61,7 +61,7 @@ def getPedido(id):
          return response
 
 
-#Registar um pedido
+# POST Registar um pedido
 #Esta a dar merda
 @pedido_blueprint.route('/registo', methods=['POST'])
 def registar():
@@ -95,19 +95,19 @@ def registar():
         # returns 202 if user already exists
         return make_response('Ja fizeste um pedido nesta viagem.', 202)
 
-#Eliminar pedido
+# DELETE Eliminar pedido
 @pedido_blueprint.route('/<int:idpedido>/remove', methods=['Delete'])
 def eliminarPedido(idpedido):
     print ('its working--Delete group')
     if Pedido.query.filter_by(idPedido=idpedido).first() is not None:
-        Pedido.query.filter_by(idpedido=idpedido).delete()
+        Pedido.query.filter_by(idPedido=idpedido).delete()
         db.session.commit()
         return make_response('Pedido removido com sucesso.', 200)
     else:
         return make_response('Pedido nao existe', 204)
 
 
-#Atualizar pedido
+# PUT Atualizar pedido
 #esta a dar merda
 @pedido_blueprint.route('/<int:idpedido>/update', methods=['Put'])
 def updatePedido(idpedido):
@@ -135,7 +135,7 @@ def updatePedido(idpedido):
         return make_response('Pedido nao existe', 404)
         
     
-
+# GET Todos os pedidos recebidos de um utilizador
 @pedido_blueprint.route('todos/recebido/<string:idCondutor>', methods=['GET'])
 def getAllpedidosRecebidos(idCondutor):
 
@@ -159,7 +159,7 @@ def getAllpedidosRecebidos(idCondutor):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-
+# GET Todos os pedidos enviados de um utilizador
 @pedido_blueprint.route('todos/enviado/<string:idPassageiro>', methods=['GET'])
 def getAllPedidosEnviados(idPassageiro):
 
@@ -184,19 +184,9 @@ def getAllPedidosEnviados(idPassageiro):
         response= jsonify({'Enviado': output})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
-
-
-
-
-
-
-
-
   
 
-
-
-
+# PUT Aceita Pedido
 @pedido_blueprint.route('/<int:idpedido>/aceitar', methods=['Put'])
 def aceitaPedido(idpedido):
 

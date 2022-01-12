@@ -10,7 +10,7 @@ carro_blueprint = Blueprint('carro_blueprint', __name__)
 from __init__ import db, app
 from models import Carro
 
-#Obter carros de um utilizador
+# GET Obter carros de um utilizador
 @carro_blueprint.route('/<string:id>', methods=['GET'])
 def get_all_carros(id):
     # querying the database
@@ -46,7 +46,7 @@ def get_all_carros(id):
     return response
 
 
-#Registar um carro
+# POST Registar um carro
 @carro_blueprint.route('/registo', methods=['POST'])
 def registar():
     # creates a dictionary of the form data
@@ -86,7 +86,7 @@ def registar():
             cor = cor,
             lugares = lugares,
             ano= ano,
-            foto=foto
+            #foto=foto     <-- Está a escaxar
         )
         # insert carro
         db.session.add(carro)
@@ -99,7 +99,7 @@ def registar():
 
 
 
-#Eliminar Carro
+# DELETE Eliminar Carro
 @carro_blueprint.route('/<string:matricula>/remove', methods=['Delete'])
 def eliminarCarro(matricula):
     if Carro.query.filter_by(matricula=matricula).first() is not None:
@@ -111,7 +111,7 @@ def eliminarCarro(matricula):
 
 
 
-#Editar carro
+# PUT Editar carro
 #/update?matricula=matr
 @carro_blueprint.route('/<string:matricula>/update', methods=['Put'])
 def updateCarro(matricula):

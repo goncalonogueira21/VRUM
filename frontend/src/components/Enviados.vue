@@ -4,6 +4,8 @@
     :items="enviados"
     item-key="name"
     class="elevation-1"
+    :hide-default-footer="true"
+
   >
     
   </v-data-table>

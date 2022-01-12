@@ -21,11 +21,11 @@ function makeRequest(request, path, data, headers) {
         headers: headers,
       });
     case "put":
-      return axios.put(process.env.API_URL + path, data, {
+      return axios.put("http://localhost:5000/" + path, data, {
         headers: headers,
       });
     case "delete":
-      return axios.delete(process.env.API_URL + path, data, {
+      return axios.delete("http://localhost:5000/" + path, data, {
         headers: headers,
       });
     default:

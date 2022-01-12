@@ -2,6 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="recebidos"
+    :hide-default-footer="true"
     item-key="name"
     class="elevation-1"
   >

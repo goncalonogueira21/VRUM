@@ -12,10 +12,10 @@
     >
 
     <template v-slot:item.id="{ item }">
-          <a :href="`/viagem/${item.id}`"> {{ item.id }} </a>
+          <a :href="`/viagem/${item.id}`"> Mostrar Viagem </a>
       </template>
-      
     </v-data-table>
+      
 
   </v-card>
 </template>
@@ -34,11 +34,6 @@ export default {
       loading: true,
       options: {},
       headers: [
-        {
-          text: "ID Viagem",
-          value: "id",
-          sortable: false,
-        },
         {
           text: "Condutor",
           value: "idCondutor",
@@ -76,7 +71,12 @@ export default {
         {
           text: "Custo por Pessoa",
           value:"custoPessoa"
-        }
+        },
+        {
+          text: "Está interessado?",
+          value: "id",
+          sortable: false,
+        },
       ],
       viagens: [],
       // viagem: [

@@ -9,7 +9,7 @@ viagem_blueprint = Blueprint('viagem_blueprint', __name__)
 from __init__ import db, app
 from models import Viagem, Usufrui
 
-#Obter as Viagens todas
+# GET Obter as Viagens todas
 @viagem_blueprint.route('/todos', methods=['GET'])
 def get_all_viagens():
     # querying the database
@@ -48,7 +48,7 @@ def get_all_viagens():
 
 
 
-#ViagemComFiltros
+# GET ViagemComFiltros
 #é preciso passar o intervalo de tempo pela querystring e os outros atributos pelo body
 @viagem_blueprint.route('/filtros', methods=['GET'])
 def get_viagens_filtros():
@@ -112,7 +112,7 @@ def get_viagens_filtros():
     return response
 
 
-#Obter as Viagens todas de um utilizador condutor
+# GET Obter as Viagens todas de um utilizador condutor
 @viagem_blueprint.route('/todos/:id', methods=['GET'])
 def get_all_viagens_condutor(id):
     # querying the database
@@ -149,7 +149,7 @@ def get_all_viagens_condutor(id):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-#Obter uma Viagem em especifico
+# GET Obter uma Viagem em especifico
 @viagem_blueprint.route('/<int:id>', methods=['GET'])
 def getViagem(id):
      viagem=Viagem.query.get(id)
@@ -184,7 +184,7 @@ def getViagem(id):
 
 
 
-#Registar uma viagem
+# POST Registar uma viagem
 @viagem_blueprint.route('/registo', methods=['POST'])
 def registar():
     # creates a dictionary of the form data
@@ -236,7 +236,7 @@ def registar():
         
         return make_response('Esta viagem ja existe.', 202)
 
-#Eliminar Viagem
+# DELETE Eliminar Viagem
 @viagem_blueprint.route('/<int:idviagem>/remove', methods=['Delete'])
 def eliminarPedido(idviagem):
     print ('its working--Delete group')
@@ -248,34 +248,28 @@ def eliminarPedido(idviagem):
         return make_response('Viagem nao existe', 204)
 
 
-#Atualizar pedido
+# PUT Atualizar viagem
 #esta a dar merda
 @viagem_blueprint.route('/<int:idviagem>/update', methods=['Put'])
 def updateViagem(idviagem):
 
     viagem = Viagem.query.get(idviagem)
-    print(viagem)
 
     if viagem is not None:
         data=request.form
 
-    
-
         for d in data:
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
-            setattr(viagem,d,data.get(d))
-            
+            setattr(viagem,d,data.get(d))         
         
         db.session.commit()
-        
 
-        
-
-        return make_response('Pedido atualizado com sucesso', 200)
+        return make_response('Viagem atualizado com sucesso', 200)
     else:
-        return make_response('Pedido nao existe', 404)
+        return make_response('Viagem nao existe', 404)
         
     
+
 @viagem_blueprint.route('/todos/passageiro/<string:idPassageiro>', methods=['GET'])
 def get_all_viagens_passageirocustos(idPassageiro):
     # querying the database
@@ -298,7 +292,6 @@ def get_all_viagens_passageirocustos(idPassageiro):
     response = jsonify({'Viagem': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
-
 
 @viagem_blueprint.route('/todos/condutor/<string:idDriver>', methods=['GET'])
 def get_all_viagens_condutor_custos(idDriver):
