@@ -30,7 +30,7 @@ def get_all_pedidos():
             'nrPessoas': pedido.nrPessoas,
             'pickupLocal': pedido.pickupLocal,
             'destino':pedido.localDestino,
-            'aceite':pedido.aceite,
+            'estado':pedido.estado,
         })
 
     response = jsonify({'Pedidos': output})
@@ -54,7 +54,7 @@ def getPedido(id):
             'nrPessoas': pedido.nrPessoas,
             'pickupLocal': pedido.pickupLocal,
             'destino':pedido.localDestino,
-            'aceite':pedido.aceite,
+            'estado':pedido.estado,
         })
          response= jsonify({'Pedido': output})
          response.headers.add("Access-Control-Allow-Origin", "*")
@@ -84,7 +84,7 @@ def registar():
             nrPessoas=nrPessoas,
             pickupLocal=pickupLocal,
             localDestino=localDestino,
-            aceite=0
+            estado="Pedido Feito"
         )
         # insert user
         db.session.add(pedido)
@@ -151,7 +151,7 @@ def getAllpedidosRecebidos(idCondutor):
              'pickupLocal': s.pickupLocal,
              'localDestino' :s.localDestino,
              'nrPessoas': s.nrPessoas,
-             'aceite': s.aceite
+             'estado': s.estado
          })
 
     
@@ -178,7 +178,7 @@ def getAllPedidosEnviados(idPassageiro):
             'nrPessoas': pedido.nrPessoas,
             'pickupLocal': pedido.pickupLocal,
             'localDestino':pedido.localDestino,
-            'aceite':pedido.aceite,
+            'estado':pedido.estado,
         })
 
         response= jsonify({'Enviado': output})
@@ -194,7 +194,7 @@ def aceitaPedido(idpedido):
     pedido = Pedido.query.get(idpedido)
     print("IDentificador do pedido" , pedido.idPedido)
     #mudar na tabela pedidos,
-    setattr(pedido,"aceite",1)
+    setattr(pedido,"estado","Aceite")
     custo = Viagem.query.get(pedido.fk_Viagem_idViagem).custoPessoa
     #inserir entrada na tabela "usufrui"
     usufrui = Usufrui(

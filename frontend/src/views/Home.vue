@@ -1,27 +1,22 @@
 <template>
   <v-container>
     <v-card class="d-flex justify-center mb-6" flat>
-     <img src= "../assets/VRUM_logo.png"  >
+      <img src="../assets/VRUM_logo.png" />
     </v-card>
-     <v-card class="d-flex justify-center mb-6" flat >
-      <v-btn to="/auth" color="#7e380e" class="white--text">
-      Entrar
-    </v-btn> 
-     </v-card> 
-    <Footer class="mt-5"></Footer>
+    <v-card class="d-flex justify-center mb-6" flat>
+      <v-btn to="/auth" color="#7e380e" class="white--text"> Entrar </v-btn>
+    </v-card>
   </v-container>
 </template>
 
 <script>
-
-import Footer from "../components/Footer.vue"
-
-
 export default {
   name: "Home",
-
-  components: {
-      Footer
+  computed: {
+    currentRouteName() {
+      console.log(this.$route.name);
+      return this.$route.name;
+    },
   },
 };
 </script>

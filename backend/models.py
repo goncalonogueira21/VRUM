@@ -62,9 +62,8 @@ class Pedido(db.Model):
     nrPessoas = db.Column(db.Integer)
     pickupLocal = db.Column(db.String(45))
     localDestino = db.Column(db.String(45))
-    aceite = db.Column(TINYINT(1))
+    estado = db.Column(db.String(45)) # "Pedido Feito", "Aceite", "Rejeitado", "Cancelado", "Viagem Eliminada"
 
-#
 class Usufrui(db.Model):
     fk_Utilizador_username = db.Column(db.String(45), db.ForeignKey('utilizador.username'), primary_key=True, nullable=False)
     fk_Viagem_idViagem = db.Column(db.Integer, db.ForeignKey('viagem.idViagem'), primary_key=True, nullable=False)

@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `vrum`.`pedido` (
   `nrPessoas` INT NOT NULL,
   `pickupLocal` VARCHAR(45) NOT NULL,
   `localDestino` VARCHAR(45) NOT NULL,
-  `aceite` TINYINT(1) NOT NULL,
+  `estado` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idPedido`),
   INDEX `FK_Pedido_2` (`fk_Utilizador_username` ASC) VISIBLE,
   INDEX `FK_Pedido_3` (`fk_Viagem_idViagem` ASC) VISIBLE,

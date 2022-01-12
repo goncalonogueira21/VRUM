@@ -288,21 +288,19 @@
     <p>Mostrar mapa da viagem</p>
     <p>Butoes para editar a viagem</p> 
     -->
-    <Footer></Footer>
   </v-container>
 </template>
 
 <script>
 import Header from "../components/Header.vue";
-import Footer from "../components/Footer.vue";
 import NavDraw from "../components/NavDraw.vue";
 import { mapState } from "vuex";
 
 export default {
   name: "Viagem",
+
   components: {
     Header,
-    Footer,
     NavDraw,
   },
 
@@ -333,6 +331,7 @@ export default {
       lugares: ["1", "2", "3", "4", "5", "6"],
       pedido: false,
       pedidoID: 0,
+      pedidoAceite: false,
     };
   },
   computed: mapState({
@@ -350,10 +349,6 @@ export default {
     },
   },
   methods: {
-    onClickHeader() {
-      this.$refs.navdraw.fixNav();
-    },
-
     initialize() {
       this.$request("get", "viagem/" + this.$route.params.id)
         .then((response) => {
@@ -429,13 +424,9 @@ export default {
       payload.append("kmsViagem", this.viagem.kmsViagem);
       payload.append("idCondutor", this.username);
       payload.append("descricao", this.viagem.descricao);
-      console.log(this.viagem)
+      console.log(this.viagem);
 
-      this.$request(
-        "put",
-        "viagem/" + this.viagem.id + "/update",
-        payload
-      )
+      this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
         .then((response) => {
           console.log(response);
           this.dialog = !this.dialog;
@@ -467,6 +458,10 @@ export default {
     // },
     close() {
       this.dialog = false;
+    },
+
+    onClickHeader() {
+      this.$refs.navdraw.fixNav();
     },
   },
 };
