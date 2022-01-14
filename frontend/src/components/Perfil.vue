@@ -101,7 +101,7 @@
                   :readonly="readonly"
                   v-model="formData.dataNascimento"
                   color="#7e380e"
-                  label="Data de Nascimento (AAAA-MM-DD)"
+                  label="Data de Nascimento (dd/mm/aaaa)"
                 />
               </v-col>
 

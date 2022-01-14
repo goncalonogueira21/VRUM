@@ -84,7 +84,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `vrum`.`avaliacao` (
   `idAvaliacao` INT NOT NULL AUTO_INCREMENT,
   `fk_Viagem_idViagem` INT NOT NULL,
-  `conteudo` VARCHAR(45) NOT NULL,
+  `conteudo` FLOAT NOT NULL,
   `dataAvaliacao` DATETIME NOT NULL,
   `utilizador` VARCHAR(45) NOT NULL,
   INDEX `FK_Avaliacoes_1` (`fk_Viagem_idViagem` ASC) VISIBLE,

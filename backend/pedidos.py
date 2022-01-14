@@ -168,7 +168,7 @@ def getAllPedidosEnviados(idPassageiro):
     pedido=Pedido.query.filter_by(fk_Utilizador_username=idPassageiro).first()
 
     if not pedido:
-        return make_response('Pedido nao existe', 404)
+        return make_response('Pedido nao existe', 200)
     else:
         output=[]
         

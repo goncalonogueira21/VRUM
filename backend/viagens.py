@@ -50,7 +50,7 @@ def get_all_viagens():
 
 # GET ViagemComFiltros
 #é preciso passar o intervalo de tempo pela querystring e os outros atributos pelo body
-@viagem_blueprint.route('/filtros', methods=['GET'])
+@viagem_blueprint.route('/filtros', methods=['Post'])
 def get_viagens_filtros():
     # querying the database
     # for all the entries in it
@@ -58,6 +58,7 @@ def get_viagens_filtros():
     
     #form
     data = request.form
+    
     #queryString
     arg = request.args
     #if data.get('desde') or ('ate'):

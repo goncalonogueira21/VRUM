@@ -50,7 +50,7 @@ class Carro(db.Model):
 class Avaliacao(db.Model):
     idAvaliacao = db.Column(db.Integer, autoincrement=True, primary_key=True)
     fk_Viagem_idViagem = db.Column(db.Integer, db.ForeignKey('viagem.idViagem'), nullable=False)
-    conteudo = db.Column(db.String(45))
+    conteudo = db.Column(db.Float)
     dataAvaliacao = db.Column(db.DateTime)
     utilizador = db.Column(db.String(45))
 
