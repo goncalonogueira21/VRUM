@@ -21,12 +21,8 @@ import {mapState} from "vuex"
     data () {
       return {
         headers: [
-          {
-            text: 'Viagem',
-            align: 'start',
-            sortable: false,
-            value: 'viagem',
-          },
+          {text: 'Data',align: 'start', value:'data'},
+          {text: 'Viagem',value: 'viagem'},
           { text: 'Origem', value: 'pickupLocal' },
           { text: 'Destino', value: 'localDestino' },
           { text: 'Nrº Pessoas', value:'nrPessoas'},

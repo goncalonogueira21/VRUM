@@ -67,19 +67,27 @@
         </v-list-item>
 
         <!-- List group se for uma secção da barra de navegação lateral que se divida em subsecções-->
-        <v-list-group class="white--text" :value="false" no-action>
+        <v-list-group  :value="false" no-action>
           <template v-slot:activator>
             <v-list-item-icon>
-            <v-icon>mdi-bell-ring</v-icon>
+            <v-icon :color="cor">mdi-bell-ring</v-icon>
           </v-list-item-icon>
-            <v-list-item-title class="white--text"
+            <v-list-item-title :class="corText" 
               >Notificações</v-list-item-title
             >
           </template>
+          
           <v-list-item link to="/pedidos">
+          <v-list-item-icon>
+            <v-icon>mdi-clipboard</v-icon>
+          </v-list-item-icon>
             <v-list-item-title class="white--text">Pedidos</v-list-item-title>
           </v-list-item>
+          
           <v-list-item link to="/inbox">
+          <v-list-item-icon>
+            <v-icon>mdi-mail</v-icon>
+          </v-list-item-icon>
             <v-list-item-title class="white--text">Mensagens</v-list-item-title>
           </v-list-item>
         </v-list-group>
@@ -100,19 +108,52 @@
 
 <script>
 import {mapActions} from "vuex"
+import { mapState } from "vuex";
+
 export default {
+  computed: mapState({
+    username: (state) => state.auth.username,
+  }),
   data() {
     return {
       miniVariant: true,
       expandOnHover: true,
       drawerOn: true,
       tempDrawer: false,
-    };
+      cor:'white',
+      corText:'white--text'
+    }
+  },
+  created(){
+  
+    this.$request("get", "pedido/todos/recebido/notificacao/" + this.username)
+      .then((response) => {
+        if ((response.data.RecebidoNotificacao).length >0){
+          this.cor="black"
+          this.corText="black--text"
+        }
+        
+      })
+      .catch((error) => {
+        console.log(" z" +error.response);
+      });
+
+      this.$request("get", "pedido/todos/enviado/notificacao/" + this.username)
+      .then((response) => {
+        if ((response.data.EnviadoNotificacao).length >0){
+          this.cor="black"
+          this.corText="black--text"
+        }
+      })
+      .catch((error) => {
+        console.log("zz"+error.response);
+      });
   },
   methods: {
    ...mapActions({
       logOut: 'auth/logOut'
     }),
+    
     logout(){
       this.logOut()
       this.$router.push('/')

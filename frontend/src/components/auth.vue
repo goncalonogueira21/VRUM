@@ -20,6 +20,18 @@
               <v-form ref="loginForm" v-model="valid" lazy-validation>
                 <v-row>
                   <v-col cols="12">
+                  <v-alert 
+                  :value="alert1" 
+                  transition="slide-y-transition" 
+                  dismissible
+                  dense 
+                  type="error"
+                  color="dark red" 
+                  @input="alert1=false">
+                   Erro no login! Tente de novo
+                  </v-alert>
+                  </v-col>
+                  <v-col cols="12">
                     <v-text-field
                       v-model="loginUsername"
                       :rules="[rules.required]"
@@ -63,6 +75,18 @@
             <v-card-text>
               <v-form ref="registerForm" v-model="valid" lazy-validation>
                 <v-row>
+                  <v-col cols="12">
+                  <v-alert 
+                    :value="alert"
+                    transition="slide-y-transition"
+                    dense
+                    color="dark red"
+                    dismissible
+                    type="error" 
+                    @input="alert=false">
+                        Utilizador ja existe
+                    </v-alert>
+                  </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
                       v-model="firstName"
@@ -153,11 +177,32 @@ export default {
     passwordMatch() {
       return () => this.password === this.verify || "Password must match";
     },
+   
+  }, 
+  mounted() {
+    if(this.alert1){
+      this.hide_alert1();
+    }
+    if(this.alert){
+      this.hide_alert();
+    }
+    
   },
   methods: {
     ...mapActions({
       signIn: "auth/signIn",
     }),
+    hide_alert() {
+      window.setInterval(() => {
+        this.alert = false;
+      }, 6000)    
+    },
+    hide_alert1() {
+      window.setInterval(() => {
+        this.alert1 = false;
+      }, 6000)    
+    },
+
     validateLogin() {
       const payload = {
         username: this.loginUsername,
@@ -167,7 +212,9 @@ export default {
         (response) => {
           if (response.status == 201) {
             this.$router.push({ name: "homeLogado" });
-          } else console.log(response);
+          } else {
+            this.alert1 = true
+          }
         },
         (error) => {
           console.log(error);
@@ -184,8 +231,12 @@ export default {
 
       axios.post("http://localhost:5000/utilizador/registo", payload).then(
         (response) => {
+          if(response.status == 201) {
           console.log(response.data);
           this.$router.go();
+          } else {
+            this.alert= true
+          }
         },
         (error) => {
           console.log(error);
@@ -224,6 +275,8 @@ export default {
       required: (value) => !!value || "Required.",
       min: (v) => (v && v.length >= 8) || "Min 8 characters",
     },
+    alert: false,
+    alert1: false
   }),
 };
 </script>

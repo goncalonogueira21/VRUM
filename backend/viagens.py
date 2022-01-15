@@ -279,9 +279,9 @@ def get_all_viagens_passageirocustos(idPassageiro):
     # for all the entries in it
     output = []
 
-    result = db.session.query(Usufrui, Viagem).filter(and_(Usufrui.fk_Utilizador_username == idPassageiro, Usufrui.fk_Viagem_idViagem==Viagem.idViagem)).all()
+    result = db.session.query(Usufrui, Viagem).filter(and_(Usufrui.fk_Utilizador_username == idPassageiro, Usufrui.fk_Viagem_idViagem==Viagem.idViagem,Viagem.estado == 'Finalizada')).all()
     for r,s in result:
-        print ("VALOR E : ", r.fk_Viagem_idViagem,s.localInicio )
+
         output.append({
             'idViagem': r.fk_Viagem_idViagem,
             'matricula': s.fk_Carro_matricula,

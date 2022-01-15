@@ -6,14 +6,14 @@
     class="elevation-1"
   >
     <template v-slot:item.actions="{ item }">
-      <div v-if="!item.aceite" class="text-center">
-        <v-btn color="#7e380e" dark @click="sheet = !sheet"> Ver Pedido </v-btn>
+      <div v-if="item.estado!= 'Aceite'" class="text-center">
+        <v-btn color="#7e380e" dark @click="verPedido(item)"> Ver Pedido </v-btn>
         <v-bottom-sheet max-width v-model="sheet">
           <v-sheet class="text-center" height="200px">
-            <v-btn class="mt-6" text color="green" @click="con(item)">
+            <v-btn class="mt-6" text color="green" @click="aceitarPedido(item)">
               Aceitar
             </v-btn>
-            <v-btn class="mt-6" text color="red" @click="con(item)">
+            <v-btn class="mt-6" text color="red" @click="rejeitarPedido(item)">
               Rejeitar
             </v-btn>
             <div class="py-7">
@@ -37,10 +37,11 @@ export default {
     return {
       headers: [
         {
-          text: "Passageiro",
+          text: "Data",
           align: "start",
-          value: "username",
+          value: "data",
         },
+        {text: "Passageiro",value: "username"},
         { text: "Viagem", value: "viagem" },
         { text: "Origem", value: "pickupLocal" },
         { text: "Destino", value: "localDestino" },
@@ -66,6 +67,44 @@ export default {
       console.log(item);
       this.sheet = !this.sheet;
     },
+    verPedido(item){
+      var payload = new FormData();
+      payload.append("notificacao", 0);
+      
+      this.$request("put", "pedido/" + item.idPedido + "/update",payload)
+        .then((response) => {
+          console.log(response.data);
+          this.sheet= !this.sheet
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    aceitarPedido(item){
+      this.$request("put", "pedido/" + item.idPedido + "/aceitar")
+        .then((response) => {
+          console.log(response.data);
+          this.sheet= !this.sheet
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    rejeitaPedido(item){
+        var payload = new FormData();
+        payload.append("notificacao", 1);
+        payload.append('estado', 'Rejeitado')
+      
+      this.$request("put", "pedido/" + item.idPedido + "/update",payload)
+        .then((response) => {
+          console.log(response.data);
+          this.sheet= !this.sheet
+          this.$router.go();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   },
 };
 </script>

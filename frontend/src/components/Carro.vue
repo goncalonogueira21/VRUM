@@ -10,12 +10,69 @@
       <v-toolbar
         flat
       >
+      
         <v-spacer></v-spacer>
+        <template>
+        <v-row >
+              <v-col class="mt-6" cols="12">
+                  <v-alert
+                    class="mt-16"
+                    :value="alert"
+                    transition="slide-y-transition"
+                    dense
+                    color="dark red"
+                    dismissible
+                    type="error" 
+                    @input="alert=false">
+                        Erro na operação
+                    </v-alert>
+          </v-col>
+          <v-col class="mt-6" cols="12">
+                  <v-alert
+                    class="mt-16" 
+                    :value="alertCarroInserido"
+                    transition="slide-y-transition"
+                    dense
+                    color="dark green"
+                    dismissible
+                    type="success" 
+                    @input="alertCarroInserido=false">
+                        Carro inserido com sucesso
+                    </v-alert>
+            </v-col>
+            <v-col class="mt-4" cols="12">
+                  <v-alert 
+                    :value="alertCarroEditado"
+                    transition="slide-y-transition"
+                    dense
+                    color="dark green"
+                    dismissible
+                    type="success" 
+                    @input="alertCarroEditado=false">
+                        Carro editado com sucesso
+                    </v-alert>
+            </v-col>
+            <v-col class="mb-16" cols="12">
+                  <v-alert 
+                    :value="alertCarroApagado"
+                    transition="slide-y-transition"
+                    dense
+                    color="dark green"
+                    dismissible
+                    type="success" 
+                    @input="alertCarroApagado=false">
+                        Carro apagado com sucesso
+                    </v-alert>
+              </v-col>
+            </v-row>
+      </template>
         <v-dialog
           v-model="dialog"
           max-width="800px"
         >
+          
           <template v-slot:activator="{ on, attrs }">
+            
             <v-btn
               color="#7e380e"
               dark
@@ -193,6 +250,7 @@
         mdi-delete
       </v-icon>
     </template>
+     
   </v-data-table>
 </template>
 
@@ -247,7 +305,11 @@ import {mapState} from "vuex"
       required: value => !!value || "Required.",
       },
       base64:'',
-      file:''
+      file:'',
+      alert:false,
+      alertCarroInserido:false,
+      alertCarroApagado:false,
+      alertCarroEditado:false
     }),
 
     computed: 
@@ -264,7 +326,7 @@ import {mapState} from "vuex"
         val || this.closeDelete()
       },
     },
-
+    
     created () {
       this.initialize()
     },
@@ -280,6 +342,7 @@ import {mapState} from "vuex"
                 this.carros=response.data.Carros   
               }).catch((error)=>{
                 console.log(error)
+                this.alert=true
               })
       },
 
@@ -300,8 +363,10 @@ import {mapState} from "vuex"
         this.$request("delete","carro/" + this.editedItem.matricula + "/remove")
           .then((response)=>{
             console.log(response)
+            this.alertCarroApagado=true
           }).catch((error)=>{
             console.log(error)
+            this.alert=true
           })
 
         this.carros.splice(this.editedIndex, 1)
@@ -341,17 +406,21 @@ import {mapState} from "vuex"
           this.$request("put", "carro/" + this.editedItem.matricula + "/update", payload)
           .then((response)=>{
             console.log(response)
+            this.alertCarroEditado=true
           }).catch((error)=>{
             console.log(error)
+            this.alert=true
           })
           
         } else {
           this.$request("post","carro/registo", payload, {'Content-Type': ' multipart/form-data'} )
           .then((response)=>{
               console.log(response)
+              this.alertCarroInserido=true
           })
           .catch((error)=>{
             console.log(error)
+            this.alert=true
           })
           
         }

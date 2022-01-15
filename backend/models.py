@@ -63,6 +63,7 @@ class Pedido(db.Model):
     pickupLocal = db.Column(db.String(45))
     localDestino = db.Column(db.String(45))
     estado = db.Column(db.String(45)) # "Pedido Feito", "Aceite", "Rejeitado", "Cancelado", "Viagem Eliminada"
+    notificacao = db.Column(TINYINT(1))
 
 class Usufrui(db.Model):
     fk_Utilizador_username = db.Column(db.String(45), db.ForeignKey('utilizador.username'), primary_key=True, nullable=False)

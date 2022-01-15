@@ -2,7 +2,56 @@
   <v-container class="my-5">
     <Header @clicked="onClickHeader"></Header>
     <NavDraw ref="navdraw"></NavDraw>
-
+     <v-alert 
+      :value="alertPedidoFeito"
+      transition="slide-y-transition"
+      dense
+      color="dark green"
+      dismissible
+      type="success" 
+      @input="alertPedidoFeito=false">
+        Pedido enviado
+      </v-alert>
+      <v-alert 
+      :value="alertPedidoCancelado"
+      transition="slide-y-transition"
+      dense
+      color="dark green"
+      dismissible
+      type="success" 
+      @input="alertPedidoCancelado=false">
+        Pedido cancelado
+      </v-alert>
+      <v-alert 
+      :value="alertErro"
+      transition="slide-y-transition"
+      dense
+      color="dark red"
+      dismissible
+      type="error" 
+      @input="alertErro=false">
+        Erro!
+      </v-alert>
+        <v-alert 
+      :value="alertViagemEditada"
+      transition="slide-y-transition"
+      dense
+      color="dark green"
+      dismissible
+      type="success" 
+      @input="alertViagemEditada=false">
+        Viagem Editada
+      </v-alert>
+        <v-alert 
+      :value="alertViagemEliminada"
+      transition="slide-y-transition"
+      dense
+      color="dark green"
+      dismissible
+      type="success" 
+      @input="alertViagemEliminada=false">
+        Viagem Eliminada
+      </v-alert>
     <v-card class="mx-auto" max-width="344" outlined elevation="5">
       <v-list-item three-line>
         <v-list-item-content>
@@ -69,8 +118,8 @@
         </div>
 
         <!-- Butões de Condutor  -->
-        <v-div v-else-if="this.username == viagem.idCondutor">
-          <v-btn class="ma-2" color="success" outlined @click="toDo">
+        <v-div v-else-if="this.username == viagem.idCondutor && viagem.estado == 'Agendada'">
+          <v-btn class="ma-2" color="success" outlined @click="startViagem">
             Iniciar viagem
             <v-icon right> mdi-play-circle-outline </v-icon>
           </v-btn>
@@ -96,6 +145,23 @@
             <v-icon right> mdi-delete-outline </v-icon>
           </v-btn>
         </v-div>
+            <!-- Butões de Condutor depois de iniciar viagem  -->
+            <v-div v-if=" viagem.estado ==  'A decorrer' ">
+                  <v-btn
+                    class="ma-2"
+                    color="red"
+                    outlined
+                    pill
+                    @click="terminarViagem"
+                  >
+                    Terminar Viagem
+                    <v-icon right> mdi-delete-outline </v-icon>
+                  </v-btn>
+            </v-div>
+              <v-div v-if=" viagem.estado ==  'Finalizada' ">
+                  <h3>Viagem Terminada</h3>
+            </v-div>
+
       </div>
 
       <!-- Dialog de Delete -->
@@ -283,6 +349,7 @@
       </v-dialog>
     </v-card>
 
+
     <!-- 
     <p>Mostrar dados da viagem</p>
     <p>Mostrar mapa da viagem</p>
@@ -310,6 +377,7 @@ export default {
       viagem: {},
       dialog: false,
       dialogDelete: false,
+      dialogTerminar: false,
       rules: {
         required: [(v) => !!v || "Field is required"],
         length30: [
@@ -332,6 +400,11 @@ export default {
       pedido: false,
       pedidoID: 0,
       pedidoAceite: false,
+      alertPedidoFeito: false,
+      alertPedidoCancelado: false,
+      alertViagemEditada: false,
+      alertViagemEliminada: false,
+      alertErro: false
     };
   },
   computed: mapState({
@@ -387,9 +460,11 @@ export default {
       this.$request("post", "pedido/registo", payload)
         .then((response) => {
           console.log(response.data);
+          this.alertPedidoFeito= true
         })
         .catch((error) => {
           console.log(error);
+          this.alertErro= true
         });
 
       this.pedido = true;
@@ -399,9 +474,11 @@ export default {
       this.$request("delete", "pedido/" + this.pedidoID + "/remove")
         .then((response) => {
           console.log(response);
+          this.alertPedidoCancelado=true
         })
         .catch((error) => {
           console.log(error);
+          this.alert=true
         });
       this.pedido = false;
       this.pedidoID = 0;
@@ -430,20 +507,44 @@ export default {
         .then((response) => {
           console.log(response);
           this.dialog = !this.dialog;
+          this.alertViagemEditada=true
         })
         .catch((error) => {
           console.log(error);
+          this.alertErro= true
         });
+    },
+    startViagem(){
+      var payload = new FormData();
+      payload.append("estado", "A decorrer");
+      this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
+        .then((response)=> {
+          console.log(response)
+        }).catch((error)=>{
+          console.log(error)
+        })
     },
     eliminarViagem() {
       this.$request("delete", "viagem/" + this.$route.params.id + "/remove")
         .then((response) => {
           console.log(response);
+          this.alertViagemEliminada= true
         })
         .catch((error) => {
           console.log(error);
+          this.alertErro= true
         });
       this.dialogDelete = !this.dialogDelete;
+    },
+    terminarViagem(){
+      var payload = new FormData();
+      payload.append("estado", "Finalizada");
+      this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
+        .then((response)=> {
+          console.log(response)
+        }).catch((error)=>{
+          console.log(error)
+        })
     },
     // getCarros() {
     //   console.log("user", this.username);
