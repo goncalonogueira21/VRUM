@@ -151,9 +151,34 @@ def getAllpedidosRecebidos(idCondutor):
              'pickupLocal': s.pickupLocal,
              'localDestino' :s.localDestino,
              'nrPessoas': s.nrPessoas,
-             'estado': s.estado
+             'estado': s.estado,
+             'idPedido': s.idPedido
          })
 
+    
+    response = jsonify({'Recebido': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+# GET Todos os pedidos POR ACEITAR recebidos de um utilizador 
+@pedido_blueprint.route('todos/recebidoAceitar/<string:idCondutor>', methods=['GET'])
+def getAllpedidosRecebidos_porAceitar(idCondutor):
+
+    output = []
+
+    result = db.session.query(Viagem, Pedido).filter(and_(Viagem.idCondutor == idCondutor, Viagem.idViagem==Pedido.fk_Viagem_idViagem)).all()
+
+    for r,s in result:
+        if s.estado == "Pedido Feito":
+            output.append({
+                'username': s.fk_Utilizador_username,
+                'viagem': s. fk_Viagem_idViagem,
+                'pickupLocal': s.pickupLocal,
+                'localDestino' :s.localDestino,
+                'nrPessoas': s.nrPessoas,
+                'estado': s.estado,
+                'idPedido': s.idPedido
+            })
     
     response = jsonify({'Recebido': output})
     response.headers.add("Access-Control-Allow-Origin", "*")

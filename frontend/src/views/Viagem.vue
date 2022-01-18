@@ -41,6 +41,33 @@
       </v-list-item>
 
       <v-spacer></v-spacer>
+      <v-div v-if="aceites[0]">
+      <v-list subheader>
+      <v-subheader>Utilizadores Aceites</v-subheader>
+
+      <v-list-item
+        v-for="pedido in aceites"
+        :key="pedido.username"
+      >
+        <!-- <v-list-item-avatar>
+          <v-img
+            :alt="`${user.foto} avatar`"
+            :src="chat.avatar"
+          ></v-img>
+        </v-list-item-avatar> -->
+
+        <v-list-item-content>
+          <v-list-item-title v-text="pedido.username"></v-list-item-title>
+        </v-list-item-content>
+
+        <v-list-item-icon>
+          <v-icon :color="pediddo.active ? 'deep-purple accent-4' : 'grey'">
+            mdi-message-outline
+          </v-icon>
+        </v-list-item-icon>
+      </v-list-item>
+    </v-list>
+    </v-div>
 
       <div class="text-center">
         <!-- Butões de Passageiro SEM Pedido -->
@@ -62,10 +89,24 @@
             Enviar Mensagem
             <v-icon right> mdi-android-messages </v-icon>
           </v-btn>
-          <v-btn class="ma-2" color="red" outlined @click="deletePassageiro">
-            Cancelar Pedido
-            <v-icon right> mdi-delete-outline </v-icon>
-          </v-btn>
+          <v-div v-if="pedidoAceite">
+            <v-btn
+              disabled
+              class="ma-2"
+              color="red"
+              outlined
+              @click="deletePassageiro"
+            >
+              Cancelar Pedido
+              <v-icon right> mdi-delete-outline </v-icon>
+            </v-btn>
+          </v-div>
+          <v-div v-else>
+            <v-btn class="ma-2" color="red" outlined @click="deletePassageiro">
+              Cancelar Pedido
+              <v-icon right> mdi-delete-outline </v-icon>
+            </v-btn>
+          </v-div>
         </div>
 
         <!-- Butões de Condutor  -->
@@ -332,6 +373,7 @@ export default {
       pedido: false,
       pedidoID: 0,
       pedidoAceite: false,
+      aceites: [],
     };
   },
   computed: mapState({
@@ -361,13 +403,21 @@ export default {
       // Verifica se o user fez um pedido nesta viagem
       this.$request("get", "pedido/todos")
         .then((response) => {
-          response.data.Pedidos.map((item) => {
+          console.log("RESPONSE", response);
+          response.data.Pedidos.map((pedido) => {
+            console.log("ITEM", pedido);
+            console.log("USER", this.username);
             if (
-              item.viagem == this.viagem.id &&
-              item.username == this.username
+              pedido.viagem == this.viagem.id &&
+              pedido.username == this.username
             ) {
               this.pedido = true;
-              this.pedidoID = item.id;
+              this.pedidoID = pedido.id;
+            }
+
+            if (pedido.estado == "Aceite" && pedido.viagem == this.viagem.id) {
+              this.pedidoAceite = true;
+              this.aceites.push(pedido);
             }
           });
         })

@@ -65,7 +65,7 @@ export default {
         },
         {
           text: "Bagagem",
-          value: "bagagem",
+          value: "bagagem"
         },
         {
           text: "Custo por Pessoa",
