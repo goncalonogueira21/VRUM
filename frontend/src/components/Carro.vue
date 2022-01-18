@@ -305,7 +305,6 @@ import {mapState} from "vuex"
       required: value => !!value || "Required.",
       },
       base64:'',
-      file:'',
       alert:false,
       alertCarroInserido:false,
       alertCarroApagado:false,
@@ -434,14 +433,14 @@ import {mapState} from "vuex"
         
       },
       handleFileUpload( event ){
-        this.file = event.target.files[0];
+        const file = event.target.files[0];
         const reader = new FileReader()
 
           reader.onloadend = () => {
             this.editedItem.foto = reader.result.split(',')[1];
 
           }
-          reader.readAsDataURL(this.file);
+          reader.readAsDataURL(file);
     },
     
     }

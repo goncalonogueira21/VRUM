@@ -4,11 +4,28 @@
     :items="viagens"
     sort-by="Data"
     class="elevation-1"
+    :custom-sort="customSort"
   >
     <template v-slot:top>
       <v-toolbar
         flat
       >
+      <template>
+        <v-row >
+              <v-col cols="12">
+                  <v-alert
+                    :value="alert"
+                    transition="slide-y-transition"
+                    dense
+                    color="dark green"
+                    dismissible
+                    type="success" 
+                    @input="alert=false">
+                        Classificação atribuida com sucesso
+                    </v-alert>
+          </v-col>
+        </v-row>
+      </template>
         
         <v-dialog v-model="dialogRate" max-width="1000px">
           <v-card>
@@ -24,7 +41,9 @@
                      <v-text-field v-model="formRating.condutor" readonly label="Condutor"/> 
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
+                      <p v-if="formRating.hasRating" class="text--h6">Já atribuiu classificação</p>
                       <v-rating
+                        :readonly="formRating.hasRating"
                         background-color="grey"
                         color="brown"
                         length="5"
@@ -88,9 +107,10 @@ import {mapState} from "vuex"
         formRating:{
           idViagem: '',
           condutor:'',
-          rating:''
-        }
-
+          rating:0,
+          hasRating: false
+        },
+        alert: false,
       }
     },
      watch: {
@@ -106,27 +126,66 @@ import {mapState} from "vuex"
           console.log(error.response)
         })
     },
+    mounted() {
+    if(alert){
+      this.hide_alert();
+    }
+    
+  },
     methods:{
+      hide_alert() {
+      window.setInterval(() => {
+        this.alert = false;
+        }, 3000)    
+      },
       closeRate () {
         this.dialogRate = false
       },
       rateUser(item) {
         this.formRating.idViagem = item.idViagem,
-        this.formRating.condutor= item.condutor,
+        this.formRating.condutor= item.condutor
+        var payload = new FormData();
+
+        payload.append('username',this.username);
+        this.$request("post","avaliacao/" + item.idViagem ,payload)
+          .then((response) =>{
+            
+              if(response.status==201){
+                  this.alert=true
+              } else if (response.status==200) {
+                this.formRating.rating= response.data.Rating
+                this.formRating.hasRating= true
+              }
+              
+            }).catch((error)=>{
+              console.log(error)
+            })
+
         this.dialogRate = true
       },
       rateUserConfirm() {
-         var payload = new FormData();
-         payload.append('rating', this.formRating.rating);
-         payload.append('username', this.username)
+        var payload = new FormData();
+        payload.append('rating', this.formRating.rating);
+        payload.append('username', this.username)
         this.$request('post','avaliacao/'+ this.formRating.idViagem,payload)
             .then((response) =>{
               console.log(response)
+              this.alert=true
             }).catch((error)=>{
               console.log(error)
             })
         this.closeRate()
-    }
+    },
+    customSort(items, index, isDesc) {
+        items.sort((a, b) => {
+          if (isDesc != "false") {
+            return a[index] < b[index] ? -1 : 1
+          } else {
+            return b[index] < a[index] ? -1 : 1
+          }
+        })
+        return items
+      },
   }
  }
 </script>

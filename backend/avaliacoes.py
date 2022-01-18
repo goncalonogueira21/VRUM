@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from flask import Blueprint, jsonify, make_response, request
 from sqlalchemy import text, Date, and_
 from datetime import date
@@ -19,6 +20,7 @@ def rate_user(id):
     user = Utilizador.query.get(id_condutor)
 
     rating = Avaliacao.query.filter((Avaliacao.utilizador==current_user) & (Avaliacao.fk_Viagem_idViagem==id)).first()
+    
 
     if not rating:
         rating = Avaliacao(fk_Viagem_idViagem=id, conteudo=new_score, dataAvaliacao=date.today(), utilizador=current_user)
@@ -37,11 +39,7 @@ def rate_user(id):
         db.session.add(rating)
         db.session.commit()
 
-        return make_response('Successfully registered.', 200)
-    else:
-        return make_response('Já atribui classificação', 200)
+        return make_response('Successfully registered.', 201)
+    else :
+        return make_response({'Rating': rating.conteudo}, 200)
 
-
-      
-
-  

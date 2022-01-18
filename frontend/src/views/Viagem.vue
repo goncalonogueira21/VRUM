@@ -520,6 +520,7 @@ export default {
       this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
         .then((response)=> {
           console.log(response)
+          this.$router.go();
         }).catch((error)=>{
           console.log(error)
         })
@@ -542,6 +543,7 @@ export default {
       this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
         .then((response)=> {
           console.log(response)
+          this.$router.go();
         }).catch((error)=>{
           console.log(error)
         })

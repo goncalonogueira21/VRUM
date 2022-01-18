@@ -4,6 +4,7 @@
     :items="recebidos"
     :hide-default-footer="true"
     class="elevation-1"
+    :custom-sort="customSort"
   >
     <template v-slot:item.actions="{ item }">
       <div v-if="item.estado!= 'Aceite'" class="text-center">
@@ -51,6 +52,25 @@ export default {
       ],
       recebidos: [],
       sheet: false,
+      editedIndex: -1,
+      editedItem: {
+        data: '',
+        username: '',
+        viagem: '',
+        pickupLocal: '',
+        localDestino: '',
+        nrPessoas: '',
+        estado: ''
+      },
+      defaultItem: {
+        data: '',
+        username: '',
+        viagem: '',
+        pickupLocal: '',
+        localDestino: '',
+        nrPessoas: '',
+        estado: ''
+      },
     };
   },
   created() {
@@ -63,6 +83,16 @@ export default {
       });
   },
   methods: {
+    customSort(items, index, isDesc) {
+        items.sort((a, b) => {
+          if (isDesc != "false") {
+            return a[index] < b[index] ? -1 : 1
+          } else {
+            return b[index] < a[index] ? -1 : 1
+          }
+        })
+        return items
+      },
     con(item) {
       console.log(item);
       this.sheet = !this.sheet;
@@ -79,6 +109,8 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+        this.editedIndex = this.carros.indexOf(item)
+        this.editedItem = Object.assign({}, item)
     },
     aceitarPedido(item){
       this.$request("put", "pedido/" + item.idPedido + "/aceitar")
@@ -89,6 +121,11 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+        if (this.editedIndex > -1) {
+          Object.assign(this.carros[this.editedIndex], this.editedItem)
+        } else {
+          this.carros.push(this.editedItem)
+        }
     },
     rejeitaPedido(item){
         var payload = new FormData();
