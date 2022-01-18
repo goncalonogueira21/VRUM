@@ -5,6 +5,7 @@
     item-key="name"
     class="elevation-1"
     :hide-default-footer="true"
+    :custom-sort="customSort"
 
   >
     
@@ -21,12 +22,8 @@ import {mapState} from "vuex"
     data () {
       return {
         headers: [
-          {
-            text: 'Viagem',
-            align: 'start',
-            sortable: false,
-            value: 'viagem',
-          },
+          {text: 'Data',align: 'start', value:'data'},
+          {text: 'Viagem',value: 'viagem'},
           { text: 'Origem', value: 'pickupLocal' },
           { text: 'Destino', value: 'localDestino' },
           { text: 'Nrº Pessoas', value:'nrPessoas'},
@@ -42,6 +39,18 @@ import {mapState} from "vuex"
         }).catch((error)=>{
           console.log(error.response)
         })
+    },
+    methods:{
+      customSort(items, index, isDesc) {
+        items.sort((a, b) => {
+          if (isDesc != "false") {
+            return a[index] < b[index] ? -1 : 1
+          } else {
+            return b[index] < a[index] ? -1 : 1
+          }
+        })
+        return items
+      }
     }
   }
 </script>

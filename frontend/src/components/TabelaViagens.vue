@@ -8,7 +8,7 @@
       :pageCount="numberOfPages"
       :hide-default-footer="true"
       :options.sync="options"
-      sort-by="name"
+      :custom-sort="customSort"
     >
 
     <template v-slot:item.id="{ item }">
@@ -33,6 +33,16 @@ export default {
       loading: true,
       options: {},
       headers: [
+         {
+          text: "Data",
+          value: "dataInicio",
+          align: "start",
+          sortDesc: true
+        },
+        {
+          text: "Hora",
+          value: "horaInicio",
+        },
         {
           text: "Condutor",
           value: "idCondutor",
@@ -50,14 +60,6 @@ export default {
         {
           text: "Destino",
           value: "localDestino",
-        },
-        {
-          text: "Data",
-          value: "dataInicio",
-        },
-        {
-          text: "Hora",
-          value: "horaInicio",
         },
         {
           text: "Lugares Disponivel",
@@ -113,6 +115,16 @@ export default {
     pushOtherPage() {
       this.$router.push({ name: 'Viagem' });
     },
+    customSort(items, index, isDesc) {
+        items.sort((a, b) => {
+          if (isDesc != "false") {
+            return a[index] < b[index] ? -1 : 1
+          } else {
+            return b[index] < a[index] ? -1 : 1
+          }
+        })
+        return items
+      },
 
   }
 };

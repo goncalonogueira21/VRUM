@@ -163,7 +163,11 @@
     },
     methods:{
             search(){
-                this.$request("get", "viagem/filtros?dataInicio=" + this.formData.dateFrom + "&" + this.formData.dateTo)
+                var payload = new FormData();
+                payload.append('localInicio', this.formData.PontoPartida);
+                payload.append('localDestino',this.formData.PontoChegada);
+                payload.append('bagagem', this.formData.bagagem ? 1 : 0);
+                this.$request("post", "viagem/filtros?dataInicio=" + this.formData.dateFrom + "&" + this.formData.dateTo, payload)
                     .then((response)=>{
                         console.log(response.data)
                         this.$emit('clicked', response.data.Viagens)

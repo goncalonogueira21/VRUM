@@ -1,8 +1,34 @@
 <template>
   <v-container id="formData-profile-view" fluid tag="section">
     <v-row justify="center">
+        <v-col cols="12">
+                  <v-alert 
+                    :value="alertSucesso"
+                    transition="slide-y-transition"
+                    dense
+                    color="dark green"
+                    dismissible
+                    type="success" 
+                    @input="alertSucesso=false">
+                        Informações alteradas com sucesso
+                    </v-alert>
+                  </v-col>
+               <v-col cols="12">
+                  <v-alert 
+                    :value="alertErro"
+                    transition="slide-y-transition"
+                    dense
+                    color="dark red"
+                    dismissible
+                    type="error" 
+                    @input="alertErro=false">
+                        Erro ao salvar alterações
+                    </v-alert>
+                  </v-col>
       <v-col cols="12" md="4">
+        
         <app-card class="mt-4 ml-16 text-center">
+               
           <v-img
             class="rounded-circle elevation-8 mt-4 ml-4 d-inline-block"
             :src="`data:image/png;base64,${formData.ava}`"
@@ -101,7 +127,7 @@
                   :readonly="readonly"
                   v-model="formData.dataNascimento"
                   color="#7e380e"
-                  label="Data de Nascimento (AAAA-MM-DD)"
+                  label="Data de Nascimento (dd/mm/aaaa)"
                 />
               </v-col>
 
@@ -159,13 +185,33 @@ export default {
       },
       readonly: true,
       url:'',
-      base64:''
+      base64:'',
+      alertSucesso: false,
+      alertErro: false
     };
+  },
+  mounted(){
+    if(this.alertSucesso){
+      this.hide_alertSucesso();
+    }
+    if(this.alertErro){
+      this.hide_alertErro();
+    }
   },
   created(){
    this.initialize()
   },
   methods: {
+    hide_alertSucesso() {
+      window.setInterval(() => {
+        this.alertSucesso = false;
+      }, 6000)    
+    },
+    hide_alertErro() {
+      window.setInterval(() => {
+        this.alertErro = false;
+      }, 6000)    
+    },
     initialize(){
       axios.get("http://localhost:5000/utilizador/" + this.username, {
         headers : { "Content-Type": "application/json" }
@@ -213,8 +259,10 @@ export default {
         .then(
           (response) => {
             console.log(response.data);
+            this.alertSucesso= true
           },
           (error) => {
+            this.alertErro = true
             console.log(error);
           }
         );

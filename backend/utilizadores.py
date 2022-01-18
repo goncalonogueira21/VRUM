@@ -122,8 +122,8 @@ def login():
             'exp': datetime.utcnow() + timedelta(minutes=30)
         }, app.config['SECRET_KEY'])
 
-        # return make_response({'token': token}, 201)
-        return make_response({'token': token.decode('UTF-8')}, 201)
+        return make_response({'token': token}, 201)
+        #return make_response({'token': token.decode('UTF-8')}, 201)
 
     # returns 403 if password is wrong
     return make_response(
@@ -163,7 +163,6 @@ def registar():
     firstname=data.get('firstName')
     lastname=data.get('lastName')
     telemovel=data.get('nrTelemovel')
-    rat=data.get('rating')
     morad=data.get('morada')
     nascimento=data.get('dataNascimento')
     about=data.get('aboutME')
@@ -184,7 +183,7 @@ def registar():
             firstName=firstname,
             lastName=lastname,
             nrTelemovel=telemovel,
-            rating=rat,
+            rating=0,
             morada=morad,
             dataNascimento=nascimento,
             aboutME=about,
@@ -260,6 +259,8 @@ def updateUser(id):
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
             if(d=='avatar'):
                 setattr(user,d,base64.b64decode(data.get(d)))   
+            elif(d=='dataNascimento'):
+                setattr(user,d,datetime.strptime(data.get(d),"%d/%m/%Y"))
             else:
                 setattr(user,d,data.get(d))
             

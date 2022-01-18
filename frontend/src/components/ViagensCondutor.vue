@@ -2,8 +2,8 @@
   <v-data-table
     :headers="headers"
     :items="viagens"
-    item-key="name"
     class="elevation-1"
+    :custom-sort="customSort"
   >
     
   </v-data-table>
@@ -40,6 +40,18 @@ import {mapState} from "vuex"
         }).catch((error)=>{
           console.log(error.response)
         })
+    },
+    methods:{
+      customSort(items, index, isDesc) {
+        items.sort((a, b) => {
+          if (isDesc != "false") {
+            return a[index] < b[index] ? -1 : 1
+          } else {
+            return b[index] < a[index] ? -1 : 1
+          }
+        })
+        return items
+      },
     }
   }
 </script>
