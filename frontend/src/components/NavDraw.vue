@@ -124,31 +124,31 @@ export default {
       corText:'white--text'
     }
   },
-  created(){
+  // created(){
   
-    this.$request("get", "pedido/todos/recebido/notificacao/" + this.username)
-      .then((response) => {
-        if ((response.data.RecebidoNotificacao).length >0){
-          this.cor="black"
-          this.corText="black--text"
-        }
+  //   this.$request("get", "pedido/todos/recebido/notificacao/" + this.username)
+  //     .then((response) => {
+  //       if ((response.data.RecebidoNotificacao).length >0){
+  //         this.cor="black"
+  //         this.corText="black--text"
+  //       }
         
-      })
-      .catch((error) => {
-        console.log(" z" +error.response);
-      });
+  //     })
+  //     .catch((error) => {
+  //       console.log(" z" +error.response);
+  //     });
 
-      this.$request("get", "pedido/todos/enviado/notificacao/" + this.username)
-      .then((response) => {
-        if ((response.data.EnviadoNotificacao).length >0){
-          this.cor="black"
-          this.corText="black--text"
-        }
-      })
-      .catch((error) => {
-        console.log("zz"+error.response);
-      });
-  },
+  //     this.$request("get", "pedido/todos/enviado/notificacao/" + this.username)
+  //     .then((response) => {
+  //       if ((response.data.EnviadoNotificacao).length >0){
+  //         this.cor="black"
+  //         this.corText="black--text"
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log("zz"+error.response);
+  //     });
+  // },
   methods: {
    ...mapActions({
       logOut: 'auth/logOut'
