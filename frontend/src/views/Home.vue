@@ -6,17 +6,7 @@
     <v-card class="d-flex justify-center mb-6" flat>
       <v-btn to="/auth" color="#7e380e" class="white--text"> Entrar </v-btn>
     </v-card>
-    <v-card class="center">
-      <h1>My coords</h1>
-      <p>{{ coordinates.lat }} : {{ coordinates.lng }}</p>
-    </v-card>
-    <v-card class="center">
-      <v-text-field
-        color="#7e380e"
-        label="Localização"
-        v-model="local"
-      ></v-text-field>
-    </v-card>
+
     <GmapMap
       :center="coordinates"
       :zoom="zoom"
@@ -24,6 +14,20 @@
       ref="mapRed"
       @dragend="handleDrag"
     ></GmapMap>
+
+    <VueGooglePlaces
+      :api-key="apiKey"
+      types="(cities)"
+      country="ua"
+      placeholder="Input your place"
+      @placechanged="onPlaceChanged"
+      @noresult="onNoResult"
+    />
+
+    <v-card class="center">
+      <h1>My coords</h1>
+      <p>{{ coordinates.lat }} : {{ coordinates.lng }}</p>
+    </v-card>
   </v-container>
 </template>
 
@@ -37,7 +41,6 @@ export default {
         lat: 41.558364,
         lng: -8.397838,
       },
-      local: "Vieira do Minho",
       zoom: 16,
     };
   },
@@ -53,7 +56,7 @@ export default {
   },
 
   mounted() {
-    // add the mao to a data object
+    // add the map to a data object
     this.$refs.mapRef.$mapPromise.then((map) => (this.map = map));
   },
 
@@ -88,6 +91,20 @@ export default {
 
       localStorage.center = JSON.stringify(center);
       localStorage.zoom = zoom;
+    },
+    cenas() {
+      if (navigator.geolocation) {
+        navigator.geolation.getCurrentPosition(
+          (position) => {
+            console.log(position.coords.latitude);
+          },
+          (error) => {
+            console.log(error.message);
+          }
+        );
+      } else {
+        console.log("not allowed");
+      }
     },
   },
 };

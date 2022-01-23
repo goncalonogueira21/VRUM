@@ -43,3 +43,25 @@ def rate_user(id):
     else :
         return make_response({'Rating': rating.conteudo}, 200)
 
+
+# GET Avaliação
+@avaliacao_blueprint.route('/<string:idViagem>&<string:idUser>', methods=['GET'])
+def get_avaliacao(idViagem, idUser):
+    # querying the database
+    # for all the entries in it
+
+    output = []
+
+    avaliacao=Avaliacao.query.filter_by(fk_Viagem_idViagem=idViagem, utilizador=idUser).first()
+
+    output.append({
+            'idAvaliacao': avaliacao.idAvaliacao,
+            'utilizador': avaliacao.utilizador,
+            'conteudo': avaliacao.conteudo,
+            'fk_Viagem_idViagem': avaliacao.fk_Viagem_idViagem,
+
+        })
+
+    response = jsonify({'Avaliação': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response

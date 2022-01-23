@@ -32,14 +32,15 @@ import {mapState} from "vuex"
         enviados: []
       }
     },
-    // created(){
-    //   this.$request('get','pedido/todos/enviado/' + this.username)
-    //     .then((response)=>{
-    //       this.enviados=response.data.Enviado
-    //     }).catch((error)=>{
-    //       console.log(error.response)
-    //     })
-    // },
+    created(){
+      this.$request('get','pedido/todos/enviado/' + this.username)
+        .then((response)=>{
+          console.log(response.data.Enviado)
+          this.enviados=response.data.Enviado
+        }).catch((error)=>{
+          console.log(error.response)
+        })
+    },
     methods:{
       customSort(items, index, isDesc) {
         items.sort((a, b) => {

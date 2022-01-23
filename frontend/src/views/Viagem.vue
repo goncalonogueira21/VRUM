@@ -57,7 +57,7 @@
     >
       Viagem Eliminada
     </v-alert>
-    <v-card class="mx-auto" max-width="344" outlined elevation="5">
+    <v-card class="mx-auto text-center" max-width="344" outlined elevation="5">
       <v-list-item three-line>
         <v-list-item-content>
           <v-list-item-title class="text-h6 overline mb-1">
@@ -94,35 +94,34 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-spacer></v-spacer>
-      <v-div v-if="aceites[0]">
-        <v-list subheader>
-          <v-subheader>Utilizadores Aceites</v-subheader>
-
-          <v-list-item v-for="pedido in aceites" :key="pedido.username">
-            <!-- <v-list-item-avatar>
-          <v-img
-            :alt="`${user.foto} avatar`"
-            :src="chat.avatar"
-          ></v-img>
-        </v-list-item-avatar> -->
-
-            <v-list-item-content>
-              <v-list-item-title v-text="pedido.username"></v-list-item-title>
-            </v-list-item-content>
-
-            <v-list-item-icon>
-              <v-icon :color="pediddo.active ? 'deep-purple accent-4' : 'grey'">
-                mdi-message-outline
-              </v-icon>
-            </v-list-item-icon>
-          </v-list-item>
-        </v-list>
+      <!-- Lista de Utilizadores aceites de uma viagem -->
+      <v-div v-if="tabela.length > 0">
+        <v-card class="mx-auto" max-width="200" tile>
+          <v-list disabled>
+            <v-subheader>Utilizadores Aceites</v-subheader>
+            <v-list-item-group color="primary">
+              <v-list-item v-for="(user, i) in tabela" :key="i">
+                <v-list-item-content>
+                  <v-list-item-title
+                    v-text="user.fk_Utilizador_username"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-card>
       </v-div>
 
-      <div class="text-center">
+
+      <v-div class="text-center" v-if="viagem.estado != 'Finalizada'">
         <!-- Butões de Passageiro SEM Pedido -->
-        <div v-if="this.username != viagem.idCondutor && !this.pedido && !this.pedidoAceite">
+        <div
+          v-if="
+            this.username != viagem.idCondutor &&
+            !this.pedido &&
+            !this.pedidoAceite
+          "
+        >
           <v-btn
             class="ma-2"
             color="success"
@@ -162,9 +161,9 @@
           </v-div>
         </div>
 
-
         <!-- Butões de Condutor  -->
         <v-div
+          class="text-center"
           v-else-if="
             this.username == viagem.idCondutor && viagem.estado == 'Agendada'
           "
@@ -196,16 +195,20 @@
           </v-btn>
         </v-div>
         <!-- Butões de Condutor depois de iniciar viagem  -->
-        <v-div v-if="viagem.estado == 'A decorrer' && this.username == viagem.idCondutor">
+        <v-div
+          v-if="
+            viagem.estado == 'A decorrer' && this.username == viagem.idCondutor
+          "
+        >
           <v-btn class="ma-2" color="red" outlined pill @click="terminarViagem">
-            Terminar Viagem {{this.username}} {{viagem.idCondutor}}
+            Terminar Viagem
             <v-icon right> mdi-delete-outline </v-icon>
           </v-btn>
         </v-div>
-        <v-div v-if="viagem.estado == 'Finalizada'">
-          <h3>Viagem Terminada</h3>
-        </v-div>
-      </div>
+      </v-div>
+      <v-div class="text-center" v-else>
+        <h3>Viagem Terminada</h3>
+      </v-div>
 
       <!-- Dialog de Delete -->
       <v-dialog v-model="dialogDelete" max-width="500px">
@@ -391,12 +394,6 @@
         </v-card>
       </v-dialog>
     </v-card>
-
-    <!-- 
-    <p>Mostrar dados da viagem</p>
-    <p>Mostrar mapa da viagem</p>
-    <p>Butoes para editar a viagem</p> 
-    -->
   </v-container>
 </template>
 
@@ -415,6 +412,7 @@ export default {
 
   data() {
     return {
+      tabela: [],
       tab: null,
       viagem: {},
       dialog: false,
@@ -455,6 +453,16 @@ export default {
   }),
   created() {
     this.initialize();
+
+    // GET Lista de Passageiros de uma viagem finalizada
+    this.$request("get", "viagem/passageiros/" + this.$route.params.id)
+      .then((response) => {
+        console.log(response.data);
+        this.tabela = response.data.Passageiros;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   watch: {
     dialog(val) {
@@ -489,11 +497,14 @@ export default {
               this.pedidoID = pedido.id;
             }
 
-            if (pedido.estado == "Aceite" && pedido.viagem == this.viagem.id && pedido.username == this.username) {
+            if (
+              pedido.estado == "Aceite" &&
+              pedido.viagem == this.viagem.id &&
+              pedido.username == this.username
+            ) {
               this.pedidoAceite = true;
               this.aceites.push(pedido);
               this.pedido = true;
-
             }
           });
         })
@@ -540,6 +551,7 @@ export default {
     editViagemDialog() {
       this.dialog = !this.dialog;
     },
+
     editarViagem() {
       var payload = new FormData();
       payload.append("lugaresDisp", this.viagem.lugaresDisp);
@@ -567,6 +579,7 @@ export default {
           this.alertErro = true;
         });
     },
+
     startViagem() {
       var payload = new FormData();
       payload.append("estado", "A decorrer");
@@ -579,6 +592,7 @@ export default {
           console.log(error);
         });
     },
+
     eliminarViagem() {
       this.$request("delete", "viagem/" + this.$route.params.id + "/remove")
         .then((response) => {
@@ -591,6 +605,7 @@ export default {
         });
       this.dialogDelete = !this.dialogDelete;
     },
+
     terminarViagem() {
       var payload = new FormData();
       payload.append("estado", "Finalizada");
@@ -603,6 +618,7 @@ export default {
           console.log(error);
         });
     },
+
     // getCarros() {
     //   console.log("user", this.username);
     //   this.$request("get", "carro/" + this.username)

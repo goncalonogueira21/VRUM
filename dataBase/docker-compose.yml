@@ -3,7 +3,7 @@ services:
   db:
     container_name: dataBaseMySql
     restart: always
-    image: mysql:8.0.27
+    image: mysql:8.0.27 # or mysql:8.0.28
     volumes:
         - mysql-db:/var/lib/mysql
     environment:

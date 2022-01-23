@@ -46,6 +46,44 @@ def get_all_viagens():
     return response
 
 
+# GET Lista de Viagens Disponíveis
+@viagem_blueprint.route('/disponiveis', methods=['GET'])
+def get_disponiveis_viagens():
+    # querying the database
+    # for all the entries in it
+    viagens=Viagem.query.all()
+    # converting the query objects
+    # to list of jsons
+    output = []
+    for viagem in viagens:
+        if (viagem.estado == 'Agendada'):
+        # appending the user data json
+        # to the response list
+            output.append({
+                'id': viagem.idViagem,
+                'username': viagem.fk_Carro_matricula,
+                # 'name': user.name,
+                'dataInicio': dt.strftime(viagem.dataInicio, '%Y-%m-%d'),
+                'horaInicio': dt.strftime(viagem.dataInicio, '%H:%M'),
+                'kmsViagem': viagem.kmsViagem,
+                'custoPessoa': viagem.custoPessoa,
+                'localInicio':viagem.localInicio,
+                'bagagem':viagem.bagagem,
+                'localDestino': viagem.localDestino,
+                'nrLugares': viagem.nrLugares,
+                'lugaresDisp': viagem.lugaresDisp,
+                'regularidade': viagem.regularidade,
+                'idCondutor': viagem.idCondutor,
+                'descricao': viagem.descricao,
+                'estado': viagem.estado,
+            })
+
+    response = jsonify({'Viagens': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+
 
 
 # GET ViagemComFiltros
@@ -252,7 +290,6 @@ def eliminarPedido(idviagem):
 
 
 # PUT Atualizar viagem
-#esta a dar merda
 @viagem_blueprint.route('/<int:idviagem>/update', methods=['Put'])
 def updateViagem(idviagem):
 
@@ -272,7 +309,7 @@ def updateViagem(idviagem):
         return make_response('Viagem nao existe', 404)
         
     
-
+# GET Lista de viagens de um Passageiro
 @viagem_blueprint.route('/todos/passageiro/<string:idPassageiro>', methods=['GET'])
 def get_all_viagens_passageirocustos(idPassageiro):
     # querying the database
@@ -296,6 +333,7 @@ def get_all_viagens_passageirocustos(idPassageiro):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+# GET Lista de Viagens de um Condutor
 @viagem_blueprint.route('/todos/condutor/<string:idDriver>', methods=['GET'])
 def get_all_viagens_condutor_custos(idDriver):
     # querying the database
@@ -319,8 +357,30 @@ def get_all_viagens_condutor_custos(idDriver):
             'dataInicio': dt.strftime(viagem.dataInicio, '%Y-%m-%d'),
             'localInicio':viagem.localInicio,
             'localDestino': viagem.localDestino,
-            'custoGanho' : "{:.2f}".format(custos.custoPago) 
+            #'custoGanho' : "{:.2f}".format(custos.custoPago) 
         })  
     response = jsonify({'Viagem': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+# GET Lista de passageiros de uma viagem
+@viagem_blueprint.route('/passageiros/<string:idViagem>', methods=['GET'])
+def get_passageiros_viagem(idViagem):
+    # querying the database
+    # for all the entries in it
+    output = []
+
+    tabela=Usufrui.query.filter_by(fk_Viagem_idViagem=idViagem)
+    for linha in tabela:
+
+        output.append({
+            'idViagem': linha.fk_Viagem_idViagem,
+            'fk_Utilizador_username': linha.fk_Utilizador_username,
+            'custoPago': linha.custoPago
+
+        })
+
+    response = jsonify({'Passageiros': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
