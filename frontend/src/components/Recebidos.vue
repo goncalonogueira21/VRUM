@@ -118,6 +118,7 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.sheet= !this.sheet
+          this.$router.go()
         })
         .catch((error) => {
           console.log(error);

@@ -131,6 +131,7 @@ export default {
       corText:'white--text'
     }
   },
+  
   // created(){
   
   //   this.$request("get", "pedido/todos/recebido/notificacao/" + this.username)
@@ -156,6 +157,7 @@ export default {
   //       console.log("zz"+error.response);
   //     });
   // },
+  
   methods: {
    ...mapActions({
       logOut: 'auth/logOut'

@@ -123,8 +123,7 @@ def login():
             'username': user.username,
             'exp': datetime.utcnow() + timedelta(minutes=30)
         }, app.config['SECRET_KEY'])
-
-        print("TOKEN::", jwt.decode(token, app.config['SECRET_KEY']))
+        
         #return make_response({'token': token}, 201)
         return make_response({'token': token.decode('UTF-8')}, 201)
 
