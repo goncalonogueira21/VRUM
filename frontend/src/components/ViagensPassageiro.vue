@@ -4,6 +4,7 @@
     :items="viagens"
     sort-by="Data"
     class="elevation-1"
+    :hide-default-footer="true"
     :custom-sort="customSort"
   >
     <template v-slot:item.idViagem="{ item }">
@@ -72,7 +73,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="#7e380e" text @click="closeRate">Cancelar</v-btn>
-              <v-btn color="#7e380e" text @click="rateUserConfirm"
+              <v-btn color="#7e380e" :disabled="formRating.hasRating" text @click="rateUserConfirm"
                 >Confirmar</v-btn
               >
               <v-spacer></v-spacer>

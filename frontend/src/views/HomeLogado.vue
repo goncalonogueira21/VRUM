@@ -41,6 +41,14 @@
         </v-list-item-content>
       </v-list-item>
     </v-card>
+    <VueGooglePlaces
+      :api-key="apiKey"
+      types="(cities)"
+      country="ua"
+      placeholder="Input your place"
+      @placechanged="onPlaceChanged"
+      @noresult="onNoResult"
+    />
   </v-container>
 </template>
 
@@ -66,14 +74,14 @@ export default {
       viagem: {},
     };
   },
-  created(){
+  created() {
     this.$request("get", "viagem/" + this.$route.params.id)
-        .then((response) => {
-          this.viagem = response.data.Viagem[0];
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      .then((response) => {
+        this.viagem = response.data.Viagem[0];
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   methods: {
     onClickHeader() {

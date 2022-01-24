@@ -167,19 +167,19 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `vrum`.`mailBox` (
   `idMailBox` INT NOT NULL AUTO_INCREMENT,
   `fk_Utilizador_username` VARCHAR(45) NOT NULL,
-  `fk_Mensagens_idMensagens` INT NOT NULL,
+  `fk_Utilizador_username2` VARCHAR(45) NOT NULL,
   `mailbox` VARCHAR(45) NOT NULL,
   INDEX `fk_mailBox_Utilizador1_idx` (`fk_Utilizador_username` ASC) VISIBLE,
-  INDEX `fk_mailBox_Mensagens1_idx` (`fk_Mensagens_idMensagens` ASC) VISIBLE,
+  INDEX `fk_mailBox_Utilizador2_idx` (`fk_Utilizador_username2` ASC) VISIBLE,
   PRIMARY KEY (`idMailBox`),
   CONSTRAINT `fk_mailBox_Utilizador1`
     FOREIGN KEY (`fk_Utilizador_username`)
     REFERENCES `vrum`.`utilizador` (`username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_mailBox_Mensagens1`
-    FOREIGN KEY (`fk_Mensagens_idMensagens`)
-    REFERENCES `vrum`.`mensagem` (`idMensagem`)
+  CONSTRAINT `fk_mailBox_Utilizador2`
+    FOREIGN KEY (`fk_Utilizador_username`)
+    REFERENCES `vrum`.`utilizador` (`username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

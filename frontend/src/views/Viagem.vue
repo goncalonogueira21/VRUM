@@ -57,7 +57,7 @@
     >
       Viagem Eliminada
     </v-alert>
-    <v-card class="mx-auto text-center" max-width="344" outlined elevation="5">
+    <v-card class="mx-auto text-center" max-width="344" outlined elevation="2">
       <v-list-item three-line>
         <v-list-item-content>
           <v-list-item-title class="text-h6 overline mb-1">
@@ -112,6 +112,16 @@
         </v-card>
       </v-div>
 
+      <GmapMap
+        :center="coordinates"
+        :zoom="zoom"
+        style="height: 360px; margin: 32px auto"
+        :options="{
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+        }"
+      ></GmapMap>
 
       <v-div class="text-center" v-if="viagem.estado != 'Finalizada'">
         <!-- Butões de Passageiro SEM Pedido -->
@@ -412,6 +422,11 @@ export default {
 
   data() {
     return {
+      coordinates: {
+        lat: 41.558364,
+        lng: -8.397838,
+      },
+      zoom: 16,
       tabela: [],
       tab: null,
       viagem: {},
@@ -448,9 +463,11 @@ export default {
       alertErro: false,
     };
   },
+
   computed: mapState({
     username: (state) => state.auth.username,
   }),
+
   created() {
     this.initialize();
 
@@ -464,6 +481,7 @@ export default {
         console.log(error);
       });
   },
+
   watch: {
     dialog(val) {
       val || this.close();
@@ -472,7 +490,20 @@ export default {
       val || this.closeDelete();
     },
   },
+
+  mounted() {
+    this.geolocate();
+  },
+
   methods: {
+    geolocate: function () {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.coordinates = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+      });
+    },
     initialize() {
       this.$request("get", "viagem/" + this.$route.params.id)
         .then((response) => {

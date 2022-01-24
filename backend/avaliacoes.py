@@ -27,9 +27,6 @@ def rate_user(id):
         
         result = db.session.query(Avaliacao, Viagem).filter(and_(Viagem.idCondutor == id_condutor, Avaliacao.fk_Viagem_idViagem==Viagem.idViagem)).all()
 
-       
-
-
         n_avaliacoes = len(result)+1
         r = user.rating
         newrating= (r + int(new_score)) / n_avaliacoes

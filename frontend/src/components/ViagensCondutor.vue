@@ -3,6 +3,7 @@
     :headers="headers"
     :items="viagens"
     class="elevation-1"
+    :hide-default-footer="true"
     :custom-sort="customSort"
   >
     <template v-slot:item.id="{ item }">
