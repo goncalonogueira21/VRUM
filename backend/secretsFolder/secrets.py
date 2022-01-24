@@ -1,5 +1,5 @@
 dbhost = 'localhost'
 dbuser = 'root'
-dbpass = 'rootroot'
+dbpass = 'root'
 dbname = 'vrum'
 dbport = '3306'

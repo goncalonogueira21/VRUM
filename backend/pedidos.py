@@ -298,7 +298,7 @@ def aceitaPedido(idpedido):
 
 # PUT Elimina Viagens nos Pedidos
 @pedido_blueprint.route('/<int:idpedido>/eliminar', methods=['Put'])
-def aceitaPedido(idpedido):
+def eliminaViagemPedido(idpedido):
 
 
     pedido = Pedido.query.get(idpedido)
