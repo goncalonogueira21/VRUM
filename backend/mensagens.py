@@ -60,6 +60,34 @@ def get_all_user_mensagens(id):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+# GET Obter todas as mensagens de dois utilizadores
+@mensagem_blueprint.route('/<string:id1>&<string:id2>', methods=['GET'])
+def get_all_users_mensagens(id1, id2):
+    # querying the database
+    # for all the entries in it
+    mensagens=Mensagem.query.filter((Mensagem.userOrigem==id1, Mensagem.userDestino==id2) | (Mensagem.userOrigem==id2, Mensagem.userDestino==id1))
+
+
+    # converting the query objects
+    # to list of jsons
+    output = []
+    for mensagem in mensagens:
+        # appending the user data json
+        # to the response list
+        output.append({
+            'idMensagem': mensagem.idMensagem,
+            'conteudo': mensagem.conteudo,
+            'userOrigem' : mensagem.userOrigem,
+            'userDestino': mensagem.userDestino,
+            'data': mensagem.data,
+
+        })
+
+    response = jsonify({'Mensagens': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 # GET Obter mailbox de um utilizador
 @mensagem_blueprint.route('/<string:id>', methods=['GET'])
 def get_mailbox(id):

@@ -423,10 +423,10 @@ export default {
   data() {
     return {
       coordinates: {
-        lat: 41.558364,
-        lng: -8.397838,
+        lat: 41.560681613621156, 
+        lng: -8.396301253582003,
       },
-      zoom: 16,
+      zoom: 15,
       tabela: [],
       tab: null,
       viagem: {},
@@ -625,6 +625,8 @@ export default {
     },
 
     eliminarViagem() {
+              // TODO: Mudar o estado dos pedidos desta viagem para "Eliminada" e eliminar as entradas na tabela usufrui
+      // apaga Viagem
       this.$request("delete", "viagem/" + this.$route.params.id + "/remove")
         .then((response) => {
           console.log(response);
@@ -634,6 +636,23 @@ export default {
           console.log(error);
           this.alertErro = true;
         });
+
+      // muda estado dos Pedidos para "Eliminada"
+      // TODO
+      // this.$request("delete", "pedido/" + this.$route.params.id + "/eliminar")
+      //   .then((response) => {
+      //     console.log(response);
+      //     this.alertViagemEliminada = true;
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //     this.alertErro = true;
+      //   });
+      
+
+      // apaga entradas em Usufrui
+      // TODO
+
       this.dialogDelete = !this.dialogDelete;
     },
 

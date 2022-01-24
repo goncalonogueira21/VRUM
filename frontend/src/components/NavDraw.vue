@@ -59,6 +59,13 @@
           <v-list-item-title class="white--text">Histórico</v-list-item-title>
         </v-list-item>
 
+                <v-list-item link to="/carteira">
+          <v-list-item-icon>
+            <v-icon>mdi-credit-card-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title class="white--text">Carteira</v-list-item-title>
+        </v-list-item>
+
         <v-list-item link to="/settings">
           <v-list-item-icon>
             <v-icon>mdi-cog</v-icon>

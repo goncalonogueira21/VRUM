@@ -246,9 +246,6 @@ def registar():
         .first()
     if not viagem:
         # database ORM object
-        
-    # if not viagem:
-        # database ORM object
         viagem = Viagem(
             fk_Carro_matricula=matricula,
             dataInicio=horaCombinada,
@@ -282,7 +279,6 @@ def eliminarPedido(idviagem):
     if Viagem.query.filter_by(idViagem=idviagem).first() is not None:
         Viagem.query.filter_by(idViagem=idviagem).delete()
 
-        # TODO: Mudar o estado dos pedidos desta viagem para "Eliminada" e eliminar as entradas na tabela usufrui
         db.session.commit()
         return make_response('Viagem removida com sucesso.', 200)
     else:

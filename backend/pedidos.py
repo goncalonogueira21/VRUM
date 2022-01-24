@@ -295,3 +295,20 @@ def aceitaPedido(idpedido):
 
 
     return make_response('Alteracao bem sucedida', 200)
+
+# PUT Elimina Viagens nos Pedidos
+@pedido_blueprint.route('/<int:idpedido>/eliminar', methods=['Put'])
+def aceitaPedido(idpedido):
+
+
+    pedido = Pedido.query.get(idpedido)
+    print("IDentificador do pedido" , pedido.idPedido)
+    #mudar na tabela pedidos,
+    setattr(pedido,"estado","Eliminada")
+    #setattr(pedido,"notificacao", 1)
+    db.session.commit()
+
+
+
+
+    return make_response('Alteracao bem sucedida', 200)

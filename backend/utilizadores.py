@@ -50,6 +50,8 @@ def token_required(f):
         try:
             # decoding the payload to fetch the stored details
             data = jwt.decode(token, app.config['SECRET_KEY'])
+            print("DATA::", data)
+            print("TOKEN....", token)
             current_user = Utilizador.query \
                 .filter_by(username=data['username']) \
                 .first()
@@ -122,6 +124,7 @@ def login():
             'exp': datetime.utcnow() + timedelta(minutes=30)
         }, app.config['SECRET_KEY'])
 
+        print("TOKEN::", jwt.decode(token, app.config['SECRET_KEY']))
         #return make_response({'token': token}, 201)
         return make_response({'token': token.decode('UTF-8')}, 201)
 
@@ -200,6 +203,7 @@ def registar():
 
 #get user info by username
 @auth_blueprint.route('/<string:id>', methods=['GET'])
+@token_required
 @cross_origin()
 def get(id):
     user = Utilizador.query.filter_by(username=id).first()
