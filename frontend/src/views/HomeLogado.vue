@@ -2,7 +2,21 @@
   <v-container class="my-5">
     <Header @clicked="onClickHeader"></Header>
     <NavDraw ref="navdraw"></NavDraw>
-    <p>Token is {{ token }}</p>
+    <v-layout justify-space-around row wrap>
+      <v-flex xs10 sm10 md9 lg9>
+        <v-card class="mt-2" flat>
+          <div v-if="viagensPorClassificar" class="text-xs-center">
+            <v-row justify="center">
+              <v-col cols="12">
+                <v-btn outline link to="historico">Viagens por classificar
+                  <v-icon dark right> mdi-star </v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </div>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -13,7 +27,7 @@ import { mapState } from "vuex";
 
 export default {
   computed: mapState({
-    token: (state) => state.auth.token,
+    username: (state) => state.auth.username
   }),
 
   components: {
@@ -24,8 +38,17 @@ export default {
   data() {
     return {
       tab: null,
-      openHelp: false,
+      viagensPorClassificar:false
     };
+  },
+  created(){
+      this.$request("get","avaliacao/yetToRate/" + this.username)
+        .then((response)=>{
+          console.log(response.data.ViagensPorClassificar)
+          this.viagensPorClassificar=response.data.ViagensPorClassificar
+        }).catch((error)=>{
+          console.log(error)
+        })
   },
   methods: {
     onClickHeader() {

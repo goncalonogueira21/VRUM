@@ -31,7 +31,7 @@ def get_all_pedidos():
             'pickupLocal': pedido.pickupLocal,
             'destino':pedido.localDestino,
             'estado':pedido.estado,
-            'notificacao':pedido.estado
+            #'notificacao':pedido.estado
         })
 
     response = jsonify({'Pedidos': output})
@@ -56,7 +56,7 @@ def getPedido(id):
             'pickupLocal': pedido.pickupLocal,
             'destino':pedido.localDestino,
             'estado':pedido.estado,
-            'notificacao':pedido.notificacao
+            #'notificacao':pedido.notificacao
         })
          response= jsonify({'Pedido': output})
          response.headers.add("Access-Control-Allow-Origin", "*")
@@ -86,7 +86,7 @@ def registar():
             pickupLocal=pickupLocal,
             localDestino=localDestino,
             estado="Pedido Enviado",
-            notificacao=1,
+            #notificacao=1,
         )
         # insert user
         db.session.add(pedido)
@@ -153,10 +153,35 @@ def getAllpedidosRecebidos(idCondutor):
              'localDestino' :s.localDestino,
              'nrPessoas': s.nrPessoas,
              'estado': s.estado,
+             'idPedido': s.idPedido,
              'data': r.dataInicio,
-             'notificacao':s.notificacao
+             #'notificacao':s.notificacao
          })
 
+    
+    response = jsonify({'Recebido': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+# GET Todos os pedidos POR ACEITAR recebidos de um utilizador 
+@pedido_blueprint.route('todos/recebidoAceitar/<string:idCondutor>', methods=['GET'])
+def getAllpedidosRecebidos_porAceitar(idCondutor):
+
+    output = []
+
+    result = db.session.query(Viagem, Pedido).filter(and_(Viagem.idCondutor == idCondutor, Viagem.idViagem==Pedido.fk_Viagem_idViagem)).all()
+
+    for r,s in result:
+        if s.estado == "Pedido Enviado":
+            output.append({
+                'username': s.fk_Utilizador_username,
+                'viagem': s. fk_Viagem_idViagem,
+                'pickupLocal': s.pickupLocal,
+                'localDestino' :s.localDestino,
+                'nrPessoas': s.nrPessoas,
+                'estado': s.estado,
+                'idPedido': s.idPedido
+            })
     
     response = jsonify({'Recebido': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -168,7 +193,7 @@ def getAllnotificacoesRecebidas(idCondutor):
 
     output = []
 
-    result = db.session.query(Viagem, Pedido).filter(and_(Viagem.idCondutor == idCondutor, Viagem.idViagem==Pedido.fk_Viagem_idViagem,Pedido.notificacao==1)).all()
+    result = db.session.query(Viagem, Pedido).filter(and_(Viagem.idCondutor == idCondutor, Viagem.idViagem==Pedido.fk_Viagem_idViagem)).all()
 
     for r,s in result:
 
@@ -179,7 +204,7 @@ def getAllnotificacoesRecebidas(idCondutor):
              'localDestino' :s.localDestino,
              'nrPessoas': s.nrPessoas,
              'estado': s.estado,
-             'notificacao':s.notificacao
+             #'notificacao':s.notificacao
          })
 
     
@@ -193,29 +218,29 @@ def getAllnotificacoesRecebidas(idCondutor):
 @pedido_blueprint.route('todos/enviado/<string:idPassageiro>', methods=['GET'])
 def getAllPedidosEnviados(idPassageiro):
 
+    pedidos=Pedido.query.filter(Pedido.fk_Utilizador_username==idPassageiro)
+
+    # converting the query objects
+    # to list of jsons
     output = []
 
-    pedido=Pedido.query.filter_by(fk_Utilizador_username=idPassageiro).first()
-    
-    if not pedido:
-        return make_response('Pedido nao existe', 200)
-    else:
-        viagem= Viagem.query.get(pedido.fk_Viagem_idViagem)
-        
+    for pedido in pedidos:
+         # appending the user data json
+        # to the response list
         output.append({
-            'id': pedido.idPedido,
-            'viagem': pedido.fk_Viagem_idViagem,
-            'nrPessoas': pedido.nrPessoas,
-            'pickupLocal': pedido.pickupLocal,
-            'localDestino':pedido.localDestino,
-            'estado':pedido.estado,
-            'notificacao':pedido.notificacao,
-            'data': viagem.dataInicio
+             'idPedido': pedido.idPedido,
+             'fk_Utilizador_username': pedido.fk_Utilizador_username,
+             'fk_Viagem_idViagem' : pedido.fk_Viagem_idViagem,
+             'nrPessoas': pedido.nrPessoas,
+             'pickupLocal': pedido.pickupLocal,
+             'localDestino': pedido.localDestino,
+             'estado': pedido.estado
         })
 
-        response= jsonify({'Enviado': output})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+
+    response = jsonify({'Pedidos': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 @pedido_blueprint.route('todos/enviado/notificacao/<string:idPassageiro>', methods=['GET'])
@@ -237,7 +262,7 @@ def getAllnotificacoesEnviados(idPassageiro):
             'pickupLocal': pedido.pickupLocal,
             'localDestino':pedido.localDestino,
             'estado':pedido.estado,
-            'notificacao':pedido.notificacao,
+            #'notificacao':pedido.notificacao,
             'data': viagem.dataInicio
         })
 

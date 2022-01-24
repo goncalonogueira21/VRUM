@@ -124,7 +124,7 @@ export default {
       corText:'white--text'
     }
   },
-  created(){
+  /*created(){
   
     this.$request("get", "pedido/todos/recebido/notificacao/" + this.username)
       .then((response) => {
@@ -148,7 +148,7 @@ export default {
       .catch((error) => {
         console.log("zz"+error.response);
       });
-  },
+  },*/
   methods: {
    ...mapActions({
       logOut: 'auth/logOut'
