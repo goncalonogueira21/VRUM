@@ -74,7 +74,7 @@ export default {
     };
   },
   created() {
-    this.$request("get", "pedido/todos/recebido/" + this.username)
+    this.$request("get", "pedido/todos/recebidoAceitar/" + this.username)
       .then((response) => {
         this.recebidos = response.data.Recebido;
       })
@@ -97,9 +97,10 @@ export default {
       console.log(item);
       this.sheet = !this.sheet;
     },
+
     verPedido(item){
       var payload = new FormData();
-      payload.append("notificacao", 0);
+      //payload.append("notificacao", 0);
       
       this.$request("put", "pedido/" + item.idPedido + "/update",payload)
         .then((response) => {
@@ -130,7 +131,7 @@ export default {
     },
     rejeitaPedido(item){
         var payload = new FormData();
-        payload.append("notificacao", 1);
+        //payload.append("notificacao", 1);
         payload.append('estado', 'Rejeitado')
       
       this.$request("put", "pedido/" + item.idPedido + "/update",payload)

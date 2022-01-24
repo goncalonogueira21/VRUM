@@ -2,57 +2,62 @@
   <v-container class="my-5">
     <Header @clicked="onClickHeader"></Header>
     <NavDraw ref="navdraw"></NavDraw>
-     <v-alert 
+    <v-alert
       :value="alertPedidoFeito"
       transition="slide-y-transition"
       dense
       color="dark green"
       dismissible
-      type="success" 
-      @input="alertPedidoFeito=false">
-        Pedido enviado
-      </v-alert>
-      <v-alert 
+      type="success"
+      @input="alertPedidoFeito = false"
+    >
+      Pedido enviado
+    </v-alert>
+    <v-alert
       :value="alertPedidoCancelado"
       transition="slide-y-transition"
       dense
       color="dark green"
       dismissible
-      type="success" 
-      @input="alertPedidoCancelado=false">
-        Pedido cancelado
-      </v-alert>
-      <v-alert 
+      type="success"
+      @input="alertPedidoCancelado = false"
+    >
+      Pedido cancelado
+    </v-alert>
+    <v-alert
       :value="alertErro"
       transition="slide-y-transition"
       dense
       color="dark red"
       dismissible
-      type="error" 
-      @input="alertErro=false">
-        Erro!
-      </v-alert>
-        <v-alert 
+      type="error"
+      @input="alertErro = false"
+    >
+      Erro!
+    </v-alert>
+    <v-alert
       :value="alertViagemEditada"
       transition="slide-y-transition"
       dense
       color="dark green"
       dismissible
-      type="success" 
-      @input="alertViagemEditada=false">
-        Viagem Editada
-      </v-alert>
-        <v-alert 
+      type="success"
+      @input="alertViagemEditada = false"
+    >
+      Viagem Editada
+    </v-alert>
+    <v-alert
       :value="alertViagemEliminada"
       transition="slide-y-transition"
       dense
       color="dark green"
       dismissible
-      type="success" 
-      @input="alertViagemEliminada=false">
-        Viagem Eliminada
-      </v-alert>
-    <v-card class="mx-auto" max-width="344" outlined elevation="5">
+      type="success"
+      @input="alertViagemEliminada = false"
+    >
+      Viagem Eliminada
+    </v-alert>
+    <v-card class="mx-auto text-center" max-width="344" outlined elevation="2">
       <v-list-item three-line>
         <v-list-item-content>
           <v-list-item-title class="text-h6 overline mb-1">
@@ -89,11 +94,44 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-spacer></v-spacer>
+      <!-- Lista de Utilizadores aceites de uma viagem -->
+      <v-div v-if="tabela.length > 0">
+        <v-card class="mx-auto" max-width="200" tile>
+          <v-list disabled>
+            <v-subheader>Utilizadores Aceites</v-subheader>
+            <v-list-item-group color="primary">
+              <v-list-item v-for="(user, i) in tabela" :key="i">
+                <v-list-item-content>
+                  <v-list-item-title
+                    v-text="user.fk_Utilizador_username"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-card>
+      </v-div>
 
-      <div class="text-center">
+      <GmapMap
+        :center="coordinates"
+        :zoom="zoom"
+        style="height: 360px; margin: 32px auto"
+        :options="{
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+        }"
+      ></GmapMap>
+
+      <v-div class="text-center" v-if="viagem.estado != 'Finalizada'">
         <!-- Butões de Passageiro SEM Pedido -->
-        <div v-if="this.username != viagem.idCondutor && !pedido">
+        <div
+          v-if="
+            this.username != viagem.idCondutor &&
+            !this.pedido &&
+            !this.pedidoAceite
+          "
+        >
           <v-btn
             class="ma-2"
             color="success"
@@ -111,14 +149,35 @@
             Enviar Mensagem
             <v-icon right> mdi-android-messages </v-icon>
           </v-btn>
-          <v-btn class="ma-2" color="red" outlined @click="deletePassageiro">
-            Cancelar Pedido
-            <v-icon right> mdi-delete-outline </v-icon>
-          </v-btn>
+          <!-- Pedido Aceite -->
+          <v-div v-if="pedidoAceite">
+            <v-btn
+              disabled
+              class="ma-2"
+              color="red"
+              outlined
+              @click="deletePassageiro"
+            >
+              Cancelar Pedido
+              <v-icon right> mdi-delete-outline </v-icon>
+            </v-btn>
+          </v-div>
+          <!-- Pedido por aceitar -->
+          <v-div v-else>
+            <v-btn class="ma-2" color="red" outlined @click="deletePassageiro">
+              Cancelar Pedido
+              <v-icon right> mdi-delete-outline </v-icon>
+            </v-btn>
+          </v-div>
         </div>
 
         <!-- Butões de Condutor  -->
-        <v-div v-else-if="this.username == viagem.idCondutor && viagem.estado == 'Agendada'">
+        <v-div
+          class="text-center"
+          v-else-if="
+            this.username == viagem.idCondutor && viagem.estado == 'Agendada'
+          "
+        >
           <v-btn class="ma-2" color="success" outlined @click="startViagem">
             Iniciar viagem
             <v-icon right> mdi-play-circle-outline </v-icon>
@@ -145,24 +204,21 @@
             <v-icon right> mdi-delete-outline </v-icon>
           </v-btn>
         </v-div>
-            <!-- Butões de Condutor depois de iniciar viagem  -->
-            <v-div v-if=" viagem.estado ==  'A decorrer' ">
-                  <v-btn
-                    class="ma-2"
-                    color="red"
-                    outlined
-                    pill
-                    @click="terminarViagem"
-                  >
-                    Terminar Viagem
-                    <v-icon right> mdi-delete-outline </v-icon>
-                  </v-btn>
-            </v-div>
-              <v-div v-if=" viagem.estado ==  'Finalizada' ">
-                  <h3>Viagem Terminada</h3>
-            </v-div>
-
-      </div>
+        <!-- Butões de Condutor depois de iniciar viagem  -->
+        <v-div
+          v-if="
+            viagem.estado == 'A decorrer' && this.username == viagem.idCondutor
+          "
+        >
+          <v-btn class="ma-2" color="red" outlined pill @click="terminarViagem">
+            Terminar Viagem
+            <v-icon right> mdi-delete-outline </v-icon>
+          </v-btn>
+        </v-div>
+      </v-div>
+      <v-div class="text-center" v-else>
+        <h3>Viagem Terminada</h3>
+      </v-div>
 
       <!-- Dialog de Delete -->
       <v-dialog v-model="dialogDelete" max-width="500px">
@@ -348,13 +404,6 @@
         </v-card>
       </v-dialog>
     </v-card>
-
-
-    <!-- 
-    <p>Mostrar dados da viagem</p>
-    <p>Mostrar mapa da viagem</p>
-    <p>Butoes para editar a viagem</p> 
-    -->
   </v-container>
 </template>
 
@@ -373,6 +422,12 @@ export default {
 
   data() {
     return {
+      coordinates: {
+        lat: 41.560681613621156, 
+        lng: -8.396301253582003,
+      },
+      zoom: 15,
+      tabela: [],
       tab: null,
       viagem: {},
       dialog: false,
@@ -400,19 +455,33 @@ export default {
       pedido: false,
       pedidoID: 0,
       pedidoAceite: false,
+      aceites: [],
       alertPedidoFeito: false,
       alertPedidoCancelado: false,
       alertViagemEditada: false,
       alertViagemEliminada: false,
-      alertErro: false
+      alertErro: false,
     };
   },
+
   computed: mapState({
     username: (state) => state.auth.username,
   }),
+
   created() {
     this.initialize();
+
+    // GET Lista de Passageiros de uma viagem finalizada
+    this.$request("get", "viagem/passageiros/" + this.$route.params.id)
+      .then((response) => {
+        console.log(response.data);
+        this.tabela = response.data.Passageiros;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
+
   watch: {
     dialog(val) {
       val || this.close();
@@ -421,7 +490,20 @@ export default {
       val || this.closeDelete();
     },
   },
+
+  mounted() {
+    this.geolocate();
+  },
+
   methods: {
+    geolocate: function () {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.coordinates = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+      });
+    },
     initialize() {
       this.$request("get", "viagem/" + this.$route.params.id)
         .then((response) => {
@@ -434,13 +516,26 @@ export default {
       // Verifica se o user fez um pedido nesta viagem
       this.$request("get", "pedido/todos")
         .then((response) => {
-          response.data.Pedidos.map((item) => {
+          console.log("RESPONSE", response);
+          response.data.Pedidos.map((pedido) => {
+            console.log("ITEM", pedido);
+            console.log("USER", this.username);
             if (
-              item.viagem == this.viagem.id &&
-              item.username == this.username
+              pedido.viagem == this.viagem.id &&
+              pedido.username == this.username
             ) {
               this.pedido = true;
-              this.pedidoID = item.id;
+              this.pedidoID = pedido.id;
+            }
+
+            if (
+              pedido.estado == "Aceite" &&
+              pedido.viagem == this.viagem.id &&
+              pedido.username == this.username
+            ) {
+              this.pedidoAceite = true;
+              this.aceites.push(pedido);
+              this.pedido = true;
             }
           });
         })
@@ -460,11 +555,11 @@ export default {
       this.$request("post", "pedido/registo", payload)
         .then((response) => {
           console.log(response.data);
-          this.alertPedidoFeito= true
+          this.alertPedidoFeito = true;
         })
         .catch((error) => {
           console.log(error);
-          this.alertErro= true
+          this.alertErro = true;
         });
 
       this.pedido = true;
@@ -474,11 +569,11 @@ export default {
       this.$request("delete", "pedido/" + this.pedidoID + "/remove")
         .then((response) => {
           console.log(response);
-          this.alertPedidoCancelado=true
+          this.alertPedidoCancelado = true;
         })
         .catch((error) => {
           console.log(error);
-          this.alert=true
+          this.alert = true;
         });
       this.pedido = false;
       this.pedidoID = 0;
@@ -487,6 +582,7 @@ export default {
     editViagemDialog() {
       this.dialog = !this.dialog;
     },
+
     editarViagem() {
       var payload = new FormData();
       payload.append("lugaresDisp", this.viagem.lugaresDisp);
@@ -507,47 +603,72 @@ export default {
         .then((response) => {
           console.log(response);
           this.dialog = !this.dialog;
-          this.alertViagemEditada=true
+          this.alertViagemEditada = true;
         })
         .catch((error) => {
           console.log(error);
-          this.alertErro= true
+          this.alertErro = true;
         });
     },
-    startViagem(){
+
+    startViagem() {
       var payload = new FormData();
       payload.append("estado", "A decorrer");
       this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
-        .then((response)=> {
-          console.log(response)
-          this.$router.go();
-        }).catch((error)=>{
-          console.log(error)
-        })
-    },
-    eliminarViagem() {
-      this.$request("delete", "viagem/" + this.$route.params.id + "/remove")
         .then((response) => {
           console.log(response);
-          this.alertViagemEliminada= true
+          this.$router.go();
         })
         .catch((error) => {
           console.log(error);
-          this.alertErro= true
         });
+    },
+
+    eliminarViagem() {
+              // TODO: Mudar o estado dos pedidos desta viagem para "Eliminada" e eliminar as entradas na tabela usufrui
+      // apaga Viagem
+      this.$request("delete", "viagem/" + this.$route.params.id + "/remove")
+        .then((response) => {
+          console.log(response);
+          this.alertViagemEliminada = true;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.alertErro = true;
+        });
+
+      // muda estado dos Pedidos para "Eliminada"
+      // TODO
+      // this.$request("delete", "pedido/" + this.$route.params.id + "/eliminar")
+      //   .then((response) => {
+      //     console.log(response);
+      //     this.alertViagemEliminada = true;
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //     this.alertErro = true;
+      //   });
+      
+
+      // apaga entradas em Usufrui
+      // TODO
+
       this.dialogDelete = !this.dialogDelete;
     },
-    terminarViagem(){
+
+    terminarViagem() {
       var payload = new FormData();
       payload.append("estado", "Finalizada");
       this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
-        .then((response)=> {
-          console.log(response)
+        .then((response) => {
+          console.log(response);
           this.$router.go();
-        }).catch((error)=>{
-          console.log(error)
         })
+        .catch((error) => {
+          console.log(error);
+        });
     },
+
     // getCarros() {
     //   console.log("user", this.username);
     //   this.$request("get", "carro/" + this.username)

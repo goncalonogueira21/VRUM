@@ -4,7 +4,7 @@
           <Header @clicked="onClickHeader"></Header>
           <NavDraw ref="navdraw"></NavDraw>
   <div>
-    <h1 class="pa-md-4 mx-lg-auto text-center">404 - Página não encontrada</h1>
+    <h1 class="pa-md-4 mx-lg-auto text-center">Carteira em desenvolvimento</h1>
   </div>
       </v-container>
 </template>

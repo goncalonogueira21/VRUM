@@ -28,12 +28,22 @@
       <v-col cols="12" md="4">
         
         <app-card class="mt-4 ml-16 text-center">
-               
+
+          <v-div v-if= formData.ava>  
           <v-img
             class="rounded-circle elevation-8 mt-4 ml-4 d-inline-block"
             :src="`data:image/png;base64,${formData.ava}`"
             width="128"
           />
+          </v-div>
+          <v-div v-else >  
+          <v-img
+            class="rounded-circle center elevation-8 mt-4 ml-4 d-inline-block"
+            center
+            :src="`${img}`"
+            width="128"
+          />
+          </v-div>
           
           <input class="text-h7 mb-2 text--secondary" v-if="!readonly" type="file" accept="image/*" @change="handleFileUpload( $event )"/>
          
@@ -183,6 +193,7 @@ export default {
         about:"",
         ava:''
       },
+      img: "https://www.iconpacks.net/icons/2/free-icon-user-4250.png",
       readonly: true,
       url:'',
       base64:'',

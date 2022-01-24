@@ -12,6 +12,12 @@
 <script>
 export default {
   name: "Home",
+
+  data() {
+    return {
+    };
+  },
+
   computed: {
     currentRouteName() {
       console.log(this.$route.name);

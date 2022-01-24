@@ -225,16 +225,16 @@ def getAllPedidosEnviados(idPassageiro):
     output = []
 
     for pedido in pedidos:
-         # appending the user data json
+        # appending the user data json
         # to the response list
         output.append({
-             'idPedido': pedido.idPedido,
-             'fk_Utilizador_username': pedido.fk_Utilizador_username,
-             'fk_Viagem_idViagem' : pedido.fk_Viagem_idViagem,
-             'nrPessoas': pedido.nrPessoas,
-             'pickupLocal': pedido.pickupLocal,
-             'localDestino': pedido.localDestino,
-             'estado': pedido.estado
+            'idPedido': pedido.idPedido,
+            'fk_Utilizador_username': pedido.fk_Utilizador_username,
+            'fk_Viagem_idViagem' : pedido.fk_Viagem_idViagem,
+            'nrPessoas': pedido.nrPessoas,
+            'pickupLocal': pedido.pickupLocal,
+            'localDestino': pedido.localDestino,
+            'estado': pedido.estado
         })
 
 
@@ -280,7 +280,7 @@ def aceitaPedido(idpedido):
     print("IDentificador do pedido" , pedido.idPedido)
     #mudar na tabela pedidos,
     setattr(pedido,"estado","Aceite")
-    setattr(pedido,"notificacao", 1)
+    #setattr(pedido,"notificacao", 1)
     custo = Viagem.query.get(pedido.fk_Viagem_idViagem).custoPessoa
     #inserir entrada na tabela "usufrui"
     usufrui = Usufrui(
@@ -289,6 +289,23 @@ def aceitaPedido(idpedido):
         custoPago= custo
     )
     db.session.add(usufrui)
+    db.session.commit()
+
+
+
+
+    return make_response('Alteracao bem sucedida', 200)
+
+# PUT Elimina Viagens nos Pedidos
+@pedido_blueprint.route('/<int:idpedido>/eliminar', methods=['Put'])
+def aceitaPedido(idpedido):
+
+
+    pedido = Pedido.query.get(idpedido)
+    print("IDentificador do pedido" , pedido.idPedido)
+    #mudar na tabela pedidos,
+    setattr(pedido,"estado","Eliminada")
+    #setattr(pedido,"notificacao", 1)
     db.session.commit()
 
 

@@ -59,6 +59,13 @@
           <v-list-item-title class="white--text">Histórico</v-list-item-title>
         </v-list-item>
 
+                <v-list-item link to="/carteira">
+          <v-list-item-icon>
+            <v-icon>mdi-credit-card-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title class="white--text">Carteira</v-list-item-title>
+        </v-list-item>
+
         <v-list-item link to="/settings">
           <v-list-item-icon>
             <v-icon>mdi-cog</v-icon>
@@ -124,31 +131,33 @@ export default {
       corText:'white--text'
     }
   },
-  /*created(){
   
-    this.$request("get", "pedido/todos/recebido/notificacao/" + this.username)
-      .then((response) => {
-        if ((response.data.RecebidoNotificacao).length >0){
-          this.cor="black"
-          this.corText="black--text"
-        }
+  // created(){
+  
+  //   this.$request("get", "pedido/todos/recebido/notificacao/" + this.username)
+  //     .then((response) => {
+  //       if ((response.data.RecebidoNotificacao).length >0){
+  //         this.cor="black"
+  //         this.corText="black--text"
+  //       }
         
-      })
-      .catch((error) => {
-        console.log(" z" +error.response);
-      });
+  //     })
+  //     .catch((error) => {
+  //       console.log(" z" +error.response);
+  //     });
 
-      this.$request("get", "pedido/todos/enviado/notificacao/" + this.username)
-      .then((response) => {
-        if ((response.data.EnviadoNotificacao).length >0){
-          this.cor="black"
-          this.corText="black--text"
-        }
-      })
-      .catch((error) => {
-        console.log("zz"+error.response);
-      });
-  },*/
+  //     this.$request("get", "pedido/todos/enviado/notificacao/" + this.username)
+  //     .then((response) => {
+  //       if ((response.data.EnviadoNotificacao).length >0){
+  //         this.cor="black"
+  //         this.corText="black--text"
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log("zz"+error.response);
+  //     });
+  // },
+  
   methods: {
    ...mapActions({
       logOut: 'auth/logOut'

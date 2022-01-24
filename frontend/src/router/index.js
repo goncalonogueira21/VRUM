@@ -10,8 +10,10 @@ import Viagem from "../views/Viagem"
 import Mensagens from "../views/Mensagens"
 import Pedidos from "../views/Pedidos"
 import Historico from "../views/HistoricoViagens"
+import Carteira from "../views/Carteira"
 import HomeLogado from "../views/HomeLogado"
 import Page404 from "../views/PageNotFound.vue"
+import Settings from "../views/Settings.vue"
 
 Vue.use(VueRouter);
 
@@ -67,9 +69,19 @@ const routes = [
     component: Historico,
   },
   {
+    path: "/carteira",
+    name: "carteira",
+    component: Carteira,
+  },
+  {
     path: "/homeLogado",
     name: "homeLogado",
     component: HomeLogado,
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    component: Settings,
   },
 
   { path: "/*",

@@ -35,6 +35,7 @@ import {mapState} from "vuex"
     created(){
       this.$request('get','pedido/todos/enviado/' + this.username)
         .then((response)=>{
+          console.log(response.data.Enviado)
           this.enviados=response.data.Enviado
         }).catch((error)=>{
           console.log(error.response)

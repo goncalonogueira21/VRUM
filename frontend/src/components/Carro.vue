@@ -6,6 +6,7 @@
     sort-by="matricula"
     class="elevation-1"
   >
+  
     <template v-slot:top>
       <v-toolbar
         flat
@@ -231,7 +232,12 @@
       </v-toolbar>
     </template>
     <template v-slot:item.foto="{ item }">
+      <v-div v-if = item.foto != null>
           <img :src="`data:image/png;base64,${item.foto}`" style="width: 50px; height: 50px" />
+      </v-div>
+      <v-div v-else>
+          <img :src="`${img}`" style="width: 50px; height: 50px" />
+      </v-div>
     </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
@@ -262,6 +268,7 @@ import {mapState} from "vuex"
       dialog: false,
       dialogDelete: false,
       search:"",
+      img: "https://www.iconpacks.net/icons/1/free-icon-car-1057.png",
       headers: [
         {
           text: 'Matrícula',

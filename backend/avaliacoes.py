@@ -9,7 +9,7 @@ avaliacao_blueprint = Blueprint('avaliacao_blueprint', __name__)
 from __init__ import db, app
 from models import Avaliacao, Utilizador, Viagem, Usufrui
 
-#Regista a avaliação do condutor de uma determinada viagem
+# POST Regista a avaliação do condutor de uma determinada viagem
 @avaliacao_blueprint.route('/<int:id>', methods=['POST'])
 def rate_user(id):
 
@@ -27,9 +27,6 @@ def rate_user(id):
         
         result = db.session.query(Avaliacao, Viagem).filter(and_(Viagem.idCondutor == id_condutor, Avaliacao.fk_Viagem_idViagem==Viagem.idViagem)).all()
 
-       
-
-
         n_avaliacoes = len(result)+1
         r = user.rating
         newrating= (r + int(new_score)) / n_avaliacoes
@@ -43,7 +40,30 @@ def rate_user(id):
     else :
         return make_response({'Rating': rating.conteudo}, 200)
 
-# vai ver se há alguma viagem por classificar
+
+# GET Avaliação
+@avaliacao_blueprint.route('/<string:idViagem>&<string:idUser>', methods=['GET'])
+def get_avaliacao(idViagem, idUser):
+    # querying the database
+    # for all the entries in it
+
+    output = []
+
+    avaliacao=Avaliacao.query.filter_by(fk_Viagem_idViagem=idViagem, utilizador=idUser).first()
+
+    output.append({
+            'idAvaliacao': avaliacao.idAvaliacao,
+            'utilizador': avaliacao.utilizador,
+            'conteudo': avaliacao.conteudo,
+            'fk_Viagem_idViagem': avaliacao.fk_Viagem_idViagem,
+
+        })
+
+    response = jsonify({'Avaliação': output})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+# GET vai ver se há alguma viagem por classificar
 @avaliacao_blueprint.route('/yetToRate/<string:id>', methods=['GET'])
 def viagensPorClassificar(id):
 
@@ -66,4 +86,5 @@ def viagensPorClassificar(id):
         
     
     return make_response({'ViagensPorClassificar': alert}, 200)
+
 
