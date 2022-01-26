@@ -23,20 +23,23 @@ def rate_user(id):
     
 
     if not rating:
-        rating = Avaliacao(fk_Viagem_idViagem=id, conteudo=new_score, dataAvaliacao=date.today(), utilizador=current_user)
-        
-        result = db.session.query(Avaliacao, Viagem).filter(and_(Viagem.idCondutor == id_condutor, Avaliacao.fk_Viagem_idViagem==Viagem.idViagem)).all()
+        if not new_score:
+             return make_response('Ainda por Avaliar', 202)
+        else:     
+            rating = Avaliacao(fk_Viagem_idViagem=id, conteudo=new_score, dataAvaliacao=date.today(), utilizador=current_user)
+            
+            result = db.session.query(Avaliacao, Viagem).filter(and_(Viagem.idCondutor == id_condutor, Avaliacao.fk_Viagem_idViagem==Viagem.idViagem)).all()
 
-        n_avaliacoes = len(result)+1
-        r = user.rating
-        newrating= (r + int(new_score)) / n_avaliacoes
+            n_avaliacoes = len(result)+1
+            r = user.rating
+            newrating= (r + int(new_score)) / n_avaliacoes
 
-        setattr(user,'rating',int(newrating))
+            setattr(user,'rating',newrating)
 
-        db.session.add(rating)
-        db.session.commit()
+            db.session.add(rating)
+            db.session.commit()
 
-        return make_response('Successfully registered.', 201)
+            return make_response('Successfully registered.', 201)
     else :
         return make_response({'Rating': rating.conteudo}, 200)
 

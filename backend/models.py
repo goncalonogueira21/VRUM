@@ -78,7 +78,7 @@ class Mensagem(db.Model):
     userDestino = db.Column(db.String(45))
     data = db.Column(db.DateTime)
 
-class MailBox(db.Model):
+class mailbox(db.Model):
     idMailBox = db.Column(db.Integer, primary_key=True)
     fk_Utilizador_username = db.Column(db.String(45), db.ForeignKey('utilizador.username'), nullable=False)
     fk_Utilizador_username2 = db.Column(db.String(45), db.ForeignKey('utilizador.username'), nullable=False)

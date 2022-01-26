@@ -202,7 +202,6 @@ def registar():
 
 #get user info by username
 @auth_blueprint.route('/<string:id>', methods=['GET'])
-@token_required
 @cross_origin()
 def get(id):
     user = Utilizador.query.filter_by(username=id).first()

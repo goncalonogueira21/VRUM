@@ -30,7 +30,7 @@
                             />
                         </v-list-item-avatar>
 
-                       
+                        
 
                         <v-list-item-content>
                           <v-list-item-title v-text="item.title" />
@@ -108,14 +108,14 @@
                   <v-card-text class="flex-shrink-1">
                       <v-text-field
                       color="#7e380e"
-                      v-model="messageForm.content"
+                      v-model="content"
                       label="Escreva a sua mensagem"
                       type="text"
                       no-details
                       outlined
                       append-outer-icon="mdi-send"
-                      @keyup.enter="sendMessage(messageForm)"
-                      @click:append-outer="sendMessage(messageForm)"
+                      @keyup.enter="sendMessage((parents[activeChat-1]).title)"
+                      @click:append-outer="sendMessage((parents[activeChat-1]).title)"
                       hide-details
                     />
                   </v-card-text>
@@ -127,93 +127,93 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
   export default {
+     computed: mapState({
+    username: (state) => state.auth.username
+  }),
     data: () => ({
         //no mounted é suposto carregar para aqui as mensagens de um user bem com o avatar da pessoa e o nome dela
       activeChat: 0,
-    parents: [
-      {
-        id: 1,
-        title: "john doe",
-        active: true
-      },
-      {
-        id: 2,
-        title: "scarlett",
-        active: false
-      },
-      {
-        id: 3,
-        title: "zat",
-        active: false
-      },
-      {
-        id: 4,
-        title: "joao",
-        active: false
-      },
-      {
-        id: 5,
-        title: "edu",
-        active: false
-      },
-      {
-        id: 6,
-        title: "carlos",
-        active: false
-      }
-    ],
-    messages: [
-      {
-        content: "lorem ipsum",
-        me: true,
-        created_at: "11:11am"
-      },
-      {
-        content: "dolor",
-        me: false,
-        created_at: "11:11am"
-      },
-      {
-        content: "dolor",
-        me: false,
-        created_at: "11:11am"
-      },
-      {
-        content: "dolor",
-        me: false,
-        created_at: "11:11am"
-      },
-      {
-        content: "dolor",
-        me: true,
-        created_at: "11:11am"
-      },
-      {
-        content: "dolor",
-        me: false,
-        created_at: "11:12am"
-      },
-      {
-        content: "dolor",
-        me: false,
-        created_at: "11:14am"
-      }
-    ],
-    messageForm: {
-      content: "",
-      me: true,
-      created_at: "11:11am"
-    }
+    parents: [],
+    messages: [],
+    content:"",
+    created_at:""
     }),
-    methods:{
-      openMessageDialog(userDestino){
-          console.log(userDestino)
-      },
-      sendMessage(msg){
-        this.messages.push(msg)
-        this.messageForm.content=''
+    watch:{
+      activeChat: function(newval){
+        if(newval!=0){
+          this.enterChat(this.parents[newval-1].title)
+        }
       }
+    },
+    created(){
+        var now     = new Date(); 
+        var year    = now.getFullYear();
+        var month   = now.getMonth()+1; 
+        var day     = now.getDate();
+        var hour    = now.getHours();
+        var minute  = now.getMinutes();
+        var second  = now.getSeconds(); 
+        if(month.toString().length == 1) {
+             month = '0'+month;
+        }
+        if(day.toString().length == 1) {
+             day = '0'+day;
+        }   
+        if(hour.toString().length == 1) {
+             hour = '0'+hour;
+        }
+        if(minute.toString().length == 1) {
+             minute = '0'+minute;
+        }
+        if(second.toString().length == 1) {
+             second = '0'+second;
+        }   
+        var dateTime = year+'/'+month+'/'+day+' '+hour+':'+minute+':'+second;   
+         
+    
+
+    this.created_at = dateTime;
+    this.$request("get","mensagem/mailbox/" + this.username)
+      .then((response)=>{
+        //console.log(response.data.Mailbox)
+        this.parents=response.data.Mailbox
+      }).catch((error)=>{
+        console.log(error)
+      })
+    },
+    methods:{
+      sendMessage(userDestino){
+        const messageForm ={
+            content: this.content,
+            me: true,
+            created_at: this.created_at
+        }
+        
+        var payload = new FormData();
+        payload.append('content', messageForm.content);
+        payload.append('userOrigem', this.username);
+        payload.append('userDestino', userDestino);
+        payload.append('created_at', messageForm.created_at)
+        this.$request("post","mensagem/registo", payload)
+          .then((response)=>{
+            console.log(response)
+            this.messages.push(messageForm)
+          }).catch((error)=>{
+            console.log(error)
+          })
+        this.content=''
+      },
+      enterChat(userDestino){
+        this.$request("get","mensagem/" + this.username + "&" + userDestino)
+          .then((response)=>{
+            console.log("mensagens :"+response.data.Mensagens)
+            this.messages=response.data.Mensagens
+          }).catch((error)=>{
+            console.log(error)
+          })
+          }
     } 
 }
 </script>

@@ -145,7 +145,7 @@
 
         <!-- Butões de Passageiro COM Pedido -->
         <div v-else-if="this.username != viagem.idCondutor && pedido">
-          <v-btn class="ma-2" color="primary" outlined @click="todoEnviarMsg">
+          <v-btn class="ma-2" color="primary" outlined @click="enviarMsg">
             Enviar Mensagem
             <v-icon right> mdi-android-messages </v-icon>
           </v-btn>
@@ -667,6 +667,22 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    enviarMsg(){
+      var payload= new FormData();
+      payload.append('userorigem', this.username)
+      payload.append('userdestino', this.viagem.idCondutor)
+      this.$request("post","mensagem/registoMailBox",payload)
+        .then((response) => {
+          console.log(response);
+          this.$router.push({name: "inbox"})
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+        
+
     },
 
     // getCarros() {

@@ -173,6 +173,8 @@ export default {
           } else if (response.status == 200) {
             this.formRating.rating = response.data.Rating;
             this.formRating.hasRating = true;
+          } else if(response.status == 202) {
+            console.log(response)
           }
         })
         .catch((error) => {

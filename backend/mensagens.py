@@ -1,6 +1,6 @@
-from dataclasses import dataclass
+from mailbox import Mailbox
 from flask import Blueprint, jsonify, make_response, request
-from sqlalchemy import text, Date, and_
+from sqlalchemy import text, Date, or_, and_
 from datetime import date
 from datetime import datetime as dt
 
@@ -8,7 +8,7 @@ from datetime import datetime as dt
 mensagem_blueprint = Blueprint('mensagem_blueprint', __name__)
 
 from __init__ import db, app
-from models import Mensagem, MailBox
+from models import Mensagem, mailbox
 
 # GET Obter todas as Mensagens
 @mensagem_blueprint.route('/todas', methods=['GET'])
@@ -34,79 +34,82 @@ def get_all_mensagens():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-# GET Obter todas as mensagens de um utilizador
-@mensagem_blueprint.route('/<string:id>', methods=['GET'])
-def get_all_user_mensagens(id):
-    # querying the database
-    # for all the entries in it
-    mensagens=Mensagem.query.filter(Mensagem.userOrigem==id, Mensagem.userDestino==id)
 
-    # converting the query objects
-    # to list of jsons
-    output = []
-    for mensagem in mensagens:
-        # appending the user data json
-        # to the response list
-        output.append({
-            'idMensagem': mensagem.idMensagem,
-            'conteudo': mensagem.conteudo,
-            'userOrigem' : mensagem.userOrigem,
-            'userDestino': mensagem.userDestino,
-            'data': mensagem.data,
-
-        })
-
-    response = jsonify({'Mensagens': output})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
 
 # GET Obter todas as mensagens de dois utilizadores
 @mensagem_blueprint.route('/<string:id1>&<string:id2>', methods=['GET'])
 def get_all_users_mensagens(id1, id2):
     # querying the database
     # for all the entries in it
-    mensagens=Mensagem.query.filter((Mensagem.userOrigem==id1, Mensagem.userDestino==id2) | (Mensagem.userOrigem==id2, Mensagem.userDestino==id1))
+    mensagens=Mensagem.query.filter((and_(Mensagem.userOrigem==id1 ,Mensagem.userDestino==id2)) | (and_(Mensagem.userOrigem==id2 ,Mensagem.userDestino==id1))  ) 
+                        
 
+    
 
-    # converting the query objects
+    # converting the query objects  
     # to list of jsons
     output = []
     for mensagem in mensagens:
         # appending the user data json
         # to the response list
-        output.append({
-            'idMensagem': mensagem.idMensagem,
-            'conteudo': mensagem.conteudo,
-            'userOrigem' : mensagem.userOrigem,
-            'userDestino': mensagem.userDestino,
-            'data': mensagem.data,
+        
+        if mensagem.userOrigem == id1 and mensagem.userDestino == id2:
+            output.append({
+                #'idMensagem': mensagem.idMensagem,
+                'content': mensagem.conteudo,
+                #'userOrigem' : mensagem.userOrigem,
+                #'userDestino': mensagem.userDestino,
+                'created_at': mensagem.data,
+                'me': 1
 
-        })
-
+            })
+        else:
+            output.append({
+                'content': mensagem.conteudo,
+                'created_at': mensagem.data,
+                'me': 0
+            })
+        
+    
     response = jsonify({'Mensagens': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
 
 # GET Obter mailbox de um utilizador
-@mensagem_blueprint.route('/<string:id>', methods=['GET'])
+@mensagem_blueprint.route('/mailbox/<string:id>', methods=['GET'])
 def get_mailbox(id):
     # querying the database
     # for all the entries in it
-    mailbox=MailBox.query.filter(MailBox.fk_Utilizador_username==id, MailBox.fk_Utilizador_username2==id)
+    mail=mailbox.query.filter(or_(mailbox.fk_Utilizador_username==id, mailbox.fk_Utilizador_username2==id)).all()
 
     # converting the query objects
     # to list of jsons
     output = []
-    for line in mailbox:
+    count=1
+    active= 'false'
+    for line in mail:
         # appending the user data json
         # to the response list
-        output.append({
-            'fk_Utilizador_username': line.fk_Utilizador_username,
-            'fk_Utilizador_username2': line.fk_Utilizador_username2,
-            'mailbox' : line.mailbox,
-
-        })
+        if (count==1):
+            active = 'true'
+        if (line.fk_Utilizador_username== id):
+            output.append({
+                #'fk_Utilizador_username': line.fk_Utilizador_username,
+                'id': count,
+                'title': line.fk_Utilizador_username2,
+                'active' : active
+            })
+            break
+        if(line.fk_Utilizador_username2== id):
+            output.append({
+                #'fk_Utilizador_username': line.fk_Utilizador_username,
+                'id': count,
+                'title': line.fk_Utilizador_username,
+                'active' : active
+            })
+            break
+        count+=1
 
     response = jsonify({'Mailbox': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -120,10 +123,10 @@ def registar_mensagem():
     data = request.form
 
     # gets all attributes
-    conteudo = data.get('conteudo')
+    conteudo = data.get('content')
     userOrigem = data.get('userOrigem')
     userDestino = data.get('userDestino')
-    dataM = date.today()
+    created_at = data.get('created_at')
     
 
     # database ORM object
@@ -131,13 +134,13 @@ def registar_mensagem():
         conteudo = conteudo,
         userOrigem = userOrigem,
         userDestino = userDestino,
-        data = dataM,
+        data = created_at,
     )
 
     # Verifica se existe um par entre os users na bd da mailbox
-    mailbox=MailBox.query.filter(MailBox.fk_Utilizador_username==userOrigem, MailBox.fk_Utilizador_username2==userDestino)
-    if mailbox.count() == 0:
-        line = MailBox(
+    mail=mailbox.query.filter_by(fk_Utilizador_username=userOrigem, fk_Utilizador_username2=userDestino).first()
+    if not mail:
+        line = mailbox(
             fk_Utilizador_username=userOrigem,
             fk_Utilizador_username2=userDestino,
             mailbox=0
@@ -151,3 +154,27 @@ def registar_mensagem():
 
     return make_response('Mensagem Enviada.', 201)
 
+#POST Regista um mailbox
+@mensagem_blueprint.route('/registoMailBox', methods=['POST'])
+def registar_mailBox():
+    # creates a dictionary of the form data
+    data = request.form
+
+    # gets all attributes
+    userOrigem = data.get('userorigem')
+    userDestino = data.get('userdestino')
+    # Verifica se existe um par entre os users na bd da mailbox
+    mail=mailbox.query.filter_by(fk_Utilizador_username=userOrigem,fk_Utilizador_username2=userDestino).first()
+    if not mail:
+        line = mailbox(
+            fk_Utilizador_username=userOrigem,
+            fk_Utilizador_username2=userDestino,
+            mailbox=0
+        )
+        db.session.add(line)
+        db.session.commit()
+
+        return make_response('mailBox Criada',200)
+
+
+    else : return make_response('Já existe mailbox', 201)

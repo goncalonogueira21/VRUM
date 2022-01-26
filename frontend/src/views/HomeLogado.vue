@@ -2,7 +2,6 @@
   <v-container class="my-5">
     <Header @clicked="onClickHeader"></Header>
     <NavDraw ref="navdraw"></NavDraw>
-    <p>Token is {{ token }}</p>
     <h1>TODO: Mostrar viagem que está a decorrer</h1>
     <v-card class="mx-auto" max-width="344" outlined elevation="5">
       <v-list-item three-line>

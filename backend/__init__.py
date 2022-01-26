@@ -1,6 +1,8 @@
+from importlib import resources
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_socketio import SocketIO
 from secretsFolder import secrets
 
 # cors = CORS()
@@ -12,10 +14,11 @@ CORS_EXPOSE_HEADERS="*,*"
 CORS_ALLOW_HEADERS="content-type,*"
 cors = CORS(app, origins=CORS_ALLOW_ORIGIN.split(","), allow_headers=CORS_ALLOW_HEADERS.split(",") , expose_headers= CORS_EXPOSE_HEADERS.split(","),   supports_credentials = True)
 
+socketio = SocketIO(app,cors_allowed_origins="*")
 
 app.debug = True
 
-cors.init_app(app)
+  
 
 conn = "mysql+pymysql://{0}:{1}@{2}/{3}?charset=utf8mb4".format(secrets.dbuser, secrets.dbpass, secrets.dbhost,
                                                                 secrets.dbname)

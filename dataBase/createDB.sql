@@ -164,7 +164,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `VRUM`.`mailBox`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `vrum`.`mailBox` (
+CREATE TABLE IF NOT EXISTS `vrum`.`mailbox` (
   `idMailBox` INT NOT NULL AUTO_INCREMENT,
   `fk_Utilizador_username` VARCHAR(45) NOT NULL,
   `fk_Utilizador_username2` VARCHAR(45) NOT NULL,
