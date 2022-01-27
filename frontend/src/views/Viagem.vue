@@ -556,6 +556,13 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.alertPedidoFeito = true;
+          //this.$socket.emit("fazerPedido", this.viagem.idCondutor);
+          var dataNot={  
+          userDestino : this.viagem.idCondutor,  
+          titulo : "Pedido para uma Viagem",
+          mensagem : "O cliente "+ this.username+" fez um pedido para a sua mensagem"  
+          };
+          this.$socket.emit("message", dataNot );
         })
         .catch((error) => {
           console.log(error);

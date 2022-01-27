@@ -183,6 +183,12 @@ import { mapState } from "vuex";
         console.log(error)
       })
     },
+    sockets:{
+     messageChannel(data) {
+      this.socketMessage = data
+      //console.log('yo' ,data)
+    } 
+    },
     methods:{
       sendMessage(userDestino){
         const messageForm ={
@@ -200,6 +206,12 @@ import { mapState } from "vuex";
           .then((response)=>{
             console.log(response)
             this.messages.push(messageForm)
+              var mensagem={  
+                userDestino : userDestino,  
+                titulo : "Mensagem",
+                mensagem : "O utilizador "+ this.username + " mandou a mensagem: " + messageForm.content  
+                };
+            this.$socket.emit("message", mensagem)
           }).catch((error)=>{
             console.log(error)
           })

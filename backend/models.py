@@ -16,6 +16,13 @@ class Utilizador(db.Model):
     avatar = db.Column(db.VARBINARY(8000))
     aboutME = db.Column(db.String(200))
 
+class Notification(db.Model):
+    idNot = db.Column(db.Integer,autoincrement=True, primary_key=True)
+    fk_Utilizador_username = db.Column(db.String(45))
+    sent = db.Column(db.DateTime)
+    visto = db.Column(TINYINT(1))
+    titulo = db.Column(db.String(45))
+    mensagem = db.Column(db.String(100))
 
 class Viagem(db.Model):
     idViagem = db.Column(db.Integer, primary_key=True)

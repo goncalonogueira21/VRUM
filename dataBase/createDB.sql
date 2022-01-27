@@ -184,6 +184,27 @@ CREATE TABLE IF NOT EXISTS `vrum`.`mailbox` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table VRUM.notification
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS vrum.notification (
+  `idNot` INT NOT NULL AUTO_INCREMENT,
+  `fk_Utilizador_username` VARCHAR(45) NOT NULL,
+  `sent` DATETIME NOT NULL,
+  `visto` BOOL NOT NULL,
+  `titulo` VARCHAR(45) NOT NULL,
+  `mensagem` VARCHAR(100) NOT NULL,
+  INDEX FK_Notification_1 (fk_Utilizador_username ASC) VISIBLE,
+  PRIMARY KEY (idNot),
+  CONSTRAINT FK_Notification_1
+    FOREIGN KEY (fk_Utilizador_username)
+    REFERENCES vrum.utilizador (username)
+    ON DELETE CASCADE
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

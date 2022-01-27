@@ -1,14 +1,13 @@
-import re
+from datetime import datetime
+from flask_socketio import emit
 from flask import Blueprint, jsonify, request, make_response
 from sqlalchemy import text,and_
-from sqlalchemy.orm import session
-from werkzeug.wrappers import response
 
 
 pedido_blueprint = Blueprint('pedido_blueprint', __name__)
 
-from __init__ import db, app
-from models import Pedido, Viagem, Usufrui
+from __init__ import db, socketio
+from models import Pedido, Viagem, Usufrui, Notification
 
 # GET Obter os pedidos todos
 @pedido_blueprint.route('/todos', methods=['GET'])
@@ -312,3 +311,46 @@ def eliminaViagemPedido(idpedido):
 
 
     return make_response('Alteracao bem sucedida', 200)
+
+
+#############TRATAR DAS NOTIFICACOES#######################
+
+
+@socketio.on("fazerPedido")
+def create_user_notification(data):#, title, message):
+    """
+    Create a User Notification
+    :param user: User object to send the notification to
+    :param action: Action being performed
+    :param title: The message title
+    :param message: Message
+    """
+    notification = Notification(titulo=data.get('titulo'),
+                                mensagem=data.get('mensagem'),
+                                sent=datetime.now(),
+                                visto=0,
+                                fk_Utilizador_username=data.get('userDestino'))
+            
+
+    db.session.add(notification)
+    db.session.commit()
+
+    
+    
+    socketio.emit('messageChannel', data ,room="user_" + data.get('userDestino'))
+         #namespace='/notifs')
+    print("FUNCIONOU")
+    #push_user_notification(userD)  
+
+
+def push_user_notification(data):#, title, message)
+    """
+    Push user notification to user socket connection.
+    """
+    user_room = 'user_' + data.get('userDestino')
+    print(user_room)
+    #('messageChannel', "merda")
+         #namespace='/notifs')
+    print("FUNCIONOU")
+
+

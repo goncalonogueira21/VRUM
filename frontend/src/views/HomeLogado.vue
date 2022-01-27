@@ -108,6 +108,18 @@ export default {
           console.log(error)
         })
   },
+  sockets: {
+    connect() {
+      // Fired when the socket connects.
+      console.log("COnectou", this.username)
+      this.$socket.emit("connection", this.username)
+    },
+    disconnect() {
+      console.log("DEsconectou")
+    },
+    // Fired when the server sends something on the "messageChannel" channel.
+    
+  },
   methods: {
     onClickHeader() {
       this.$refs.navdraw.fixNav();

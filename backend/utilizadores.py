@@ -3,6 +3,7 @@ from typing import ByteString
 import jwt
 from functools import wraps
 from flask import request, jsonify, make_response, Blueprint
+from flask_socketio import join_room
 from sqlalchemy.dialects.mysql import base
 from sqlalchemy.sql.expression import null
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,14 +11,14 @@ from sqlalchemy.sql import text
 from datetime import datetime, timedelta
 from flask_cors import cross_origin
 import base64
-import io
+
 
 import json
 
 
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
-from __init__ import db, app
+from __init__ import db, app, socketio
 from models import Utilizador
 
 
@@ -275,3 +276,12 @@ def updateUser(id):
         return make_response('User atualizado com sucesso', 200)
     else:
         return make_response('User nao existe', 404)
+
+#quando se faz login
+@socketio.on("connection")
+def connect_handler(msg):
+    print(msg)
+    user_room = 'user_' + msg
+    print("USER ROM É :" + user_room)
+    join_room(user_room)
+    print("o zat?")
