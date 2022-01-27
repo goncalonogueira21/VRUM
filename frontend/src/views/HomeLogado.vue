@@ -54,7 +54,7 @@
           <div v-if="viagensPorClassificar" class="text-xs-center">
             <v-row justify="center">
               <v-col cols="12">
-                <v-btn outline link to="historico">Viagens por classificar
+                <v-btn outlined link to="historico">Viagens por classificar
                   <v-icon dark right> mdi-star </v-icon>
                 </v-btn>
               </v-col>
@@ -91,6 +91,7 @@ export default {
   },
   
   created() {
+    this.$socket.emit("connection", this.username)
   
     this.$request("get", "viagem/" + this.$route.params.id)
       .then((response) => {
@@ -108,18 +109,8 @@ export default {
           console.log(error)
         })
   },
-  sockets: {
-    connect() {
-      // Fired when the socket connects.
-      console.log("COnectou", this.username)
-      this.$socket.emit("connection", this.username)
-    },
-    disconnect() {
-      console.log("DEsconectou")
-    },
-    // Fired when the server sends something on the "messageChannel" channel.
-    
-  },
+ 
+ 
   methods: {
     onClickHeader() {
       this.$refs.navdraw.fixNav();

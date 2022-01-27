@@ -99,17 +99,8 @@ export default {
     },
 
     verPedido(item){
-      var payload = new FormData();
-      //payload.append("notificacao", 0);
       
-      this.$request("put", "pedido/" + item.idPedido + "/update",payload)
-        .then((response) => {
-          console.log(response.data);
-          this.sheet= !this.sheet
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        this.sheet= !this.sheet
         this.editedIndex = this.carros.indexOf(item)
         this.editedItem = Object.assign({}, item)
     },
@@ -118,6 +109,13 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.sheet= !this.sheet
+          var notificacao={  
+          userDestino : item.fk_Utilizador_username,  
+          titulo : "Pedido Aceite",
+          mensagem : "O utilizador "+ this.username+" aceitou o seu pedido" ,
+          viagem: this.$route.params.id
+          };
+          this.$socket.emit("viagem", notificacao );
           this.$router.go()
         })
         .catch((error) => {
@@ -138,6 +136,13 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.sheet= !this.sheet
+          var notificacao={  
+          userDestino : item.fk_Utilizador_username,  
+          titulo : "Pedido Rejeitado",
+          mensagem : "O utilizador "+ this.username+" rejeitou o seu pedido" ,
+          viagem: this.$route.params.id
+          };
+          this.$socket.emit("viagem", notificacao );
           this.$router.go();
         })
         .catch((error) => {

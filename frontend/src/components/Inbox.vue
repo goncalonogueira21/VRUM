@@ -25,7 +25,7 @@
                         <v-list-item-avatar>
                            <v-img
                               class="rounded-circle elevation-8 d-inline-block"
-                              src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
+                              src="https://www.iconpacks.net/icons/2/free-icon-user-4250.png"
                               width="128"
                             />
                         </v-list-item-avatar>
@@ -133,8 +133,7 @@ import { mapState } from "vuex";
     username: (state) => state.auth.username
   }),
     data: () => ({
-        //no mounted é suposto carregar para aqui as mensagens de um user bem com o avatar da pessoa e o nome dela
-      activeChat: 0,
+    activeChat: 0,
     parents: [],
     messages: [],
     content:"",
@@ -184,10 +183,15 @@ import { mapState } from "vuex";
       })
     },
     sockets:{
-     messageChannel(data) {
-      this.socketMessage = data
-      //console.log('yo' ,data)
-    } 
+      messageInstant(data){
+         const messageForm ={
+            content: data.content,
+            me: data.me,
+            created_at: data.created_at
+        }
+        this.messages.push(messageForm)
+        console.log("zatt"  ,messageForm)
+      }
     },
     methods:{
       sendMessage(userDestino){
@@ -208,10 +212,17 @@ import { mapState } from "vuex";
             this.messages.push(messageForm)
               var mensagem={  
                 userDestino : userDestino,  
-                titulo : "Mensagem",
-                mensagem : "O utilizador "+ this.username + " mandou a mensagem: " + messageForm.content  
+                titulo : "Mensagem Recebida",
+                mensagem : "O utilizador "+ this.username + " enviou-te uma mensagem"  
                 };
             this.$socket.emit("message", mensagem)
+                var messageInstant ={
+                  content: messageForm.content,
+                  me: false,
+                  created_at: messageForm.created_at,
+                  userDestino : userDestino, 
+        }
+            this.$socket.emit("messageInstant", messageInstant)
           }).catch((error)=>{
             console.log(error)
           })
@@ -226,6 +237,6 @@ import { mapState } from "vuex";
             console.log(error)
           })
           }
-    } 
+    }
 }
 </script>

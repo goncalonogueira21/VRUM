@@ -53,11 +53,17 @@ def getAllNotiUser(id):
 
 
    
+@socketio.on("messageInstant")
+def messageIntant(data):
 
+    socketio.emit('messageInstant', data ,room="user_" + data.get('userDestino'))
+         
+    
+     
 
 
 @socketio.on("message")
-def create_user_notification(data):#, title, message):
+def create_user_notification_mensagem(data):#, title, message):
     """
     Create a User Notification
     :param user: User object to send the notification to
@@ -77,19 +83,61 @@ def create_user_notification(data):#, title, message):
 
     
     
-    socketio.emit('messageChannel', data ,room="user_" + data.get('userDestino'))
+    socketio.emit('message', data ,room="user_" + data.get('userDestino'))
          #namespace='/notifs')
-    print("FUNCIONOU")
+   
     #push_user_notification(userD)  
 
 
-def push_user_notification(data):#, title, message)
-    """
-    Push user notification to user socket connection.
-    """
-    user_room = 'user_' + data.get('userDestino')
-    print(user_room)
-    #('messageChannel', "merda")
-         #namespace='/notifs')
-    print("FUNCIONOU")
 
+
+@socketio.on("viagem")
+def create_user_notification_viagem(data):#, title, message):
+    """
+    Create a User Notification
+    :param user: User object to send the notification to
+    :param action: Action being performed
+    :param title: The message title
+    :param message: Message
+    """
+    notification = Notification(titulo=data.get('titulo'),
+                                mensagem=data.get('mensagem'),
+                                sent=datetime.now(),
+                                visto=0,
+                                fk_Utilizador_username=data.get('userDestino'))
+            
+
+    db.session.add(notification)
+    db.session.commit()
+
+    
+    
+    socketio.emit('viagem', data ,room="user_" + data.get('userDestino'))
+         
+    
+     
+
+
+@socketio.on("pedido")
+def create_user_notification_pedido(data):#, title, message):
+    """
+    Create a User Notification
+    :param user: User object to send the notification to
+    :param action: Action being performed
+    :param title: The message title
+    :param message: Message
+    """
+    notification = Notification(titulo=data.get('titulo'),
+                                mensagem=data.get('mensagem'),
+                                sent=datetime.now(),
+                                visto=0,
+                                fk_Utilizador_username=data.get('userDestino'))
+            
+
+    db.session.add(notification)
+    db.session.commit()
+
+    
+    
+    socketio.emit('pedido', data ,room="user_" + data.get('userDestino'))
+     

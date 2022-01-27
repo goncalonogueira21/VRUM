@@ -518,8 +518,8 @@ export default {
         .then((response) => {
           console.log("RESPONSE", response);
           response.data.Pedidos.map((pedido) => {
-            console.log("ITEM", pedido);
-            console.log("USER", this.username);
+            //console.log("ITEM", pedido);
+            //console.log("USER", this.username);
             if (
               pedido.viagem == this.viagem.id &&
               pedido.username == this.username
@@ -554,15 +554,15 @@ export default {
 
       this.$request("post", "pedido/registo", payload)
         .then((response) => {
-          console.log(response.data);
+          console.log(response);
           this.alertPedidoFeito = true;
-          //this.$socket.emit("fazerPedido", this.viagem.idCondutor);
-          var dataNot={  
+          var notificacao={  
           userDestino : this.viagem.idCondutor,  
           titulo : "Pedido para uma Viagem",
-          mensagem : "O cliente "+ this.username+" fez um pedido para a sua mensagem"  
+          mensagem : "O utilizador "+ this.username+" fez um pedido para registar-se numa viagem sua." ,
+          viagem: this.$route.params.id
           };
-          this.$socket.emit("message", dataNot );
+          this.$socket.emit("pedido", notificacao );
         })
         .catch((error) => {
           console.log(error);
@@ -577,6 +577,13 @@ export default {
         .then((response) => {
           console.log(response);
           this.alertPedidoCancelado = true;
+          var notificacao={  
+          userDestino : this.viagem.idCondutor,  
+          titulo : "Cancelar pedido",
+          mensagem : "O utilizador "+ this.username+" cancelou um pedido de uma viagem" ,
+          viagem: this.$route.params.id
+          };
+          this.$socket.emit("viagem", notificacao );
         })
         .catch((error) => {
           console.log(error);
@@ -624,6 +631,16 @@ export default {
       this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
         .then((response) => {
           console.log(response);
+          this.tabela.forEach(user => {
+             var notificacao={  
+                userDestino : user.fk_Utilizador_Username,  
+                titulo : "Viagem Iniciada",
+                mensagem : "O condutor" + this.username + "inciou uma viagem onde está registado",
+                viagem: this.$route.params.id
+              };
+              this.$socket.emit("viagem", notificacao );
+          });
+         
           this.$router.go();
         })
         .catch((error) => {
@@ -669,6 +686,15 @@ export default {
       this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
         .then((response) => {
           console.log(response);
+           this.tabela.forEach(user => {
+             var notificacao={  
+                userDestino : user.fk_Utilizador_Username,  
+                titulo : "Viagem",
+                mensagem : "A viagem do condutor" + this.username + "terminou" ,
+                viagem: this.$route.params.id
+              };
+              this.$socket.emit("viagem", notificacao );
+          });
           this.$router.go();
         })
         .catch((error) => {
@@ -711,5 +737,6 @@ export default {
       this.$refs.navdraw.fixNav();
     },
   },
+ 
 };
 </script>

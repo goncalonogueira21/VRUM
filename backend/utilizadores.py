@@ -282,6 +282,6 @@ def updateUser(id):
 def connect_handler(msg):
     print(msg)
     user_room = 'user_' + msg
-    print("USER ROM É :" + user_room)
+    print("USER ROOM É :" + user_room)
     join_room(user_room)
     print("o zat?")

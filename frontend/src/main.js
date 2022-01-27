@@ -20,6 +20,8 @@ if (token) {
 
 Vue.config.productionTip = false;
 
+
+
 Vue.use(VueGeolocation);
 Vue.use(VueGooglePlaces)
 Vue.use(VueGoogleMaps, {
