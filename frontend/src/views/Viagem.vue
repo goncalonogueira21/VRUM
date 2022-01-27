@@ -618,6 +618,15 @@ export default {
           console.log(response);
           this.dialog = !this.dialog;
           this.alertViagemEditada = true;
+          this.tabela.forEach(user => {
+          var notificacao={  
+                userDestino : user.fk_Utilizador_username,  
+                titulo : "Viagem Editada",
+                mensagem : "O condutor " + this.username + " editou uma viagem onde está registado",
+                viagem: this.$route.params.id
+              };
+          this.$socket.emit("viagem", notificacao );
+          });
         })
         .catch((error) => {
           console.log(error);
@@ -633,15 +642,15 @@ export default {
           console.log(response);
           this.tabela.forEach(user => {
              var notificacao={  
-                userDestino : user.fk_Utilizador_Username,  
+                userDestino : user.fk_Utilizador_username,  
                 titulo : "Viagem Iniciada",
-                mensagem : "O condutor" + this.username + "inciou uma viagem onde está registado",
+                mensagem : "O condutor " + this.username + " inciou uma viagem onde está registado",
                 viagem: this.$route.params.id
               };
               this.$socket.emit("viagem", notificacao );
           });
          
-          this.$router.go();
+         this.$router.go();
         })
         .catch((error) => {
           console.log(error);
@@ -688,9 +697,9 @@ export default {
           console.log(response);
            this.tabela.forEach(user => {
              var notificacao={  
-                userDestino : user.fk_Utilizador_Username,  
+                userDestino : user.fk_Utilizador_username,  
                 titulo : "Viagem",
-                mensagem : "A viagem do condutor" + this.username + "terminou" ,
+                mensagem : "A viagem do condutor " + this.username + " terminou" ,
                 viagem: this.$route.params.id
               };
               this.$socket.emit("viagem", notificacao );
@@ -717,18 +726,6 @@ export default {
         
 
     },
-
-    // getCarros() {
-    //   console.log("user", this.username);
-    //   this.$request("get", "carro/" + this.username)
-    //     .then((response) => {
-    //       this.carros = response.data.Carros;
-    //       console.log(this.carros);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // },
     close() {
       this.dialog = false;
     },
