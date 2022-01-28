@@ -43,16 +43,12 @@ def token_required(f):
         # jwt is passed in the request header
         if 'Authorization' in request.headers:
             token = request.headers['Authorization']
-            
         # return 401 if token is not passed
         if not token:
             return jsonify({'message': 'Token is missing!'}), 401
-
         try:
             # decoding the payload to fetch the stored details
-            data = jwt.decode(token, app.config['SECRET_KEY'])
-            print("DATA::", data)
-            print("TOKEN....", token)
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms="HS256", options={"verify_exp": False})
             current_user = Utilizador.query \
                 .filter_by(username=data['username']) \
                 .first()
@@ -61,7 +57,7 @@ def token_required(f):
                 'message': 'Token is invalid!'
             }), 401
         # returns the current logged in users context to the routes
-        return f(current_user, *args, **kwargs)
+        return f(*args, **kwargs)
 
     return decorated
 
@@ -122,11 +118,9 @@ def login():
         # generates the JWT Token
         token = jwt.encode({
             'username': user.username,
-            'exp': datetime.utcnow() + timedelta(minutes=30)
-        }, app.config['SECRET_KEY'])
-        
-        #return make_response({'token': token}, 201)
-        return make_response({'token': token.decode('UTF-8')}, 201)
+            'exp': datetime.utcnow() + timedelta(minutes=720)
+        }, app.config['SECRET_KEY'], algorithm="HS256")
+        return make_response({'token': token}, 201)
 
     # returns 403 if password is wrong
     return make_response(
@@ -247,16 +241,16 @@ def delete(id):
 
 
 #Editar utilizador
-@auth_blueprint.route('/<string:id>/update', methods=['Put'])
-
+@auth_blueprint.route('/<string:id>/update', methods=['PUT'])
+@token_required
 def updateUser(id):
-    
     user = Utilizador.query.get(id)
-    
+    token = request.headers['Authorization']
+    data = jwt.decode(token, app.config['SECRET_KEY'], algorithms="HS256", options={"verify_exp": False})
+    if not data['username'] == id:
+        return make_response('You can not do that', 404)
     if user is not None:
         data=request.form
-
-    
 
         for d in data:
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
