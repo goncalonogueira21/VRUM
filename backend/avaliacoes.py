@@ -72,7 +72,7 @@ def viagensPorClassificar(id):
 
   
     
-    query= Usufrui.query.filter(Usufrui.fk_Utilizador_username==id).all()
+    query= Usufrui.query.filter_by(fk_Utilizador_username=id,estado="Finalizada").all()
     alert = False
     
 

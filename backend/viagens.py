@@ -380,3 +380,20 @@ def get_passageiros_viagem(idViagem):
     response = jsonify({'Passageiros': output})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
+
+
+
+# PUT Atualizar usufrui
+@viagem_blueprint.route('/usufrui/<int:idviagem>&<string:idUser>/update', methods=['Put'])
+def updateUsufrui(idviagem,idUser):
+
+    data=request.form
+    usufrui = Usufrui.query.filter_by(fk_Utilizador_username=idUser,fk_Viagem_idViagem=idviagem).first()
+
+    if usufrui:  
+        setattr(usufrui,'estado',data.get('estado'))          
+        db.session.commit()
+
+        return make_response('Usufrui atualizado com sucesso', 200)
+    else:
+        return make_response('Viagem nao existe', 404)

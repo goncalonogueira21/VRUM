@@ -471,7 +471,7 @@ export default {
   created() {
     this.initialize();
 
-    // GET Lista de Passageiros de uma viagem finalizada
+    // GET Lista de Passageiros de uma viagem 
     this.$request("get", "viagem/passageiros/" + this.$route.params.id)
       .then((response) => {
         console.log(response.data);
@@ -640,17 +640,26 @@ export default {
       this.$request("put", "viagem/" + this.viagem.id + "/update", payload)
         .then((response) => {
           console.log(response);
-          this.tabela.forEach(user => {
-             var notificacao={  
+          this.tabela.forEach((user) => {
+            this.$request("put", "viagem/usufrui/" + this.viagem.id + "&" + user.fk_Utilizador_username +"/update", payload)
+              .then((response)=> {
+              console.log(response);
+               var notificacao={  
                 userDestino : user.fk_Utilizador_username,  
                 titulo : "Viagem Iniciada",
                 mensagem : "O condutor " + this.username + " inciou uma viagem onde está registado",
                 viagem: this.$route.params.id
               };
               this.$socket.emit("viagem", notificacao );
-          });
+              
+            });
+          this.$router.go();
+              }).catch((error)=>{
+                console.log(error)
+              })
+            
          
-         this.$router.go();
+        
         })
         .catch((error) => {
           console.log(error);
@@ -696,15 +705,22 @@ export default {
         .then((response) => {
           console.log(response);
            this.tabela.forEach(user => {
-             var notificacao={  
+              this.$request("put", "viagem/usufrui/" + this.viagem.id + "&" + user.fk_Utilizador_username +"/update", payload)
+              .then((response)=> {
+              console.log(response);
+               var notificacao={  
                 userDestino : user.fk_Utilizador_username,  
-                titulo : "Viagem",
-                mensagem : "A viagem do condutor " + this.username + " terminou" ,
+                titulo : "Viagem Iniciada",
+                mensagem : "O condutor " + this.username + " inciou uma viagem onde está registado",
                 viagem: this.$route.params.id
               };
               this.$socket.emit("viagem", notificacao );
-          });
+          }); 
           this.$router.go();
+              }).catch((error)=>{
+                console.log(error)
+              })
+         
         })
         .catch((error) => {
           console.log(error);

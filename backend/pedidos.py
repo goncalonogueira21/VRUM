@@ -285,7 +285,8 @@ def aceitaPedido(idpedido):
     usufrui = Usufrui(
         fk_Utilizador_username= pedido.fk_Utilizador_username,
         fk_Viagem_idViagem=pedido.fk_Viagem_idViagem,
-        custoPago= custo
+        custoPago= custo,
+        estado = "Pendente"
     )
     db.session.add(usufrui)
     db.session.commit()
