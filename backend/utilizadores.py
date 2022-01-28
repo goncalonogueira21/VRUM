@@ -261,9 +261,15 @@ def updateUser(id):
         for d in data:
             #session.execute(update(stuff_table, values={stuff_table.c.foo: stuff_table.c.foo + 1}))
             if(d=='avatar'):
-                setattr(user,d,base64.b64decode(data.get(d)))   
+                #imagens pequenas
+                avatar = base64.b64decode(data.get(d))
+                setattr(user,d,avatar)
             elif(d=='dataNascimento'):
-                setattr(user,d,datetime.strptime(data.get(d),"%d/%m/%Y"))
+                days = data.get(d)
+                if "-" not in days:
+                    setattr(user,d,datetime.strptime(data.get(d),"%d/%m/%Y"))
+                else:
+                    setattr(user, d, datetime.strptime(data.get(d), "%Y-%m-%d"))
             else:
                 setattr(user,d,data.get(d))
             
