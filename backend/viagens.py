@@ -8,9 +8,11 @@ viagem_blueprint = Blueprint('viagem_blueprint', __name__)
 
 from __init__ import db, app
 from models import Viagem, Usufrui
+from utilizadores import token_required
 
 # GET Obter as Viagens todas
 @viagem_blueprint.route('/todos', methods=['GET'])
+@token_required
 def get_all_viagens():
     # querying the database
     # for all the entries in it
@@ -48,6 +50,7 @@ def get_all_viagens():
 
 # GET Lista de Viagens Disponíveis
 @viagem_blueprint.route('/disponiveis', methods=['GET'])
+@token_required
 def get_disponiveis_viagens():
     # querying the database
     # for all the entries in it
@@ -89,6 +92,7 @@ def get_disponiveis_viagens():
 # GET ViagemComFiltros
 #é preciso passar o intervalo de tempo pela querystring e os outros atributos pelo body
 @viagem_blueprint.route('/filtros', methods=['Post'])
+@token_required
 def get_viagens_filtros():
     # querying the database
     # for all the entries in it
@@ -153,6 +157,7 @@ def get_viagens_filtros():
 
 # GET Obter as Viagens todas de um utilizador condutor
 @viagem_blueprint.route('/todos/:id', methods=['GET'])
+@token_required
 def get_all_viagens_condutor(id):
     # querying the database
     # for all the entries in it
@@ -190,6 +195,7 @@ def get_all_viagens_condutor(id):
 
 # GET Obter uma Viagem em especifico
 @viagem_blueprint.route('/<int:id>', methods=['GET'])
+@token_required
 def getViagem(id):
      viagem=Viagem.query.get(id)
      if not viagem:
@@ -225,6 +231,7 @@ def getViagem(id):
 
 # POST Registar uma viagem
 @viagem_blueprint.route('/registo', methods=['POST'])
+@token_required
 def registar():
     # creates a dictionary of the form data
     data = request.form
@@ -274,6 +281,7 @@ def registar():
 
 # DELETE Eliminar Viagem
 @viagem_blueprint.route('/<int:idviagem>/remove', methods=['Delete'])
+@token_required
 def eliminarPedido(idviagem):
     print ('its working--Delete group')
     if Viagem.query.filter_by(idViagem=idviagem).first() is not None:
@@ -287,6 +295,7 @@ def eliminarPedido(idviagem):
 
 # PUT Atualizar viagem
 @viagem_blueprint.route('/<int:idviagem>/update', methods=['Put'])
+@token_required
 def updateViagem(idviagem):
 
     viagem = Viagem.query.get(idviagem)
@@ -307,6 +316,7 @@ def updateViagem(idviagem):
     
 # GET Lista de viagens de um Passageiro
 @viagem_blueprint.route('/todos/passageiro/<string:idPassageiro>', methods=['GET'])
+@token_required
 def get_all_viagens_passageirocustos(idPassageiro):
     # querying the database
     # for all the entries in it
@@ -331,6 +341,7 @@ def get_all_viagens_passageirocustos(idPassageiro):
 
 # GET Lista de Viagens de um Condutor
 @viagem_blueprint.route('/todos/condutor/<string:idDriver>', methods=['GET'])
+@token_required
 def get_all_viagens_condutor_custos(idDriver):
     # querying the database
     # for all the entries in it
@@ -362,6 +373,7 @@ def get_all_viagens_condutor_custos(idDriver):
 
 # GET Lista de passageiros de uma viagem
 @viagem_blueprint.route('/passageiros/<string:idViagem>', methods=['GET'])
+@token_required
 def get_passageiros_viagem(idViagem):
     # querying the database
     # for all the entries in it
@@ -385,6 +397,7 @@ def get_passageiros_viagem(idViagem):
 
 # PUT Atualizar usufrui
 @viagem_blueprint.route('/usufrui/<int:idviagem>&<string:idUser>/update', methods=['Put'])
+@token_required
 def updateUsufrui(idviagem,idUser):
 
     data=request.form

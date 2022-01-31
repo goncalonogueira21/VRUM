@@ -11,7 +11,7 @@
     cols="12" 
     > 
       <div class="mt-4 text-center"> 
-          <small class="grey--text change-font text-none">©VRUM, 2021</small> 
+          <small class="grey--text change-font text-none">©VRUM, 2022</small> 
       </div>
     </v-col>
     </v-row>

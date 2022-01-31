@@ -2,7 +2,7 @@ from datetime import datetime
 from flask_socketio import emit
 from flask import Blueprint, jsonify, request, make_response
 from sqlalchemy import text,and_
-
+from datetime import datetime as dt
 notificacao_blueprint = Blueprint('notificacao_blueprint', __name__)
 
 
@@ -40,7 +40,7 @@ def getAllNotiUser(id):
         output.append({
             'idNot' :noti.idNot,
             'fk_Utilizador_username' :noti.fk_Utilizador_username,
-            'sent' : noti.sent,
+            'sent' : dt.strftime(noti.sent, '%m-%d'),
             'visto' : noti.visto,
             'titulo' : noti.titulo,
             'mensagem' : noti.mensagem

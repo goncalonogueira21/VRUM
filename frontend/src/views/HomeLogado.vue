@@ -48,21 +48,7 @@
       @placechanged="onPlaceChanged"
       @noresult="onNoResult"
     />
-    <v-layout justify-space-around row wrap>
-      <v-flex xs10 sm10 md9 lg9>
-        <v-card class="mt-2" flat>
-          <div v-if="viagensPorClassificar" class="text-xs-center">
-            <v-row justify="center">
-              <v-col cols="12">
-                <v-btn outlined link to="historico">Viagens por classificar
-                  <v-icon dark right> mdi-star </v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </div>
-        </v-card>
-      </v-flex>
-    </v-layout>
+
   </v-container>
 </template>
 
@@ -85,8 +71,7 @@ export default {
     return {
       tab: null,
       openHelp: false,
-      viagem: {},
-      viagensPorClassificar:false
+      viagem: {}
     };
   },
   
@@ -96,18 +81,13 @@ export default {
     this.$request("get", "viagem/" + this.$route.params.id)
       .then((response) => {
         this.viagem = response.data.Viagem[0];
+         
       })
       .catch((error) => {
         console.log(error);
       });
       
-      this.$request("get","avaliacao/yetToRate/" + this.username)
-        .then((response)=>{
-          console.log(response.data.ViagensPorClassificar)
-          this.viagensPorClassificar=response.data.ViagensPorClassificar
-        }).catch((error)=>{
-          console.log(error)
-        })
+      
   },
  
  

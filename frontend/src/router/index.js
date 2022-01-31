@@ -14,6 +14,7 @@ import Carteira from "../views/Carteira"
 import HomeLogado from "../views/HomeLogado"
 import Page404 from "../views/PageNotFound.vue"
 import Settings from "../views/Settings.vue"
+import Hub_notificaçoes from "../views/Hub_notificaçoes.vue"
 
 Vue.use(VueRouter);
 
@@ -57,6 +58,11 @@ const routes = [
     path: "/inbox",
     name: "inbox",
     component: Mensagens,
+  },
+  {
+    path: "/notifications",
+    name: "notifications",
+    component: Hub_notificaçoes,
   },
   {
     path: "/pedidos",

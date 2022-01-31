@@ -63,7 +63,7 @@ def token_required(f):
 
 #obter todos os utilizadores
 @auth_blueprint.route('/todos', methods=['GET'])
-#@token_required
+@token_required
 def get_all_users():
     # querying the database
     # for all the entries in it
@@ -120,7 +120,7 @@ def login():
             'username': user.username,
             'exp': datetime.utcnow() + timedelta(minutes=720)
         }, app.config['SECRET_KEY'], algorithm="HS256")
-        return make_response({'token': token}, 201)
+        return make_response({'token': token.decode('UTF-8')}, 201)
 
     # returns 403 if password is wrong
     return make_response(
@@ -130,22 +130,6 @@ def login():
     )
 
 
-#para testar as imagens
-@auth_blueprint.route('/testeImagem', methods=['POST'])
-@cross_origin()
-def registar2():
-    # creates a dictionary of the form data
-        data=request.form
-        texto=data.get('avatar')
-        avatar=base64.b64decode(texto)
-        #foto = "".join(["{:08b}".format(x) for x in foto1])
-        avatarencoded=base64.b64encode(avatar)
-        #PARA TIRAR O B E AS PELICAS
-        final = str(avatarencoded, 'UTF-8')
-        print(final)
-        #fotoencoded=base64.b64encode(ByteString)
-        
-        return make_response('E TASS', 201)
     
 @auth_blueprint.route('/registo', methods=['POST'])
 @cross_origin()
@@ -197,6 +181,7 @@ def registar():
 
 #get user info by username
 @auth_blueprint.route('/<string:id>', methods=['GET'])
+@token_required
 @cross_origin()
 def get(id):
     user = Utilizador.query.filter_by(username=id).first()
@@ -228,6 +213,7 @@ def get(id):
 
 # Eliminar um utilizador
 @auth_blueprint.route('/<int:id>/delete', methods=['GET','POST'])
+@token_required
 def delete(id):
     user = Utilizador.query.filter_by(username=id).first()
     if request.method == 'POST':

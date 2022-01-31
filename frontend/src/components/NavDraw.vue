@@ -66,13 +66,6 @@
           <v-list-item-title class="white--text">Carteira</v-list-item-title>
         </v-list-item>
 
-        <v-list-item link to="/settings">
-          <v-list-item-icon>
-            <v-icon>mdi-cog</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title class="white--text">Definições</v-list-item-title>
-        </v-list-item>
-
         <!-- List group se for uma secção da barra de navegação lateral que se divida em subsecções-->
         <v-list-group  :value="false" no-action>
           <template v-slot:activator>
@@ -97,7 +90,20 @@
           </v-list-item-icon>
             <v-list-item-title class="white--text">Mensagens</v-list-item-title>
           </v-list-item>
+          <v-list-item link to="/notifications">
+          <v-list-item-icon>
+            <v-icon>mdi-bell-ring</v-icon>
+          </v-list-item-icon>
+            <v-list-item-title class="white--text">Notificações</v-list-item-title>
+          </v-list-item>
         </v-list-group>
+
+        <v-list-item link to="/settings">
+          <v-list-item-icon>
+            <v-icon>mdi-cog</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title class="white--text">Definições</v-list-item-title>
+        </v-list-item>
       </v-list>
       <template v-slot:append>
         <div class="pa-2">
@@ -132,31 +138,7 @@ export default {
     }
   },
   
-  // created(){
-  
-  //   this.$request("get", "pedido/todos/recebido/notificacao/" + this.username)
-  //     .then((response) => {
-  //       if ((response.data.RecebidoNotificacao).length >0){
-  //         this.cor="black"
-  //         this.corText="black--text"
-  //       }
-        
-  //     })
-  //     .catch((error) => {
-  //       console.log(" z" +error.response);
-  //     });
-
-  //     this.$request("get", "pedido/todos/enviado/notificacao/" + this.username)
-  //     .then((response) => {
-  //       if ((response.data.EnviadoNotificacao).length >0){
-  //         this.cor="black"
-  //         this.corText="black--text"
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log("zz"+error.response);
-  //     });
-  // },
+ 
   
   methods: {
    ...mapActions({
