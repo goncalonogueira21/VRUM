@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `vrum`.`usufrui` (
   `fk_Utilizador_username` VARCHAR(45) NOT NULL,
   `fk_Viagem_idViagem` INT NOT NULL,
   `custoPago` FLOAT NOT NULL,
+  `estado` VARCHAR(45) NOT NULL,
   INDEX `FK_usufrui_1` (`fk_Utilizador_username` ASC) VISIBLE,
   INDEX `FK_usufrui_2` (`fk_Viagem_idViagem` ASC) VISIBLE,
   CONSTRAINT `FK_usufrui_1`
