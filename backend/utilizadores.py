@@ -120,7 +120,7 @@ def login():
             'username': user.username,
             'exp': datetime.utcnow() + timedelta(minutes=720)
         }, app.config['SECRET_KEY'], algorithm="HS256")
-        return make_response({'token': token.decode('UTF-8')}, 201)
+        return make_response({'token': token}, 201)
 
     # returns 403 if password is wrong
     return make_response(
@@ -132,7 +132,6 @@ def login():
 
     
 @auth_blueprint.route('/registo', methods=['POST'])
-@cross_origin()
 def registar():
     db.session.rollback()
     # creates a dictionary of the form data
@@ -182,7 +181,6 @@ def registar():
 #get user info by username
 @auth_blueprint.route('/<string:id>', methods=['GET'])
 @token_required
-@cross_origin()
 def get(id):
     user = Utilizador.query.filter_by(username=id).first()
     output = []
