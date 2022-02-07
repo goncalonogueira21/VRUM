@@ -2,7 +2,7 @@
   <v-container class="my-5">
     <Header @clicked="onClickHeader"></Header>
     <NavDraw ref="navdraw"></NavDraw>
-    <h1>TODO: Mostrar viagem que está a decorrer</h1>
+    <!-- <h1>TODO: Mostrar viagem que está a decorrer</h1>
     <v-card class="mx-auto" max-width="344" outlined elevation="5">
       <v-list-item three-line>
         <v-list-item-content>
@@ -47,9 +47,15 @@
       placeholder="Input your place"
       @placechanged="onPlaceChanged"
       @noresult="onNoResult"
-    />
+    /> -->
 
+  <v-container>
+    <v-card class="d-flex justify-center mb-6" flat>
+      <img src="../assets/VRUM_logo.png" />
+    </v-card>
   </v-container>
+  </v-container> 
+
 </template>
 
 <script>
@@ -78,14 +84,14 @@ export default {
   created() {
     this.$socket.emit("connection", this.username)
   
-    this.$request("get", "viagem/" + this.$route.params.id)
-      .then((response) => {
-        this.viagem = response.data.Viagem[0];
+    // this.$request("get", "viagem/" + this.$route.params.id)
+    //   .then((response) => {
+    //     this.viagem = response.data.Viagem[0];
          
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
       
       
   },

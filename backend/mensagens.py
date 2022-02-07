@@ -9,9 +9,12 @@ mensagem_blueprint = Blueprint('mensagem_blueprint', __name__)
 
 from __init__ import db, app
 from models import Mensagem, mailbox
+from utilizadores import token_required
+
 
 # GET Obter todas as Mensagens
 @mensagem_blueprint.route('/todas', methods=['GET'])
+@token_required
 def get_all_mensagens():
     # querying the database
     # for all the entries in it
@@ -38,6 +41,7 @@ def get_all_mensagens():
 
 # GET Obter todas as mensagens de dois utilizadores
 @mensagem_blueprint.route('/<string:id1>&<string:id2>', methods=['GET'])
+@token_required
 def get_all_users_mensagens(id1, id2):
     # querying the database
     # for all the entries in it
@@ -78,6 +82,7 @@ def get_all_users_mensagens(id1, id2):
 
 # GET Obter mailbox de um utilizador
 @mensagem_blueprint.route('/mailbox/<string:id>', methods=['GET'])
+@token_required
 def get_mailbox(id):
     # querying the database
     # for all the entries in it
@@ -118,6 +123,7 @@ def get_mailbox(id):
 
 # POST Regista uma mensagem
 @mensagem_blueprint.route('/registo', methods=['POST'])
+@token_required
 def registar_mensagem():
     # creates a dictionary of the form data
     data = request.form
@@ -156,6 +162,7 @@ def registar_mensagem():
 
 #POST Regista um mailbox
 @mensagem_blueprint.route('/registoMailBox', methods=['POST'])
+@token_required
 def registar_mailBox():
     # creates a dictionary of the form data
     data = request.form

@@ -8,9 +8,11 @@ pedido_blueprint = Blueprint('pedido_blueprint', __name__)
 
 from __init__ import db, socketio
 from models import Pedido, Viagem, Usufrui, Notification
+from utilizadores import token_required
 
 # GET Obter os pedidos todos
 @pedido_blueprint.route('/todos', methods=['GET'])
+@token_required
 def get_all_pedidos():
     # querying the database
     # for all the entries in it
@@ -39,6 +41,7 @@ def get_all_pedidos():
 
 # GET Obter um pedido em especifico
 @pedido_blueprint.route('/<int:id>', methods=['GET'])
+@token_required
 def getPedido(id):
      pedido=Pedido.query.get(id)
      if not pedido:
@@ -64,6 +67,7 @@ def getPedido(id):
 
 # POST Registar um pedido
 @pedido_blueprint.route('/registo', methods=['POST'])
+@token_required
 def registar():
     # creates a dictionary of the form data
     db.session.rollback()
@@ -98,6 +102,7 @@ def registar():
 
 # DELETE Eliminar pedido
 @pedido_blueprint.route('/<int:idpedido>/remove', methods=['Delete'])
+@token_required
 def eliminarPedido(idpedido):
     print ('its working--Delete group')
     if Pedido.query.filter_by(idPedido=idpedido).first() is not None:
@@ -110,6 +115,7 @@ def eliminarPedido(idpedido):
 
 # PUT Atualizar pedido
 @pedido_blueprint.route('/<int:idpedido>/update', methods=['Put'])
+@token_required
 def updatePedido(idpedido):
 
     pedido = Pedido.query.get(idpedido)
@@ -136,6 +142,7 @@ def updatePedido(idpedido):
     
 # GET Todos os pedidos recebidos de um utilizador
 @pedido_blueprint.route('todos/recebido/<string:idCondutor>', methods=['GET'])
+@token_required
 def getAllpedidosRecebidos(idCondutor):
 
     output = []
@@ -164,6 +171,7 @@ def getAllpedidosRecebidos(idCondutor):
 
 # GET Todos os pedidos POR ACEITAR recebidos de um utilizador 
 @pedido_blueprint.route('todos/recebidoAceitar/<string:idCondutor>', methods=['GET'])
+@token_required
 def getAllpedidosRecebidos_porAceitar(idCondutor):
 
     output = []
@@ -188,6 +196,7 @@ def getAllpedidosRecebidos_porAceitar(idCondutor):
 
 #notificaçoes de pedidos recebidos
 @pedido_blueprint.route('todos/recebido/notificacao/<string:idCondutor>', methods=['GET'])
+@token_required
 def getAllnotificacoesRecebidas(idCondutor):
 
     output = []
@@ -215,6 +224,7 @@ def getAllnotificacoesRecebidas(idCondutor):
 
 # GET Todos os pedidos enviados de um utilizador
 @pedido_blueprint.route('todos/enviado/<string:idPassageiro>', methods=['GET'])
+@token_required
 def getAllPedidosEnviados(idPassageiro):
 
     pedidos=Pedido.query.filter(Pedido.fk_Utilizador_username==idPassageiro)
@@ -243,6 +253,7 @@ def getAllPedidosEnviados(idPassageiro):
 
 
 @pedido_blueprint.route('todos/enviado/notificacao/<string:idPassageiro>', methods=['GET'])
+@token_required
 def getAllnotificacoesEnviados(idPassageiro):
 
     output = []
@@ -272,6 +283,7 @@ def getAllnotificacoesEnviados(idPassageiro):
 
 # PUT Aceita Pedido
 @pedido_blueprint.route('/<int:idpedido>/aceitar', methods=['Put'])
+@token_required
 def aceitaPedido(idpedido):
 
 
@@ -298,6 +310,7 @@ def aceitaPedido(idpedido):
 
 # PUT Elimina Viagens nos Pedidos
 @pedido_blueprint.route('/<int:idpedido>/eliminar', methods=['Put'])
+@token_required
 def eliminaViagemPedido(idpedido):
 
 

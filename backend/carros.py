@@ -2,8 +2,10 @@ from flask import Blueprint, jsonify, make_response, request
 from flask_cors.decorator import cross_origin
 from sqlalchemy.sql import text
 import base64
+from utilizadores import token_required
 
 from sqlalchemy.sql.elements import Null
+
 
 carro_blueprint = Blueprint('carro_blueprint', __name__)
 
@@ -12,6 +14,7 @@ from models import Carro
 
 # GET Obter carros de um utilizador
 @carro_blueprint.route('/<string:id>', methods=['GET'])
+@token_required
 def get_all_carros(id):
     # querying the database
     # for all the entries in it
@@ -48,6 +51,7 @@ def get_all_carros(id):
 
 # POST Registar um carro
 @carro_blueprint.route('/registo', methods=['POST'])
+@token_required
 def registar():
     # creates a dictionary of the form data
     data = request.form
@@ -101,6 +105,7 @@ def registar():
 
 # DELETE Eliminar Carro
 @carro_blueprint.route('/<string:matricula>/remove', methods=['Delete'])
+@token_required
 def eliminarCarro(matricula):
     if Carro.query.filter_by(matricula=matricula).first() is not None:
         Carro.query.filter_by(matricula=matricula).delete()
@@ -114,6 +119,7 @@ def eliminarCarro(matricula):
 # PUT Editar carro
 #/update?matricula=matr
 @carro_blueprint.route('/<string:matricula>/update', methods=['Put'])
+@token_required
 def updateCarro(matricula):
     
     carro = Carro.query.get(matricula)

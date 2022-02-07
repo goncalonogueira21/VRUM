@@ -8,9 +8,12 @@ avaliacao_blueprint = Blueprint('avaliacao_blueprint', __name__)
 
 from __init__ import db, app
 from models import Avaliacao, Utilizador, Viagem, Usufrui
+from utilizadores import token_required
+
 
 # POST Regista a avaliação do condutor de uma determinada viagem
 @avaliacao_blueprint.route('/<int:id>', methods=['POST'])
+@token_required
 def rate_user(id):
 
     new_score = request.form.get("rating")
@@ -46,6 +49,7 @@ def rate_user(id):
 
 # GET Avaliação
 @avaliacao_blueprint.route('/<string:idViagem>&<string:idUser>', methods=['GET'])
+@token_required
 def get_avaliacao(idViagem, idUser):
     # querying the database
     # for all the entries in it
@@ -68,6 +72,7 @@ def get_avaliacao(idViagem, idUser):
 
 # GET vai ver se há alguma viagem por classificar
 @avaliacao_blueprint.route('/yetToRate/<string:id>', methods=['GET'])
+@token_required
 def viagensPorClassificar(id):
 
   

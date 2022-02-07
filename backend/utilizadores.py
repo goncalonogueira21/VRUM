@@ -9,7 +9,6 @@ from sqlalchemy.sql.expression import null
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
 from datetime import datetime, timedelta
-from flask_cors import cross_origin
 import base64
 
 
@@ -132,7 +131,6 @@ def login():
 
     
 @auth_blueprint.route('/registo', methods=['POST'])
-@cross_origin()
 def registar():
     db.session.rollback()
     # creates a dictionary of the form data
@@ -181,8 +179,7 @@ def registar():
 
 #get user info by username
 @auth_blueprint.route('/<string:id>', methods=['GET'])
-@token_required
-@cross_origin()
+#@token_required
 def get(id):
     user = Utilizador.query.filter_by(username=id).first()
     output = []

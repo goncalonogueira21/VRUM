@@ -27,6 +27,7 @@
         <v-spacer></v-spacer>
         <v-col cols="11" md="5">
           <v-text-field
+            id="autocomplete"
             v-model="formData.localDestino"
             :rules="[...rules.required, ...rules.length30]"
             :counter="30"
@@ -59,7 +60,11 @@
             <v-date-picker v-model="formData.dataInicio" no-title scrollable>
               <v-spacer></v-spacer>
               <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-              <v-btn text color="primary" @click="$refs.menu.save(formData.dataInicio)">
+              <v-btn
+                text
+                color="primary"
+                @click="$refs.menu.save(formData.dataInicio)"
+              >
                 OK
               </v-btn>
             </v-date-picker>
@@ -135,31 +140,31 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-             <v-text-field
-            v-model="formData.descricao"
-            label="Descrição"
-          />
+          <v-text-field v-model="formData.descricao" label="Descrição" />
         </v-col>
       </v-row>
     </v-container>
-    <v-card  flat>
+    <v-card flat>
       <v-row class="px-2 pb-2 ma-0 py-2" justify="center">
-      
-          <v-btn  class="ml-2 mr-2 mb-2" color="#7e380e" elevation="5" @click="reset">
-            Clean
-            <v-icon color="white">mdi-broom</v-icon>
-          </v-btn>
-          
-          <v-btn
-            @click="registaViagem"
-            color="#7e380e"
-            elevation="5"
-            class="ml-2 mr-2 mb-2"
-          >
+        <v-btn
+          class="ml-2 mr-2 mb-2"
+          color="#7e380e"
+          elevation="5"
+          @click="reset"
+        >
+          Clean
+          <v-icon color="white">mdi-broom</v-icon>
+        </v-btn>
+
+        <v-btn
+          @click="registaViagem"
+          color="#7e380e"
+          elevation="5"
+          class="ml-2 mr-2 mb-2"
+        >
           Submit
-            <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
-          </v-btn>
-        
+          <v-icon color="white">mdi-checkbox-marked-outline</v-icon>
+        </v-btn>
       </v-row>
     </v-card>
   </v-form>
@@ -167,6 +172,7 @@
 
 <script>
 import { mapState } from "vuex";
+//import * as VueGoogleMaps from 'vue2-google-maps'
 export default {
   data() {
     return {
@@ -179,11 +185,11 @@ export default {
         localDestino: "",
         regularidade: "",
         bagagem: false,
-        dataInicio: '',
+        dataInicio: "",
         horaInicio: null,
         custoPessoa: 0,
         kmsViagem: 0,
-        descricao:''
+        descricao: "",
       },
       rules: {
         required: [(v) => !!v || "Field is required"],
@@ -207,18 +213,21 @@ export default {
       menu: false,
       menu2: false,
       menuTime: false,
-      carros: []
+      carros: [],
+      autocomplete: null,
+      address: '',
+
     };
   },
   computed: mapState({
     username: (state) => state.auth.username,
   }),
-  /* mounted(){
-        new google.maps.places.Autocomplete(
-            document.getElementById("autocomplete")
-        )
-    },*/
-
+  mounted() {
+    this.autocomplete.addListener("place_changed", () => {
+    var place = self.autocomplete.getPlace();
+    this.formData.localInicio = place.name; // update the value
+  });
+  },
   methods: {
     reset() {
       this.$refs.form.reset();
@@ -234,31 +243,32 @@ export default {
           console.log(error);
         });
     },
-    registaViagem(){
+    registaViagem() {
       var payload = new FormData();
-      payload.append('lugaresDisp', this.formData.lugaresDisp);
-      payload.append('localInicio', this.formData.localInicio );
-      payload.append('fk_Carro_matricula',this.formData.fk_Carro_matricula );
-      payload.append('localDestino', this.formData.localDestino);
-      payload.append('regularidade',this.formData.regularidade );
-      payload.append('dataInicio',this.formData.dataInicio );
-      payload.append('bagagem', this.formData.bagagem ? 1 : 0);
-      payload.append('horaInicio', this.formData.horaInicio);
-      payload.append('custoPessoa', this.formData.custoPessoa);
-      payload.append('kmsViagem', this.formData.kmsViagem);
-      payload.append('idCondutor', this.username);
-      payload.append('descricao', this.formData.descricao)
+      payload.append("lugaresDisp", this.formData.lugaresDisp);
+      payload.append("localInicio", this.formData.localInicio);
+      payload.append("fk_Carro_matricula", this.formData.fk_Carro_matricula);
+      payload.append("localDestino", this.formData.localDestino);
+      payload.append("regularidade", this.formData.regularidade);
+      payload.append("dataInicio", this.formData.dataInicio);
+      payload.append("bagagem", this.formData.bagagem ? 1 : 0);
+      payload.append("horaInicio", this.formData.horaInicio);
+      payload.append("custoPessoa", this.formData.custoPessoa);
+      payload.append("kmsViagem", this.formData.kmsViagem);
+      payload.append("idCondutor", this.username);
+      payload.append("descricao", this.formData.descricao);
 
-      this.$request("post", "viagem/registo", payload, {'Content-Type': ' application/form-data'})
+      this.$request("post", "viagem/registo", payload, {
+        "Content-Type": " application/form-data",
+      })
         .then((response) => {
           console.log(response);
         })
         .catch((error) => {
           console.log(error);
         });
-      this.$router.push('viagens');
+      this.$router.push("viagens");
     },
-
   },
   created() {
     this.getCarros();

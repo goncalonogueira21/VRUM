@@ -26,7 +26,7 @@ Vue.use(VueGeolocation);
 Vue.use(VueGooglePlaces)
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyDUllI61bsFW7A0eti3Ks7dsVfcRfwMtDc',
+    key: 'AIzaSyA0NR6fs6UYHQaq6jlrpLqIiUCIRzEhN9A',
     libraries: 'places',
   },
 })
