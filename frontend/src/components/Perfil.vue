@@ -224,7 +224,7 @@ export default {
       }, 6000)    
     },
     initialize(){
-      axios.get("http://localhost:5000/utilizador/" + this.username, {
+      axios.get("http://0.0.0.0:5000/utilizador/" + this.username, {
         headers : { "Content-Type": "application/json" }
       })
         .then((response) => {
@@ -264,7 +264,7 @@ export default {
 
       this.readonly = !this.readonly;
       axios
-        .put("http://localhost:5000/utilizador/" + this.username + "/update", payload,
+        .put("http://0.0.0.0:5000/utilizador/" + this.username + "/update", payload,
           // headers: {'Content-Type': ' multipart/form-data' 
           )
         .then(

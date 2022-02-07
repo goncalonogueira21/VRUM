@@ -229,7 +229,7 @@ export default {
       payload.append("lastName", this.lastName);
       payload.append("firstName", this.firstName);
 
-      axios.post("http://localhost:5000/utilizador/registo", payload).then(
+      axios.post("http://0.0.0.0:5000/utilizador/registo", payload).then(
         (response) => {
           if(response.status == 201) {
           console.log(response.data);

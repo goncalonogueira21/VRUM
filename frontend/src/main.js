@@ -34,7 +34,7 @@ Vue.use(VueGoogleMaps, {
 Vue.use(request)
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: SocketIO('http://127.0.0.1:5000'), //options object is Optional
+  connection: SocketIO('http://0.0.0.0:5000'), //options object is Optional
 })
 );
 

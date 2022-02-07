@@ -1,0 +1,51 @@
+
+version: '3.3'
+services:
+  mysqldb:
+    container_name: mysqldb
+    restart: always
+    build: ./dataBase
+    volumes:
+        - mysql-db:/var/lib/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: vrum
+    ports:
+        - "3306:3306"
+    networks:
+        - 'db_Vrum'
+  
+
+  backend:
+    depends_on:
+        - mysqldb
+    build: ./backend
+    environment:
+        PYTHONUNBUFFERED: 1
+    ports:
+        - '5000:5000' 
+    expose:
+        - '5000'
+    networks:
+        - 'db_Vrum'
+    links:
+        - mysqldb
+  
+  frontend:
+    depends_on:
+        - backend
+    build: ./frontend
+
+    ports:
+        - '8080:8080'
+    expose:
+        - '8080'
+    networks:
+        - 'db_Vrum'
+    links:
+        - backend
+
+volumes:
+    mysql-db:
+networks:
+    db_Vrum:  

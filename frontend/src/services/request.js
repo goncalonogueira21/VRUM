@@ -13,19 +13,19 @@ const request = {
 function makeRequest(request, path, data, headers) {
   switch (request) {
     case "get":
-      return axios.get("http://localhost:5000/" + path, {
+      return axios.get("http://0.0.0.0:5000/" + path, {
         headers: headers,
       });
     case "post":
-      return axios.post("http://localhost:5000/" + path, data, {
+      return axios.post("http://0.0.0.0:5000/" + path, data, {
         headers: headers,
       });
     case "put":
-      return axios.put("http://localhost:5000/"  + path, data, {
+      return axios.put("http://0.0.0.0:5000/"  + path, data, {
         headers: headers,
       });
     case "delete":
-      return axios.delete("http://localhost:5000/" + path, data, {
+      return axios.delete("http://0.0.0.0:5000/" + path, data, {
         headers: headers,
       });
     default:
